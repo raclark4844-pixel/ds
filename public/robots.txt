@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /work
+Disallow: /process
+Disallow: /industries
+Disallow: /crypto
+
+Sitemap: https://[DOMAIN]/sitemap.xml
