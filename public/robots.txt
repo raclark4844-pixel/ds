@@ -5,4 +5,4 @@ Disallow: /process
 Disallow: /industries
 Disallow: /crypto
 
-Sitemap: https://[DOMAIN]/sitemap.xml
+Sitemap: https://www.demoretechnologysolutions.com/sitemap.xml

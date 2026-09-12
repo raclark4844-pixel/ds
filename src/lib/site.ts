@@ -1,7 +1,7 @@
 /**
  * PLACEHOLDERS — find and replace these tokens site-wide:
- *   [PHONE]  [DOMAIN]
- * Email is live. Phone stays unpublished.
+ *   [PHONE]
+ * Email is live. Domain is live. Phone stays unpublished.
  */
 import {
   automationAnswer,
@@ -25,7 +25,7 @@ export const REGION_ABBR = "OH";
 export const COUNTRY = "United States";
 export const CITY_LINE = "Mentor, Lake County, Ohio";
 export const AREA_LINE = "United States — nationwide, remote";
-export const DOMAIN = "[DOMAIN]";
+export const DOMAIN = "www.demoretechnologysolutions.com";
 
 export const SITE_NAME = "Demore Technology Solutions";
 export const SITE_URL = `https://${DOMAIN}`;
