@@ -19,31 +19,27 @@ function contactFields() {
   };
 }
 
-export function pageHead({
-  title,
-  description,
-  path,
-}: {
-  title: string;
-  description: string;
-  path: string;
-}) {
+export function pageHead({ title, description, path }: { title: string; description: string; path: string }) {
   const url = `${SITE_URL}${path}`;
   const og = `${SITE_URL}/og.png`;
   return {
     meta: [
       { title },
       { name: "description", content: description },
-      { name: "robots", content: "index,follow" },
+      { name: "robots", content: "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" },
       { name: "author", content: SITE_NAME },
       ...(isPlaceholder(CITY_LINE) ? [] : [{ name: "geo.placename", content: CITY_LINE }]),
       ...(REGION_ABBR ? [{ name: "geo.region", content: `US-${REGION_ABBR}` }] : []),
+      { property: "og:site_name", content: SITE_NAME },
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
       { property: "og:url", content: url },
       { property: "og:image", content: og },
+      { property: "og:image:alt", content: `${SITE_NAME} digital technology and growth solutions` },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: title },
+      { name: "twitter:description", content: description },
       { name: "twitter:image", content: og },
     ],
     links: [{ rel: "canonical", href: url }],
@@ -65,21 +61,41 @@ export function organizationJsonLd() {
         address: postalAddress,
         areaServed,
         description:
-          "Demore Technology Solutions builds custom websites, online stores, social auto-posting, short-form content, and insurance claim supplements. Based in Mentor, Lake County, Ohio. Serving businesses nationwide. SEO, GEO, AEO, CRO, and UX. Not an insurer. Not a public adjuster unless licensed in that state.",
+          "Demore Technology Solutions builds custom websites, ecommerce, AI-assisted digital marketing, lead-generation systems, SEO, GEO, AEO, CRO, analytics, conversion tracking, social automation, content workflows, and custom business automation. Based in Mentor, Ohio and serving clients nationwide.",
         knowsAbout: [
+          "AI-assisted digital marketing",
+          "lead generation",
           "SEO",
+          "search engine optimization",
           "AEO",
+          "answer engine optimization",
           "GEO",
+          "generative engine optimization",
           "CRO",
+          "conversion rate optimization",
+          "technical SEO",
+          "website performance",
+          "user experience",
           "custom websites",
           "ecommerce",
+          "landing pages",
+          "analytics",
+          "conversion tracking",
           "social media automation",
-          "insurance claim supplements",
-          "Xactimate",
-          "contractor websites",
-          "technical performance",
-          "UX",
+          "Google Business Profile automation",
+          "review workflows",
+          "content automation",
+          "business workflow automation",
+          "AI assistants",
         ],
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${SITE_URL}/#website`,
+        name: SITE_NAME,
+        url: SITE_URL,
+        publisher: { "@id": `${SITE_URL}/#organization` },
+        inLanguage: "en-US",
       },
       {
         "@type": "ProfessionalService",
@@ -90,28 +106,27 @@ export function organizationJsonLd() {
         address: postalAddress,
         areaServed,
         description:
-          "Custom websites, stores, social systems, growth stack, and insurance claim supplements.",
+          "Nationwide digital technology, website, ecommerce, AI-assisted marketing, lead-generation, search optimization, analytics, content, and automation services.",
         serviceType: [
           "Website development",
+          "Ecommerce development",
+          "AI-assisted digital marketing",
+          "Lead generation",
           "Business automation",
           "Search engine optimization",
           "Answer engine optimization",
           "Generative engine optimization",
           "Conversion rate optimization",
-          "Content and digital growth",
-          "Industry-specific digital solutions",
+          "Analytics implementation",
+          "Conversion tracking",
+          "Content and social automation",
         ],
       },
     ],
   };
 }
 
-export function serviceJsonLd({
-  name,
-  description,
-  path,
-  serviceType,
-}: {
+export function serviceJsonLd({ name, description, path, serviceType }: {
   name: string;
   description: string;
   path: string;
@@ -124,13 +139,9 @@ export function serviceJsonLd({
     name,
     description,
     url: `${SITE_URL}${path}`,
-    areaServed: { "@type": "Country", name: COUNTRY },
+    areaServed,
     serviceType,
-    provider: {
-      "@type": "Organization",
-      name: SITE_NAME,
-      url: SITE_URL,
-    },
+    provider: { "@id": `${SITE_URL}/#organization`, "@type": "Organization", name: SITE_NAME, url: SITE_URL },
   };
 }
 
