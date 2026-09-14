@@ -33,9 +33,7 @@ export function FeaturedPills({
             aria-label={item.label}
             className={cn(
               "group inline-flex min-h-12 items-center justify-center gap-1.5 rounded-pill border px-2 py-2 text-center text-[9px] font-semibold uppercase tracking-[0.16em] no-underline transition-colors duration-200 min-[400px]:px-3 min-[400px]:text-[10px] sm:text-[11px] sm:tracking-[0.18em]",
-              active
-                ? "border-volt/50 bg-volt-dim text-volt"
-                : "border-fg/25 bg-transparent text-fg hover:border-fg/45 hover:bg-elevated",
+              active ? "border-volt/50 bg-volt-dim text-volt" : "border-fg/25 bg-transparent text-fg hover:border-fg/45 hover:bg-elevated",
             )}
           >
             <Icon className="size-3.5 shrink-0" aria-hidden="true" />
@@ -53,14 +51,9 @@ export function SiteDock() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
-    <div
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl print:hidden"
-      data-site-dock
-    >
-      <div className="mx-auto max-w-6xl px-3 pt-3">
-        <FeaturedPills />
-      </div>
-      <nav aria-label="Site sections" className="mx-auto grid max-w-6xl grid-cols-6 px-1 pb-1.5 pt-1.5">
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl print:hidden" data-site-dock>
+      <div className="mx-auto max-w-6xl px-3 pt-3"><FeaturedPills /></div>
+      <nav aria-label="Site sections" className="mx-auto grid max-w-6xl grid-cols-5 px-1 pb-1.5 pt-1.5">
         {dockTabs.map((item) => {
           const Icon = navIcons[item.to];
           const active = pathMatches(item.to, pathname);
@@ -76,10 +69,7 @@ export function SiteDock() {
               )}
             >
               <Icon className="size-5" strokeWidth={active ? 2 : 1.5} aria-hidden="true" />
-              <span
-                className="max-w-full truncate text-[9px] font-medium leading-none tracking-wide min-[400px]:text-[10px]"
-                aria-hidden="true"
-              >
+              <span className="max-w-full truncate text-[9px] font-medium leading-none tracking-wide min-[400px]:text-[10px]" aria-hidden="true">
                 <span className="sm:hidden">{item.short ?? item.label}</span>
                 <span className="hidden sm:inline">{item.label}</span>
               </span>
