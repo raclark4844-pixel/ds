@@ -20,9 +20,9 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/")({
   head: () =>
     pageHead({
-      title: "Demore Technology Solutions | Websites, AI Marketing, Automation, and Claims",
+      title: "Demore Technology Solutions | Websites, AI Marketing, Lead Generation & Automation",
       description:
-        "Custom websites, ecommerce, AI-assisted digital marketing, lead generation, SEO, GEO, AEO, CRO, social automation, content systems, and insurance claim supplements.",
+        "Custom websites, ecommerce, AI-assisted digital marketing, lead generation, SEO, GEO, AEO, CRO, analytics, social automation, and content systems.",
       path: "/",
     }),
   component: Home,
@@ -71,13 +71,13 @@ function Home() {
         lede={
           <p>
             Websites, ecommerce, AI-assisted digital marketing, lead-generation systems,
-            search optimization, automation, content, and insurance claim supplements.
-            The goal is not another disconnected tool. It is a working system that helps
-            a business get found, earn attention, capture demand, and move the opportunity forward.
+            search optimization, analytics, automation, and content workflows. The goal is
+            not another disconnected tool. It is a working system that helps a business get
+            found, earn attention, capture demand, and move qualified opportunities forward.
           </p>
         }
         primary={{ to: "/contact", label: "Start a project brief" }}
-        secondary={{ to: "/claims", label: "Maximize a claim", variant: "claim" }}
+        secondary={{ to: "/growth", label: "See the growth stack", variant: "volt" }}
         media={{
           src: "/media/hero-orbs.jpg",
           alt: "Geometric fluorescent orbs on a near-black field, the visual mark of Demore Technology Solutions.",
@@ -93,7 +93,7 @@ function Home() {
       <Section
         kicker="Proof, not slogans"
         title="What will this shop refuse to fake?"
-        lede="No invented revenue. No borrowed logos. No quotes from people who do not exist. No fake recovery numbers."
+        lede="No invented revenue. No borrowed logos. No fake testimonials. No fabricated traffic, lead, ranking, or conversion numbers."
       >
         <ol className="grid gap-4 md:grid-cols-3">
           {proofPoints.map((item) => (
@@ -111,7 +111,7 @@ function Home() {
       <Section
         kicker="Offers, in the open"
         title="What does the studio actually build?"
-        lede="Websites and ecommerce, growth systems, automation and content, and documented insurance claim supplement support. Each offer is built to connect to the next useful action."
+        lede="Websites and ecommerce, AI-assisted growth systems, lead generation, analytics, automation, and content workflows — designed as connected parts of the same customer journey."
       >
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {offerCards.map((card) => (
@@ -191,10 +191,10 @@ function Home() {
       <div className="mt-16">
         <CtaBand
           kicker="Next"
-          title="Start a brief, or open the claims desk."
-          body="Tell us what needs to be built, what needs to generate leads, or what needs to be documented. Rankings, conversion lifts, lead volume, and payment increases are not guaranteed."
+          title="Start a project brief."
+          body="Tell us what needs to be built, what needs to generate leads, and what needs to be automated or measured. Rankings, AI citations, lead volume, and conversion lifts are not guaranteed."
           primaryLabel="Start a project brief"
-          secondary={{ to: "/claims", label: "Maximize a claim", variant: "claim" }}
+          secondary={{ to: "/growth", label: "See the growth stack", variant: "volt" }}
         />
       </div>
     </main>
