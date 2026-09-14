@@ -16,9 +16,9 @@ export const Route = createFileRoute("/contact")({
   }),
   head: () =>
     pageHead({
-      title: "Start a Project | Demore Technology Solutions",
+      title: "Start a Digital Project | Demore Technology Solutions",
       description:
-        "Tell us what to build. Website, store, bot, content, growth, or insurance claim supplements. A project brief, not a contract.",
+        "Start a project for a website, ecommerce, AI-assisted marketing, lead generation, SEO, GEO, AEO, CRO, analytics, content, or business automation.",
       path: "/contact",
     }),
   component: ContactPage,
@@ -32,8 +32,8 @@ function ContactPage() {
       <JsonLd data={faqJsonLd(contactFaqs)} />
       <JsonLd
         data={serviceJsonLd({
-          name: "Project intake",
-          description: "Multi-step project brief for Demore Technology Solutions.",
+          name: "Digital project intake",
+          description: "Project brief for websites, ecommerce, AI-assisted marketing, growth, lead generation, analytics, content, and automation.",
           path: "/contact",
           serviceType: "ProfessionalService",
         })}
@@ -41,18 +41,19 @@ function ContactPage() {
       <header className="pt-10 sm:pt-16">
         <p className="kicker">Start a project</p>
         <h1 className="mt-4 font-display text-[2.4rem] font-semibold leading-[0.95] tracking-tight sm:text-6xl">
-          Tell us what to build.
+          Tell us what the system needs to do.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-          Digital systems and insurance claim supplements. Five steps. A
-          project brief, not a contract.
+          Websites, ecommerce, AI-assisted digital marketing, lead generation,
+          SEO, GEO, AEO, CRO, analytics, content, and automation. Five steps.
+          A project brief, not a contract.
         </p>
       </header>
 
       <GeoQuote>
-        The brief is the working document, not a contract. Claim support does
-        not guarantee a carrier will increase payment. Growth work does not
-        guarantee rankings, citations, or conversion lifts.
+        The brief captures the business, offer, audience, current digital stack,
+        conversion goals, and workflows so the project can be scoped around a
+        real business outcome instead of a generic package.
       </GeoQuote>
 
       <DirectAnswer question="What goes in the project brief?">
@@ -63,11 +64,11 @@ function ContactPage() {
         <IntakeForm need={need} />
       </div>
 
-      <Section kicker="Also on this site" title="Which page is this brief for?">
+      <Section kicker="Also on this site" title="Which service is this brief for?">
         <RelatedOffers current="/contact" />
       </Section>
 
-      <Section kicker="Questions" title="Is this a contract?">
+      <Section kicker="Questions" title="Direct answers.">
         <FaqList items={contactFaqs} />
       </Section>
     </main>
