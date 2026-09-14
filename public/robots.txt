@@ -1,6 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /work
-Disallow: /process
 
 Sitemap: https://www.demoretechnologysolutions.com/sitemap.xml
