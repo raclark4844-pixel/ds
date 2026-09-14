@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Menu, X } from "lucide-react";
+import { Building2, Menu, X } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { navIcons } from "@/lib/nav-icons";
@@ -45,6 +45,14 @@ export function SiteHeader() {
               </Link>
             );
           })}
+          <Link
+            to="/industries"
+            className="inline-flex items-center gap-1.5 rounded-pill px-2.5 py-2 text-sm text-muted transition-colors duration-200 hover:text-fg"
+            activeProps={{ className: "text-fg" }}
+          >
+            <Building2 className="size-4" aria-hidden="true" />
+            Industries
+          </Link>
         </nav>
 
         <div className="flex items-center gap-2">
@@ -93,6 +101,14 @@ export function SiteHeader() {
               </Link>
             );
           })}
+          <Link
+            to="/industries"
+            onClick={() => setOpen(false)}
+            className="inline-flex min-h-12 items-center gap-3 rounded-lg px-3 py-3 text-base text-fg hover:bg-elevated"
+          >
+            <Building2 className="size-5 text-muted" aria-hidden="true" />
+            Industries
+          </Link>
           <div className="mt-4 flex flex-col gap-2 pb-4">
             <Button asChild size="lg">
               <Link to="/contact" onClick={() => setOpen(false)}>
