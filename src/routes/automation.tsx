@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CtaBand } from "@/components/cta-band";
 import { FaqList } from "@/components/faq-list";
+import { IndustryLinks } from "@/components/industry-links";
 import { JsonLd } from "@/components/json-ld";
 import { PageHero } from "@/components/page-hero";
 import { RelatedOffers } from "@/components/related-offers";
@@ -138,6 +139,10 @@ function AutomationPage() {
         </div>
       </Section>
 
+      <Section kicker="Industries" title="See how automation changes by industry.">
+        <IndustryLinks />
+      </Section>
+
       <Section kicker="Questions" title="Direct answers.">
         <FaqList items={automationFaqs} />
       </Section>
@@ -148,7 +153,7 @@ function AutomationPage() {
         <CtaBand
           kicker="Next"
           title="Show us the repetitive work you want off the team’s plate."
-          body="The brief collects platforms, workflows, approval rules, destinations, and lead-handling needs. Platform access, API availability, and third-party permissions can affect what can be automated."
+          body="The brief collects the industry, platforms, workflows, approval rules, destinations, budget, and lead-handling needs. Platform access, API availability, and third-party permissions can affect what can be automated."
           primaryLabel="Start a project brief"
           primaryNeed="automation"
           secondary={{ to: "/growth", label: "See the growth stack" }}
