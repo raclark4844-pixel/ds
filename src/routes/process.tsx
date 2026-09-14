@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CtaBand } from "@/components/cta-band";
 import { FaqList } from "@/components/faq-list";
+import { IndustryLinks } from "@/components/industry-links";
 import { JsonLd } from "@/components/json-ld";
 import { LaterPages, RelatedOffers } from "@/components/related-offers";
 import { DirectAnswer, GeoQuote, Section } from "@/components/section";
@@ -24,12 +25,12 @@ export const Route = createFileRoute("/process")({
 
 function ProcessPage() {
   return (
-    <main id="main" className="mx-auto max-w-3xl px-4 pb-20 sm:px-6">
+    <main id="main" className="mx-auto max-w-5xl px-4 pb-20 sm:px-6">
       <JsonLd data={faqJsonLd(processFaqs)} />
       <header className="pt-10 sm:pt-16">
         <p className="kicker">Process</p>
         <h1 className="mt-4 font-display text-5xl font-semibold tracking-tight">Business outcome first. Build second.</h1>
-        <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">The process starts with the business, customer, offer, current stack, and desired result. Pages, content, analytics, and automation are then scoped around that outcome.</p>
+        <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">The process starts with the industry, business, customer, offer, current stack, budget, and desired result. Pages, content, analytics, and automation are then scoped around that outcome.</p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <Button asChild size="lg"><Link to="/contact">Start a project brief</Link></Button>
           <Button asChild size="lg" variant="outline"><Link to="/growth">See the growth stack</Link></Button>
@@ -42,11 +43,12 @@ function ProcessPage() {
           {engagementSteps.map((item) => <li key={item.n} className="rounded-xl border border-line bg-surface p-6"><p className="font-display text-sm text-volt">{item.n}</p><h3 className="mt-2 font-display text-2xl font-semibold tracking-tight">{item.title}</h3><p className="mt-3 text-sm leading-relaxed text-muted">{item.body}</p></li>)}
         </ol>
       </Section>
+      <Section kicker="Industries" title="See how the process is applied by industry."><IndustryLinks /></Section>
       <Section kicker="In this category" title="Other supporting pages."><LaterPages current="/process" /></Section>
       <Section kicker="All pages" title="Jump to an offer."><RelatedOffers current="/process" /></Section>
       <Section kicker="Questions" title="Direct answers."><FaqList items={processFaqs} /></Section>
       <div className="mt-16">
-        <CtaBand kicker="Process" title="The brief is step one." body="Tell us the offer, audience, current stack, conversion goal, content needs, and repetitive work that should be automated." secondary={{ to: "/growth", label: "See the growth stack", variant: "outline" }} />
+        <CtaBand kicker="Process" title="The brief is step one." body="Tell us the industry, offer, audience, current stack, conversion goal, content needs, automation needs, and project budget. Minimum budget is $600." secondary={{ to: "/growth", label: "See the growth stack", variant: "outline" }} />
       </div>
     </main>
   );
