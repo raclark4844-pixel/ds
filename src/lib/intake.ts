@@ -1,48 +1,40 @@
-export const STORAGE_KEY = "demore-brief-v3";
+export const STORAGE_KEY = "demore-brief-v4";
 
 export const businessTypes = [
-  "Roofing contractor",
-  "Siding contractor",
-  "Remodeler / GC",
-  "Other home-service contractor",
+  "Contractor / home services",
   "Service company",
   "Ecommerce / retail",
   "Professional practice",
-  "Homeowner claim only",
+  "B2B company",
+  "Local business",
   "Other",
 ] as const;
 
 export const wantBuilt = [
   { id: "website", label: "New website" },
   { id: "redesign", label: "Redesign existing site" },
-  { id: "store", label: "Online store" },
+  { id: "store", label: "Online store / ecommerce" },
+  { id: "landing", label: "Campaign / landing pages" },
   { id: "booking", label: "Booking or estimating flow" },
-  { id: "bots", label: "Social auto-posting bots" },
-  { id: "av", label: "Audio / video for social" },
   { id: "growth", label: "SEO, GEO, AEO, CRO" },
-  { id: "claims", label: "Insurance claim supplements" },
-] as const;
-
-export const budgetBands = [
-  "Under $2,500",
-  "$2,500 to $7,500",
-  "$7,500 to $15,000",
-  "$15,000 to $40,000",
-  "$40,000 plus",
-  "Not sure — recommend",
+  { id: "leadgen", label: "Lead-generation system" },
+  { id: "automation", label: "AI / workflow automation" },
+  { id: "content", label: "Social / content system" },
+  { id: "analytics", label: "Analytics and conversion tracking" },
 ] as const;
 
 export const siteFeatures = [
   { id: "service-pages", label: "Service pages" },
-  { id: "location-pages", label: "Location pages" },
-  { id: "gallery", label: "Gallery" },
-  { id: "reviews", label: "Reviews" },
-  { id: "blog", label: "Blog or resource hub" },
-  { id: "portal", label: "Customer portal" },
-  { id: "payments", label: "Payments" },
+  { id: "location-pages", label: "Location / service-area pages" },
+  { id: "gallery", label: "Gallery / portfolio" },
+  { id: "reviews", label: "Reviews / reputation proof" },
+  { id: "resources", label: "Resource hub / articles" },
+  { id: "portal", label: "Customer portal / gated content" },
+  { id: "payments", label: "Payments / ecommerce" },
   { id: "crm", label: "CRM integration" },
-  { id: "financing", label: "Financing widget" },
+  { id: "financing", label: "Financing integration" },
   { id: "multilingual", label: "Multilingual" },
+  { id: "chat", label: "AI chat / assistant" },
 ] as const;
 
 export const platforms = [
@@ -54,32 +46,28 @@ export const platforms = [
   "X",
   "Google Business Profile",
   "Nextdoor",
+  "Other",
 ] as const;
 
 export const growthPriorities = [
-  "Local pack / maps",
-  "Service-page rankings",
-  "AI / answer citations",
+  "Local search / maps",
+  "Organic service or product rankings",
+  "AI / answer visibility",
+  "Lead generation",
   "Conversion rate",
+  "Content and social reach",
+  "Analytics and attribution",
   "All of it",
-] as const;
-
-export const estimatingSoftware = [
-  "Xactimate",
-  "Symbility / Cotality",
-  "Other",
-  "None",
-  "Not applicable",
 ] as const;
 
 export const NEED_MAP: Record<string, string[]> = {
   website: ["website"],
   store: ["store"],
-  bots: ["bots"],
-  av: ["av"],
-  growth: ["growth"],
-  automation: ["bots", "av"],
-  claims: ["claims"],
+  growth: ["growth", "leadgen"],
+  automation: ["automation"],
+  bots: ["automation", "content"],
+  av: ["content"],
+  leadgen: ["leadgen"],
 };
 
 export type Brief = {
@@ -95,7 +83,6 @@ export type Brief = {
   wants: string[];
   goal: string;
   timeline: string;
-  budget: string;
   features: string[];
   mustHavePages: string;
   brand: string;
@@ -108,11 +95,10 @@ export type Brief = {
   existingContent: string;
   seoNow: string;
   growthPriority: string;
-  insuranceTouches: string;
-  claimVolume: string;
-  carriers: string;
-  estimating: string;
-  missedItems: string;
+  leadProcess: string;
+  analyticsNow: string;
+  automationNeeds: string;
+  crmTools: string;
   anythingElse: string;
   consent: boolean;
   submittedAt: string;
@@ -131,7 +117,6 @@ export const emptyBrief = (): Brief => ({
   wants: [],
   goal: "",
   timeline: "",
-  budget: "",
   features: [],
   mustHavePages: "",
   brand: "",
@@ -144,11 +129,10 @@ export const emptyBrief = (): Brief => ({
   existingContent: "",
   seoNow: "",
   growthPriority: "",
-  insuranceTouches: "",
-  claimVolume: "",
-  carriers: "",
-  estimating: "",
-  missedItems: "",
+  leadProcess: "",
+  analyticsNow: "",
+  automationNeeds: "",
+  crmTools: "",
   anythingElse: "",
   consent: false,
   submittedAt: "",
@@ -158,16 +142,15 @@ export function applyNeed(brief: Brief, need?: string): Brief {
   if (!need) return brief;
   const extras = NEED_MAP[need] ?? [];
   if (extras.length === 0) return brief;
-  const wants = Array.from(new Set([...brief.wants, ...extras]));
-  return { ...brief, wants };
+  return { ...brief, wants: Array.from(new Set([...brief.wants, ...extras])) };
 }
 
 export function formatBrief(brief: Brief): string {
-  const lines = [
+  return [
     "DEMORE TECHNOLOGY SOLUTIONS — PROJECT BRIEF",
     brief.submittedAt ? `Submitted: ${brief.submittedAt}` : "",
     "",
-    "STEP 1 — WHO YOU ARE",
+    "STEP 1 — BUSINESS",
     `Full name: ${brief.name}`,
     `Role: ${brief.role}`,
     `Business name: ${brief.businessName}`,
@@ -178,11 +161,10 @@ export function formatBrief(brief: Brief): string {
     `Service area: ${brief.serviceArea}`,
     `Current website: ${brief.website}`,
     "",
-    "STEP 2 — WHAT YOU WANT BUILT",
+    "STEP 2 — SCOPE AND OUTCOME",
     `Wants: ${brief.wants.join(", ") || "—"}`,
     `Primary goal: ${brief.goal}`,
     `Timeline: ${brief.timeline}`,
-    `Budget: ${brief.budget}`,
     "",
     "STEP 3 — WEBSITE AND BRAND",
     `Features: ${brief.features.join(", ") || "—"}`,
@@ -192,30 +174,30 @@ export function formatBrief(brief: Brief): string {
     `Competitors: ${brief.competitors}`,
     `Buyer: ${brief.buyer}`,
     "",
-    "STEP 4 — AUTOMATION, CONTENT, GROWTH",
+    "STEP 4 — GROWTH AND CONTENT",
     `Platforms: ${brief.platforms.join(", ") || "—"}`,
     `Posting frequency: ${brief.frequency}`,
-    `Who approves posts: ${brief.approver}`,
+    `Approver: ${brief.approver}`,
     `Assets on hand: ${brief.existingContent}`,
-    `Current SEO: ${brief.seoNow}`,
+    `Current SEO / visibility: ${brief.seoNow}`,
     `Growth priority: ${brief.growthPriority}`,
     "",
-    "STEP 5 — CLAIMS AND CLOSE",
-    `Does insurance touch this business: ${brief.insuranceTouches}`,
-    `Rough claim volume per year: ${brief.claimVolume}`,
-    `Carriers seen most: ${brief.carriers}`,
-    `Estimating software: ${brief.estimating}`,
-    `What first estimates usually miss: ${brief.missedItems}`,
+    "STEP 5 — LEADS, ANALYTICS, AUTOMATION",
+    `Current lead process: ${brief.leadProcess}`,
+    `Current analytics: ${brief.analyticsNow}`,
+    `Automation needs: ${brief.automationNeeds}`,
+    `CRM / tools: ${brief.crmTools}`,
     `Anything else: ${brief.anythingElse}`,
     `Consent: ${brief.consent ? "Yes" : "No"}`,
-  ];
-  return lines.filter((line) => line !== undefined).join("\n");
+  ]
+    .filter(Boolean)
+    .join("\n");
 }
 
 export const STEPS = [
-  { id: 1, label: "Who" },
+  { id: 1, label: "Business" },
   { id: 2, label: "Scope" },
-  { id: 3, label: "Site and brand" },
-  { id: 4, label: "Automation" },
-  { id: 5, label: "Claims and close" },
+  { id: 3, label: "Site & brand" },
+  { id: 4, label: "Growth" },
+  { id: 5, label: "Leads & automation" },
 ] as const;
