@@ -1,12 +1,9 @@
 import { notFound } from "@tanstack/react-router";
 
-/**
- * Flip a flag to true when a page has enough real content to show.
- * Unpublished routes 404 and stay out of nav and sitemap.
- */
+/** Pages with enough real content to show publicly. */
 export const published = {
-  work: false,
-  process: false,
+  work: true,
+  process: true,
 } as const;
 
 export type UnpublishedPage = keyof typeof published;
