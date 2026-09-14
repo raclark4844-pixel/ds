@@ -5,7 +5,6 @@
  */
 import {
   automationAnswer,
-  claimsAnswer,
   homeWhatWeDoAnswer,
   intakeStartAnswer,
   processAnswer,
@@ -36,12 +35,10 @@ export const primaryNav = [
   { to: "/websites", label: "Websites" },
   { to: "/growth", label: "Growth" },
   { to: "/automation", label: "Automation" },
-  { to: "/claims", label: "Claims" },
 ] as const;
 
 export const laterNav = [
   { to: "/work", label: "Work" },
-  { to: "/industries", label: "Industries" },
   { to: "/process", label: "Process" },
 ] as const;
 
@@ -49,43 +46,43 @@ export const offerCards = [
   {
     to: "/websites" as const,
     kicker: "Sites",
-    title: "Websites and stores",
-    body: "Custom modern mobile sites and online stores. Architecture follows how you get paid — not a leftover theme.",
+    title: "Websites and ecommerce",
+    body: "Custom mobile-first websites, landing pages, and online stores built around how the business gets found, converts visitors, and gets paid.",
     accent: "hot" as const,
   },
   {
     to: "/growth" as const,
     kicker: "Growth",
     title: "SEO / GEO / AEO / CRO",
-    body: "Found in search. Built to convert. Rankings, citations, and lifts are not guaranteed.",
+    body: "Search visibility, AI-answer visibility, conversion strategy, technical performance, analytics, and lead-generation systems working together.",
     accent: "volt" as const,
   },
   {
     to: "/automation" as const,
-    kicker: "Bots",
-    title: "Bots and social",
-    body: "Auto-posting to the networks you already use. You approve. The calendar does not wait on a designer.",
+    kicker: "AI + automation",
+    title: "Marketing automation",
+    body: "AI-assisted content, social publishing, lead routing, Google Business Profile workflows, review workflows, and custom business automation.",
     accent: "flare" as const,
   },
   {
     to: "/automation" as const,
     kicker: "Content",
-    title: "Audio and video",
-    body: "Short-form made for TikTok, Reels, Shorts, and Stories. Built to point at a page that converts.",
+    title: "Content systems",
+    body: "Short-form video, social content, campaign assets, repurposing, approvals, and publishing workflows built to point traffic at a converting destination.",
     accent: "hot" as const,
   },
   {
-    to: "/claims" as const,
-    kicker: "Claims",
-    title: "Insurance claim supplements",
-    body: "Document missed scope. Ask for a more complete payout. A supplement is a correction, not a fight.",
+    to: "/growth" as const,
+    kicker: "Leads",
+    title: "Lead generation",
+    body: "Campaign landing pages, forms, conversion paths, audience targeting, tracking, and follow-up systems designed to create qualified opportunities.",
     accent: "volt" as const,
   },
   {
     to: "/contact" as const,
     kicker: "Intake",
     title: "Project brief",
-    body: "A multi-step brief that collects facts a closer — or a claim file — actually needs.",
+    body: "A structured brief that collects the business, audience, goals, current stack, desired outcomes, and systems needed to build the right solution.",
     accent: "flare" as const,
   },
 ] as const;
@@ -93,37 +90,37 @@ export const offerCards = [
 export const proofPoints = [
   {
     kicker: "01",
-    title: "Both offers, in the open",
-    body: "Digital systems and insurance claim supplements are first-class. Neither is buried in a blog.",
+    title: "One connected growth system",
+    body: "Website, search visibility, AI-answer visibility, content, lead capture, analytics, and automation are designed to support one another instead of living in separate silos.",
   },
   {
     kicker: "02",
-    title: "Intake that survives a real call",
-    body: "Forms collect the facts that keep a closer from starting at zero. The brief on this site is the working sample.",
+    title: "Intake built around the business",
+    body: "The project brief collects the information needed to understand the offer, customer, conversion path, current tools, and growth priorities before the build starts.",
   },
   {
     kicker: "03",
     title: "No fake proof",
-    body: "No invented revenue. No borrowed logos. No fake recovery amounts. Rankings and payouts are not guaranteed.",
+    body: "No invented revenue, fake testimonials, borrowed logos, fake traffic numbers, or guaranteed rankings, citations, leads, or conversion lifts.",
   },
 ] as const;
 
 export const audiences = [
   {
-    title: "Contractors",
-    body: "Roofers, siders, remodelers. Storm pages, galleries, intake, and a documented claim path when insurance touches the job.",
+    title: "Contractors and home-service companies",
+    body: "Service pages, landing pages, galleries, estimate intake, local and service-area SEO structure, lead routing, social content, and automation that support real sales follow-up.",
   },
   {
-    title: "Service companies",
-    body: "Service pages, booking or estimating, and a form a dispatcher can read. Presence that sends work, not vanity posts.",
+    title: "Service businesses",
+    body: "Websites, booking or estimating flows, conversion tracking, search visibility, content systems, and lead capture built around the way the company sells and delivers its service.",
   },
   {
     title: "Online stores",
-    body: "Catalog, cart, and checkout have to work on a phone. Content and traffic have to point at that cart.",
+    body: "Catalog, cart, checkout, product discovery, analytics, content, conversion optimization, and automation designed to move qualified traffic toward a purchase.",
   },
   {
-    title: "Homeowners after a storm",
-    body: "Respect the mess. A supplement documents missed scope. It does not invent damage. Payment is not guaranteed.",
+    title: "Professional and growing businesses",
+    body: "Lead-generation websites, campaign pages, authority content, AI-assisted marketing, analytics, and workflow automation for businesses that need a stronger digital operating system.",
   },
 ] as const;
 
@@ -131,23 +128,23 @@ export const engagementSteps = [
   {
     n: "01",
     title: "File a brief",
-    body: "Who you are, what you want built, brand, growth, and whether insurance touches the work.",
+    body: "Tell us who you serve, what you sell, what you want built, what is working now, and the business outcome the system needs to support.",
     to: "/contact",
   },
   {
     n: "02",
     title: "Pressure-test the offer",
-    body: "We read how you get paid, or how a first estimate missed scope. If a request will not convert, we say so.",
+    body: "We review the offer, audience, conversion path, current website, search visibility, content, analytics, and automation opportunities before choosing the build priorities.",
   },
   {
     n: "03",
-    title: "Build",
-    body: "Sites, stores, automation, content, and claim documentation ship as a system. You see the work.",
+    title: "Build the system",
+    body: "Sites, ecommerce, landing pages, growth optimization, analytics, content workflows, and automation are built as connected parts of the same customer journey.",
   },
   {
     n: "04",
-    title: "Launch",
-    body: "The site goes live with crawlable structure and a path to intake. Posts point at pages that can take the job.",
+    title: "Launch and improve",
+    body: "The system launches with crawlable structure, measurement, clear conversion paths, and a foundation for ongoing testing, content, and automation.",
   },
 ] as const;
 
@@ -161,9 +158,8 @@ export const homeFaqs = [
     a: whoForAnswer,
   },
   {
-    q: "What is an insurance claim supplement?",
-    a: claimsAnswer,
-    links: [{ to: "/claims" as const, label: "Claims" }],
+    q: "What is an AI-assisted digital marketing and lead-generation platform?",
+    a: "It is a connected system that combines the website, landing pages, search visibility, AI-answer visibility, content, social publishing, lead capture, analytics, conversion tracking, follow-up, and business automation. AI can assist with research, content workflows, campaign development, optimization, and repetitive tasks while people keep control of strategy, approvals, brand, and sales decisions. The objective is to make the marketing stack work as one system rather than a collection of disconnected tools.",
   },
 ] as const;
 
@@ -173,12 +169,12 @@ export const websiteFaqs = [
     a: websiteCustomAnswer,
   },
   {
-    q: "Do you build stores?",
-    a: "Yes. An online store is a payment path: catalog, variant, cart, checkout, pickup or ship, financing if you use it. Demore Technology Solutions does not decorate a theme and call it commerce. If a product cannot be bought on a phone with a thumb, the store is not done. Mark “online store” on the project brief.",
+    q: "Do you build online stores?",
+    a: "Yes. Ecommerce work can include catalog structure, product and collection pages, variants, cart, checkout, pickup or shipping workflows, payments, analytics, conversion tracking, search structure, and marketing integrations. The store is designed around a usable mobile purchase path rather than simply applying a theme.",
   },
   {
-    q: "Do you build contractor sites?",
-    a: "Yes. A contractor still needs a site. Roofing, siding, remodel, and other home service trades live on storm calls and estimate follow-up. The site has to survive a one-handed tap from a driveway. Service pages, city-ready language for later market pages, galleries that load, and an intake a closer can read.",
+    q: "Do you build lead-generation websites?",
+    a: "Yes. Lead-generation sites can combine service pages, landing pages, calls to action, estimate or booking forms, analytics, conversion events, SEO, GEO, AEO, CRO, local or service-area structure, and integrations that route new inquiries into the business workflow.",
   },
 ] as const;
 
@@ -189,41 +185,26 @@ export const growthFaqs = [
   },
   {
     q: "Is GEO the same as AEO?",
-    a: "No. AEO is whether a search, voice, or an AI Overview can lift a clean answer from the page. GEO is whether ChatGPT, Perplexity, Gemini, Copilot, or an AI Overview cites Demore Technology Solutions in a synthesized answer. On contractor pages GEO also covers geography: service-area language ready for city pages later. They stack. They are not the same job. CRO is whether the visitor acts.",
+    a: "No. AEO focuses on making a page easy for search engines, voice systems, and AI-assisted results to extract as a direct answer. GEO focuses on making the brand, services, entities, expertise, and quotable information clear enough for generative systems to understand and potentially cite. Geographic optimization can also strengthen local and service-area relevance. CRO then focuses on what qualified visitors do after they arrive.",
   },
   {
-    q: "Do you only optimize sites you build?",
-    a: "No. The growth stack is how this site is built and what Demore Technology Solutions sells. If you already have a site, the brief collects the URL, what you rank for, and the action you want a visitor to take. We still do not guarantee rankings, AI citations, or conversion lifts.",
+    q: "Do you only optimize websites you build?",
+    a: "No. Existing websites can be audited and improved for technical SEO, content structure, GEO, AEO, CRO, analytics, conversion tracking, internal linking, page speed, user experience, lead capture, and campaign performance. Rankings, AI citations, lead volume, and conversion lifts are not guaranteed.",
   },
 ] as const;
 
 export const automationFaqs = [
   {
-    q: "What is a social posting system for a local business?",
+    q: "What is an AI-assisted marketing automation system?",
     a: automationAnswer,
   },
   {
-    q: "Which platforms?",
-    a: "The networks you already use: Facebook, Instagram, TikTok, YouTube, LinkedIn, X, Google Business Profile, Nextdoor. Mark the ones you will actually post to on the brief. A calendar for a network you will not log into is waste.",
+    q: "Which platforms can the system support?",
+    a: "Workflows can be designed around the platforms the business actually uses, including Facebook, Instagram, TikTok, YouTube, LinkedIn, X, Google Business Profile, and other supported services. The exact integrations depend on the platform APIs, account permissions, and the workflow being automated.",
   },
   {
-    q: "Do posts need approval?",
-    a: "Yes, unless you explicitly waive it. The default is you approve. Frequency, platforms, and who signs off are collected in the project brief.",
-  },
-] as const;
-
-export const claimsFaqs = [
-  {
-    q: "What is an insurance claim supplement?",
-    a: claimsAnswer,
-  },
-  {
-    q: "Are you a public adjuster?",
-    a: "Demore Technology Solutions is not an insurer and is not a public adjuster unless licensed in that state. Do not treat this site as public-adjuster status. A supplement is a documented correction to missed scope. Policy limits, deductibles, and exclusions still apply. Payment increases are not guaranteed.",
-  },
-  {
-    q: "Do you guarantee a higher payout?",
-    a: "No. Claim support does not guarantee a carrier will increase payment. We do not invent recovery dollar amounts or approval rates. We do not teach anyone how to fabricate damage or inflate a claim. First estimates often omit code items, access and height, flashings, waste, and hidden damage. Those are the usual misses. The file still has to be true.",
+    q: "Do automated posts and workflows need approval?",
+    a: "Approval can be built into the workflow. For brand-sensitive content, reviews, customer communication, or other consequential actions, human review is often the better default. Automation should remove repetitive work without giving up appropriate control.",
   },
 ] as const;
 
@@ -234,7 +215,7 @@ export const contactFaqs = [
   },
   {
     q: "Is this a contract?",
-    a: "No. The intake is a project brief, not a contract. Claim support does not guarantee a carrier will increase payment. Growth work does not guarantee rankings, AI citations, or conversion lifts. Submitting it does not hire Demore Technology Solutions.",
+    a: "No. The intake is a project brief, not a contract. Submitting it does not hire Demore Technology Solutions and does not guarantee rankings, AI citations, traffic, lead volume, engagement, or conversion lifts.",
   },
 ] as const;
 
@@ -245,7 +226,7 @@ export const workFaqs = [
   },
   {
     q: "Will you invent results to fill this page?",
-    a: "No. Demore Technology Solutions does not publish fake revenue, fake quotes, fake recovery numbers, or borrowed logos. File a project brief if you want real work on this page later.",
+    a: "No. Demore Technology Solutions does not publish fake revenue, fake testimonials, fabricated traffic, made-up lead counts, or borrowed client logos. Results will be published only when there is real, permissioned work to document.",
   },
 ] as const;
 
