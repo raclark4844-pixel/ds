@@ -4,7 +4,7 @@ Demore Technology Solutions builds connected digital growth systems for business
 
 Core offerings:
 - Custom websites and ecommerce
-- AI-assisted digital marketing
+- Custom AI-assisted digital marketing and lead-generation platforms
 - Lead-generation systems and landing pages
 - SEO, GEO, AEO, CRO, technical performance, and UX
 - Google Analytics, Search Console, conversion tracking, and campaign measurement
@@ -18,12 +18,26 @@ Based in Mentor, Ohio. Serving clients nationwide. Work can be delivered remotel
 ## Growth definitions
 SEO improves findability and relevance in traditional search.
 AEO improves the ability of search, voice, and AI-assisted systems to extract a clean answer from a page.
-GEO improves entity clarity, machine understanding, geographic relevance where appropriate, and the ability of generative systems to understand and potentially cite the brand.
+GEO covers both geographic relevance and generative engine optimization: clear service areas, entity relationships, expertise, machine understanding, and content that generative systems can understand and potentially cite.
 CRO improves the path from qualified visit to useful action.
 Technical performance and UX support all of these by making pages fast, stable, accessible, mobile-friendly, and easy to use.
 
 ## AI-assisted marketing platform
-The platform combines website and landing-page strategy, search visibility, content workflows, social distribution, lead capture, analytics, conversion tracking, follow-up, and automation. AI can assist with research, drafting, repurposing, analysis, and repetitive tasks while people retain control of business strategy, approvals, brand, and final decisions.
+The platform can combine website and landing-page strategy, search visibility, content workflows, social distribution, lead capture, analytics, conversion tracking, follow-up, and automation. AI can assist with research, drafting, repurposing, analysis, and repetitive tasks while people retain control of business strategy, approvals, brand, and final decisions.
+
+## Industry strategies
+Industry pages explain how the same growth disciplines are adapted to different buying behavior, search intent, conversion paths, content needs, and operational workflows.
+
+Industries currently covered:
+- Contractors and home services
+- Landscaping and outdoor services
+- Hospitality
+- Professional services
+- Service companies
+- Retail and ecommerce
+
+## Project brief
+The project brief begins with industry selection, including an Other option. Prospects then select what they are looking for, including a custom AI-assisted digital marketing and lead-generation platform, and provide a project budget. Minimum project budget is $600. Submitting the brief is not a contract.
 
 Rankings, AI citations, traffic, lead volume, engagement, and conversion lifts are not guaranteed.
 
@@ -32,6 +46,15 @@ Rankings, AI citations, traffic, lead volume, engagement, and conversion lifts a
 - /websites
 - /growth
 - /automation
+- /industries
+- /industries/contractors
+- /industries/landscaping
+- /industries/hospitality
+- /industries/professional-services
+- /industries/service-companies
+- /industries/stores-ecommerce
+- /work
+- /process
 - /contact
 
 Email: ryan@demoretechnologysolutions.com
