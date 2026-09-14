@@ -1,12 +1,11 @@
 import { notFound } from "@tanstack/react-router";
 
 /**
- * Flip a flag to true when that page has enough real content to show.
- * Unpublished routes 404 and stay out of nav, sitemap, and robots.
+ * Flip a flag to true when a page has enough real content to show.
+ * Unpublished routes 404 and stay out of nav and sitemap.
  */
 export const published = {
   work: false,
-  industries: false,
   process: false,
 } as const;
 
