@@ -20,9 +20,9 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/")({
   head: () =>
     pageHead({
-      title: "Demore Technology Solutions | Websites, Growth, and Claim Supplements",
+      title: "Demore Technology Solutions | Websites, AI Marketing, Automation, and Claims",
       description:
-        "Custom websites, stores, social systems, and insurance claim supplements. Built loud. Tuned to convert. Start a project brief or maximize a claim.",
+        "Custom websites, ecommerce, AI-assisted digital marketing, lead generation, SEO, GEO, AEO, CRO, social automation, content systems, and insurance claim supplements.",
       path: "/",
     }),
   component: Home,
@@ -34,6 +34,33 @@ const accentBar: Record<(typeof offerCards)[number]["accent"], string> = {
   flare: "bg-flare",
 };
 
+const platformCapabilities = [
+  {
+    title: "AI-assisted digital marketing",
+    body: "A connected marketing system that helps plan campaigns, create and repurpose content, improve landing pages, organize offers, and keep the brand active without turning every task into a separate manual project.",
+  },
+  {
+    title: "Lead-generation systems",
+    body: "Campaign pages, forms, calls to action, tracking, audience targeting, follow-up paths, and conversion-focused intake designed to turn traffic into qualified opportunities for the sales team.",
+  },
+  {
+    title: "Search and answer visibility",
+    body: "SEO, GEO, AEO, technical performance, structured content, local and service-area signals, schema, internal linking, and direct-answer content built to improve discoverability across traditional and AI-assisted search.",
+  },
+  {
+    title: "Social and content automation",
+    body: "Systems for Facebook, Instagram, Google Business Profile, TikTok, YouTube, LinkedIn, X, and other channels, including content calendars, assisted creation, approvals, publishing workflows, and reuse across platforms.",
+  },
+  {
+    title: "Analytics and optimization",
+    body: "Google Analytics, Search Console, conversion events, campaign measurement, behavior review, CRO improvements, and ongoing testing so decisions come from what visitors actually do rather than guesswork.",
+  },
+  {
+    title: "Custom business automation",
+    body: "Bots, alerts, intake routing, content workflows, review workflows, CRM handoffs, lead notifications, and custom integrations that reduce repetitive work and connect the website to the rest of the business.",
+  },
+];
+
 function Home() {
   return (
     <main id="main" className="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
@@ -43,9 +70,10 @@ function Home() {
         title="Built loud. Tuned to convert."
         lede={
           <p>
-            Custom websites, stores, social systems, and insurance claim
-            supplements. Digital work and claims are both first-class. Neither
-            is a blog topic.
+            Websites, ecommerce, AI-assisted digital marketing, lead-generation systems,
+            search optimization, automation, content, and insurance claim supplements.
+            The goal is not another disconnected tool. It is a working system that helps
+            a business get found, earn attention, capture demand, and move the opportunity forward.
           </p>
         }
         primary={{ to: "/contact", label: "Start a project brief" }}
@@ -83,7 +111,7 @@ function Home() {
       <Section
         kicker="Offers, in the open"
         title="What does the studio actually build?"
-        lede="Six cards. Two offers. Digital systems and insurance claim supplements both stay in the primary nav."
+        lede="Websites and ecommerce, growth systems, automation and content, and documented insurance claim supplement support. Each offer is built to connect to the next useful action."
       >
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {offerCards.map((card) => (
@@ -108,7 +136,30 @@ function Home() {
         </ul>
       </Section>
 
-      <Section kicker="Who it is for" title="Crews, carts, and homeowners after a storm.">
+      <Section
+        kicker="AI-assisted marketing platform"
+        title="One system for visibility, content, leads, and follow-up."
+        lede="The platform layer connects the website, search visibility, content engine, social channels, lead capture, analytics, and automation so the marketing stack behaves like one operating system instead of a pile of subscriptions."
+      >
+        <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {platformCapabilities.map((item) => (
+            <li key={item.title} className="rounded-xl border border-line bg-surface p-6">
+              <h3 className="font-display text-xl font-semibold tracking-tight">{item.title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted">{item.body}</p>
+            </li>
+          ))}
+        </ul>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Link to="/growth" className="text-sm font-medium text-volt underline underline-offset-4">
+            Explore search, AI visibility, and lead generation
+          </Link>
+          <Link to="/automation" className="text-sm font-medium text-flare underline underline-offset-4">
+            Explore bots, publishing, and workflow automation
+          </Link>
+        </div>
+      </Section>
+
+      <Section kicker="Who it is for" title="Businesses that need a working growth system — not disconnected tactics.">
         <ul className="grid gap-4 sm:grid-cols-2">
           {audiences.map((item) => (
             <li key={item.title} className="rounded-xl border border-line bg-surface p-6">
@@ -141,7 +192,7 @@ function Home() {
         <CtaBand
           kicker="Next"
           title="Start a brief, or open the claims desk."
-          body="Both paths are live. Neither is hidden. Payment increases and rankings are not guaranteed."
+          body="Tell us what needs to be built, what needs to generate leads, or what needs to be documented. Rankings, conversion lifts, lead volume, and payment increases are not guaranteed."
           primaryLabel="Start a project brief"
           secondary={{ to: "/claims", label: "Maximize a claim", variant: "claim" }}
         />
