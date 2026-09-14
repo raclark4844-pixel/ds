@@ -69,7 +69,7 @@ export function IndustryPage({ industry }: { industry: IndustryProfile }) {
       <Section kicker="Other industries" title="Explore another industry.">
         <div className="flex flex-wrap gap-2">
           {industries.filter((item) => item.slug !== industry.slug).map((item) => (
-            <Button key={item.slug} asChild variant="outline" size="sm"><Link to={`/industries/${item.slug}`}>{item.label}</Link></Button>
+            <Button key={item.slug} asChild variant="outline" size="sm"><a href={`/industries/${item.slug}`}>{item.label}</a></Button>
           ))}
         </div>
       </Section>
