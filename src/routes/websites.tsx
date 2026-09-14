@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CtaBand } from "@/components/cta-band";
 import { FaqList } from "@/components/faq-list";
+import { IndustryLinks } from "@/components/industry-links";
 import { JsonLd } from "@/components/json-ld";
 import { PageHero } from "@/components/page-hero";
 import { RelatedOffers } from "@/components/related-offers";
@@ -141,6 +142,10 @@ function WebsitesPage() {
         </ul>
       </Section>
 
+      <Section kicker="Industries" title="See how the website strategy changes by industry.">
+        <IndustryLinks />
+      </Section>
+
       <Section kicker="Questions" title="Direct answers.">
         <FaqList items={websiteFaqs} />
       </Section>
@@ -151,7 +156,7 @@ function WebsitesPage() {
         <CtaBand
           kicker="Next"
           title="Tell us what the website needs to make happen."
-          body="The brief collects the offer, pages, audience, brand, lead path, ecommerce needs, and growth goals. Rankings and conversion lifts are not guaranteed."
+          body="The brief collects the industry, offer, pages, audience, brand, lead path, ecommerce needs, budget, and growth goals. Rankings and conversion lifts are not guaranteed."
           primaryLabel="Start a project brief"
           primaryNeed="website"
           secondary={{ to: "/growth", label: "See the growth stack" }}
