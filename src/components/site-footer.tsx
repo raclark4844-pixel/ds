@@ -16,62 +16,38 @@ export function SiteFooter() {
         <div className="lg:col-span-5">
           <Logo size="footer" />
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted">
-            {SITE_NAME} builds custom websites, online stores, auto-posting
-            bots, social video, and insurance claim supplements. Based in
-            Mentor, Lake County, Ohio. Serving businesses nationwide. Work is
-            remote.
+            {SITE_NAME} builds custom websites, ecommerce, AI-assisted digital
+            marketing, lead-generation systems, SEO, GEO, AEO, CRO, analytics,
+            content workflows, and business automation. Based in Mentor, Ohio
+            and serving clients nationwide.
           </p>
           <dl className="mt-6 space-y-1 text-sm text-muted">
             {!isPlaceholder(EMAIL) ? (
               <div className="flex gap-3">
                 <dt className="w-16 text-faint">Email</dt>
-                <dd>
-                  <a className="text-fg underline-offset-4 hover:underline" href={`mailto:${EMAIL}`}>
-                    {EMAIL}
-                  </a>
-                </dd>
+                <dd><a className="text-fg underline-offset-4 hover:underline" href={`mailto:${EMAIL}`}>{EMAIL}</a></dd>
               </div>
             ) : null}
             {!isPlaceholder(PHONE) ? (
-              <div className="flex gap-3">
-                <dt className="w-16 text-faint">Phone</dt>
-                <dd>{PHONE}</dd>
-              </div>
+              <div className="flex gap-3"><dt className="w-16 text-faint">Phone</dt><dd>{PHONE}</dd></div>
             ) : null}
-            <div className="flex gap-3">
-              <dt className="w-16 text-faint">Base</dt>
-              <dd>{CITY_LINE}</dd>
-            </div>
-            <div className="flex gap-3">
-              <dt className="w-16 text-faint">Area</dt>
-              <dd>{AREA_LINE}</dd>
-            </div>
+            <div className="flex gap-3"><dt className="w-16 text-faint">Base</dt><dd>{CITY_LINE}</dd></div>
+            <div className="flex gap-3"><dt className="w-16 text-faint">Area</dt><dd>{AREA_LINE}</dd></div>
           </dl>
           <p className="mt-4 text-sm text-muted">
-            Start with the{" "}
-            <Link to="/contact" className="underline decoration-line underline-offset-4 hover:text-volt">
-              project brief
-            </Link>
-            . Phone unpublished.
+            Start with the <Link to="/contact" className="underline decoration-line underline-offset-4 hover:text-volt">project brief</Link>.
           </p>
         </div>
-
         <div className="grid gap-8 lg:col-span-7">
           <div>
             <p className="kicker">Pages</p>
-            <div className="mt-4">
-              <PageButtons items={allMainPages} size="sm" label="Pages" />
-            </div>
+            <div className="mt-4"><PageButtons items={allMainPages} size="sm" label="Pages" /></div>
           </div>
         </div>
       </div>
       <div className="border-t border-line">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-6 text-xs text-faint sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <p>
-            © {new Date().getFullYear()} {SITE_NAME}. Rankings, AI citations,
-            conversion lifts, and claim payment increases are not guaranteed.
-            Not an insurer. Not a public adjuster unless licensed in that state.
-          </p>
+          <p>© {new Date().getFullYear()} {SITE_NAME}. Rankings, AI citations, traffic, lead volume, engagement, and conversion lifts are not guaranteed.</p>
         </div>
       </div>
     </footer>
