@@ -1,6 +1,7 @@
 import {
   Bot,
   Briefcase,
+  Building2,
   ClipboardList,
   Globe,
   Home,
@@ -15,6 +16,7 @@ export const navIcons: Record<AppPath, LucideIcon> = {
   "/websites": Globe,
   "/growth": TrendingUp,
   "/automation": Bot,
+  "/industries": Building2,
   "/contact": ClipboardList,
   "/work": Briefcase,
   "/process": ListOrdered,
