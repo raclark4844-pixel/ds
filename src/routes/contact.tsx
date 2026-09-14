@@ -8,24 +8,25 @@ import { intakeStartAnswer } from "@/lib/answers";
 import { contactFaqs } from "@/lib/site";
 import { faqJsonLd, pageHead, serviceJsonLd } from "@/lib/seo";
 
-type ContactSearch = { need?: string };
+type ContactSearch = { need?: string; industry?: string };
 
 export const Route = createFileRoute("/contact")({
   validateSearch: (search: Record<string, unknown>): ContactSearch => ({
     need: typeof search.need === "string" ? search.need : undefined,
+    industry: typeof search.industry === "string" ? search.industry : undefined,
   }),
   head: () =>
     pageHead({
       title: "Start a Digital Project | Demore Technology Solutions",
       description:
-        "Start a project for a website, ecommerce, AI-assisted marketing, lead generation, SEO, GEO, AEO, CRO, analytics, content, or business automation.",
+        "Start a project for a website, ecommerce, custom AI-assisted digital marketing and lead generation, SEO, GEO, AEO, CRO, analytics, content, or business automation.",
       path: "/contact",
     }),
   component: ContactPage,
 });
 
 function ContactPage() {
-  const { need } = Route.useSearch();
+  const { need, industry } = Route.useSearch();
 
   return (
     <main id="main" className="mx-auto max-w-3xl px-4 pb-20 sm:px-6">
@@ -33,7 +34,7 @@ function ContactPage() {
       <JsonLd
         data={serviceJsonLd({
           name: "Digital project intake",
-          description: "Project brief for websites, ecommerce, AI-assisted marketing, growth, lead generation, analytics, content, and automation.",
+          description: "Project brief for websites, ecommerce, custom AI-assisted marketing and lead generation, growth, analytics, content, and automation.",
           path: "/contact",
           serviceType: "ProfessionalService",
         })}
@@ -44,16 +45,16 @@ function ContactPage() {
           Tell us what the system needs to do.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-          Websites, ecommerce, AI-assisted digital marketing, lead generation,
-          SEO, GEO, AEO, CRO, analytics, content, and automation. Five steps.
-          A project brief, not a contract.
+          Select your industry first, choose what you are looking for, set your
+          project budget, then tell us about your goals, current stack, growth
+          priorities, and automation needs. Minimum project budget: $600.
         </p>
       </header>
 
       <GeoQuote>
-        The brief captures the business, offer, audience, current digital stack,
-        conversion goals, and workflows so the project can be scoped around a
-        real business outcome instead of a generic package.
+        The brief captures the industry, offer, audience, budget, current digital
+        stack, conversion goals, and workflows so the project can be scoped around
+        a real business outcome instead of a generic package.
       </GeoQuote>
 
       <DirectAnswer question="What goes in the project brief?">
@@ -61,7 +62,7 @@ function ContactPage() {
       </DirectAnswer>
 
       <div className="mt-10">
-        <IntakeForm need={need} />
+        <IntakeForm need={need} industry={industry} />
       </div>
 
       <Section kicker="Also on this site" title="Which service is this brief for?">
