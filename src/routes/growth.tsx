@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CtaBand } from "@/components/cta-band";
 import { FaqList } from "@/components/faq-list";
+import { IndustryLinks } from "@/components/industry-links";
 import { JsonLd } from "@/components/json-ld";
 import { PageHero } from "@/components/page-hero";
 import { RelatedOffers } from "@/components/related-offers";
@@ -202,10 +203,14 @@ function GrowthPage() {
         </div>
       </Section>
 
+      <Section kicker="Industries" title="See how the growth strategy changes by industry.">
+        <IndustryLinks />
+      </Section>
+
       <Section kicker="Questions" title="Direct answers."><FaqList items={growthFaqs} /></Section>
       <RelatedOffers current="/growth" />
       <div className="mt-16">
-        <CtaBand kicker="Next" title="Build a growth system around the actual sales process." body="The brief collects the website, offer, audience, service area, channels, and the action you want prospects to take. Rankings, AI citations, traffic, lead volume, and conversion lifts are not guaranteed." primaryLabel="Start a project brief" primaryNeed="growth" secondary={{ to: "/automation", label: "See automation systems" }} />
+        <CtaBand kicker="Next" title="Build a growth system around the actual sales process." body="The brief collects the industry, website, offer, audience, service area, channels, budget, and the action you want prospects to take. Rankings, AI citations, traffic, lead volume, and conversion lifts are not guaranteed." primaryLabel="Start a project brief" primaryNeed="growth" secondary={{ to: "/automation", label: "See automation systems" }} />
       </div>
     </main>
   );
