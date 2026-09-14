@@ -13,54 +13,50 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AutomationRouteImport } from './routes/automation'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as GrowthRouteImport } from './routes/growth'
+import { Route as IndustriesRouteImport } from './routes/industries'
 import { Route as ProcessRouteImport } from './routes/process'
 import { Route as WebsitesRouteImport } from './routes/websites'
 import { Route as WorkRouteImport } from './routes/work'
+import { Route as IndustriesIndexRouteImport } from './routes/industries.index'
+import { Route as IndustriesContractorsRouteImport } from './routes/industries.contractors'
+import { Route as IndustriesHospitalityRouteImport } from './routes/industries.hospitality'
+import { Route as IndustriesLandscapingRouteImport } from './routes/industries.landscaping'
+import { Route as IndustriesProfessionalServicesRouteImport } from './routes/industries.professional-services'
+import { Route as IndustriesServiceCompaniesRouteImport } from './routes/industries.service-companies'
+import { Route as IndustriesStoresEcommerceRouteImport } from './routes/industries.stores-ecommerce'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AutomationRoute = AutomationRouteImport.update({
-  id: '/automation',
-  path: '/automation',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContactRoute = ContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const GrowthRoute = GrowthRouteImport.update({
-  id: '/growth',
-  path: '/growth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProcessRoute = ProcessRouteImport.update({
-  id: '/process',
-  path: '/process',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WebsitesRoute = WebsitesRouteImport.update({
-  id: '/websites',
-  path: '/websites',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WorkRoute = WorkRouteImport.update({
-  id: '/work',
-  path: '/work',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const IndexRoute = IndexRouteImport.update({ id: '/', path: '/', getParentRoute: () => rootRouteImport } as any)
+const AutomationRoute = AutomationRouteImport.update({ id: '/automation', path: '/automation', getParentRoute: () => rootRouteImport } as any)
+const ContactRoute = ContactRouteImport.update({ id: '/contact', path: '/contact', getParentRoute: () => rootRouteImport } as any)
+const GrowthRoute = GrowthRouteImport.update({ id: '/growth', path: '/growth', getParentRoute: () => rootRouteImport } as any)
+const IndustriesRoute = IndustriesRouteImport.update({ id: '/industries', path: '/industries', getParentRoute: () => rootRouteImport } as any)
+const ProcessRoute = ProcessRouteImport.update({ id: '/process', path: '/process', getParentRoute: () => rootRouteImport } as any)
+const WebsitesRoute = WebsitesRouteImport.update({ id: '/websites', path: '/websites', getParentRoute: () => rootRouteImport } as any)
+const WorkRoute = WorkRouteImport.update({ id: '/work', path: '/work', getParentRoute: () => rootRouteImport } as any)
+const IndustriesIndexRoute = IndustriesIndexRouteImport.update({ id: '/', path: '/', getParentRoute: () => IndustriesRoute } as any)
+const IndustriesContractorsRoute = IndustriesContractorsRouteImport.update({ id: '/contractors', path: '/contractors', getParentRoute: () => IndustriesRoute } as any)
+const IndustriesHospitalityRoute = IndustriesHospitalityRouteImport.update({ id: '/hospitality', path: '/hospitality', getParentRoute: () => IndustriesRoute } as any)
+const IndustriesLandscapingRoute = IndustriesLandscapingRouteImport.update({ id: '/landscaping', path: '/landscaping', getParentRoute: () => IndustriesRoute } as any)
+const IndustriesProfessionalServicesRoute = IndustriesProfessionalServicesRouteImport.update({ id: '/professional-services', path: '/professional-services', getParentRoute: () => IndustriesRoute } as any)
+const IndustriesServiceCompaniesRoute = IndustriesServiceCompaniesRouteImport.update({ id: '/service-companies', path: '/service-companies', getParentRoute: () => IndustriesRoute } as any)
+const IndustriesStoresEcommerceRoute = IndustriesStoresEcommerceRouteImport.update({ id: '/stores-ecommerce', path: '/stores-ecommerce', getParentRoute: () => IndustriesRoute } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/automation': typeof AutomationRoute
   '/contact': typeof ContactRoute
   '/growth': typeof GrowthRoute
+  '/industries': typeof IndustriesRouteWithChildren
   '/process': typeof ProcessRoute
   '/websites': typeof WebsitesRoute
   '/work': typeof WorkRoute
+  '/industries/contractors': typeof IndustriesContractorsRoute
+  '/industries/hospitality': typeof IndustriesHospitalityRoute
+  '/industries/landscaping': typeof IndustriesLandscapingRoute
+  '/industries/professional-services': typeof IndustriesProfessionalServicesRoute
+  '/industries/service-companies': typeof IndustriesServiceCompaniesRoute
+  '/industries/stores-ecommerce': typeof IndustriesStoresEcommerceRoute
+  '/industries/': typeof IndustriesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +66,13 @@ export interface FileRoutesByTo {
   '/process': typeof ProcessRoute
   '/websites': typeof WebsitesRoute
   '/work': typeof WorkRoute
+  '/industries/contractors': typeof IndustriesContractorsRoute
+  '/industries/hospitality': typeof IndustriesHospitalityRoute
+  '/industries/landscaping': typeof IndustriesLandscapingRoute
+  '/industries/professional-services': typeof IndustriesProfessionalServicesRoute
+  '/industries/service-companies': typeof IndustriesServiceCompaniesRoute
+  '/industries/stores-ecommerce': typeof IndustriesStoresEcommerceRoute
+  '/industries': typeof IndustriesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -77,16 +80,69 @@ export interface FileRoutesById {
   '/automation': typeof AutomationRoute
   '/contact': typeof ContactRoute
   '/growth': typeof GrowthRoute
+  '/industries': typeof IndustriesRouteWithChildren
   '/process': typeof ProcessRoute
   '/websites': typeof WebsitesRoute
   '/work': typeof WorkRoute
+  '/industries/': typeof IndustriesIndexRoute
+  '/industries/contractors': typeof IndustriesContractorsRoute
+  '/industries/hospitality': typeof IndustriesHospitalityRoute
+  '/industries/landscaping': typeof IndustriesLandscapingRoute
+  '/industries/professional-services': typeof IndustriesProfessionalServicesRoute
+  '/industries/service-companies': typeof IndustriesServiceCompaniesRoute
+  '/industries/stores-ecommerce': typeof IndustriesStoresEcommerceRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/automation' | '/contact' | '/growth' | '/process' | '/websites' | '/work'
+  fullPaths:
+    | '/'
+    | '/automation'
+    | '/contact'
+    | '/growth'
+    | '/industries'
+    | '/process'
+    | '/websites'
+    | '/work'
+    | '/industries/contractors'
+    | '/industries/hospitality'
+    | '/industries/landscaping'
+    | '/industries/professional-services'
+    | '/industries/service-companies'
+    | '/industries/stores-ecommerce'
+    | '/industries/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/automation' | '/contact' | '/growth' | '/process' | '/websites' | '/work'
-  id: '__root__' | '/' | '/automation' | '/contact' | '/growth' | '/process' | '/websites' | '/work'
+  to:
+    | '/'
+    | '/automation'
+    | '/contact'
+    | '/growth'
+    | '/process'
+    | '/websites'
+    | '/work'
+    | '/industries/contractors'
+    | '/industries/hospitality'
+    | '/industries/landscaping'
+    | '/industries/professional-services'
+    | '/industries/service-companies'
+    | '/industries/stores-ecommerce'
+    | '/industries'
+  id:
+    | '__root__'
+    | '/'
+    | '/automation'
+    | '/contact'
+    | '/growth'
+    | '/industries'
+    | '/process'
+    | '/websites'
+    | '/work'
+    | '/industries/'
+    | '/industries/contractors'
+    | '/industries/hospitality'
+    | '/industries/landscaping'
+    | '/industries/professional-services'
+    | '/industries/service-companies'
+    | '/industries/stores-ecommerce'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -94,6 +150,7 @@ export interface RootRouteChildren {
   AutomationRoute: typeof AutomationRoute
   ContactRoute: typeof ContactRoute
   GrowthRoute: typeof GrowthRoute
+  IndustriesRoute: typeof IndustriesRouteWithChildren
   ProcessRoute: typeof ProcessRoute
   WebsitesRoute: typeof WebsitesRoute
   WorkRoute: typeof WorkRoute
@@ -101,63 +158,42 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/automation': {
-      id: '/automation'
-      path: '/automation'
-      fullPath: '/automation'
-      preLoaderRoute: typeof AutomationRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/growth': {
-      id: '/growth'
-      path: '/growth'
-      fullPath: '/growth'
-      preLoaderRoute: typeof GrowthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/process': {
-      id: '/process'
-      path: '/process'
-      fullPath: '/process'
-      preLoaderRoute: typeof ProcessRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/websites': {
-      id: '/websites'
-      path: '/websites'
-      fullPath: '/websites'
-      preLoaderRoute: typeof WebsitesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/work': {
-      id: '/work'
-      path: '/work'
-      fullPath: '/work'
-      preLoaderRoute: typeof WorkRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+    '/': { id: '/'; path: '/'; fullPath: '/'; preLoaderRoute: typeof IndexRouteImport; parentRoute: typeof rootRouteImport }
+    '/automation': { id: '/automation'; path: '/automation'; fullPath: '/automation'; preLoaderRoute: typeof AutomationRouteImport; parentRoute: typeof rootRouteImport }
+    '/contact': { id: '/contact'; path: '/contact'; fullPath: '/contact'; preLoaderRoute: typeof ContactRouteImport; parentRoute: typeof rootRouteImport }
+    '/growth': { id: '/growth'; path: '/growth'; fullPath: '/growth'; preLoaderRoute: typeof GrowthRouteImport; parentRoute: typeof rootRouteImport }
+    '/industries': { id: '/industries'; path: '/industries'; fullPath: '/industries'; preLoaderRoute: typeof IndustriesRouteImport; parentRoute: typeof rootRouteImport }
+    '/process': { id: '/process'; path: '/process'; fullPath: '/process'; preLoaderRoute: typeof ProcessRouteImport; parentRoute: typeof rootRouteImport }
+    '/websites': { id: '/websites'; path: '/websites'; fullPath: '/websites'; preLoaderRoute: typeof WebsitesRouteImport; parentRoute: typeof rootRouteImport }
+    '/work': { id: '/work'; path: '/work'; fullPath: '/work'; preLoaderRoute: typeof WorkRouteImport; parentRoute: typeof rootRouteImport }
+    '/industries/': { id: '/industries/'; path: '/'; fullPath: '/industries/'; preLoaderRoute: typeof IndustriesIndexRouteImport; parentRoute: typeof IndustriesRoute }
+    '/industries/contractors': { id: '/industries/contractors'; path: '/contractors'; fullPath: '/industries/contractors'; preLoaderRoute: typeof IndustriesContractorsRouteImport; parentRoute: typeof IndustriesRoute }
+    '/industries/hospitality': { id: '/industries/hospitality'; path: '/hospitality'; fullPath: '/industries/hospitality'; preLoaderRoute: typeof IndustriesHospitalityRouteImport; parentRoute: typeof IndustriesRoute }
+    '/industries/landscaping': { id: '/industries/landscaping'; path: '/landscaping'; fullPath: '/industries/landscaping'; preLoaderRoute: typeof IndustriesLandscapingRouteImport; parentRoute: typeof IndustriesRoute }
+    '/industries/professional-services': { id: '/industries/professional-services'; path: '/professional-services'; fullPath: '/industries/professional-services'; preLoaderRoute: typeof IndustriesProfessionalServicesRouteImport; parentRoute: typeof IndustriesRoute }
+    '/industries/service-companies': { id: '/industries/service-companies'; path: '/service-companies'; fullPath: '/industries/service-companies'; preLoaderRoute: typeof IndustriesServiceCompaniesRouteImport; parentRoute: typeof IndustriesRoute }
+    '/industries/stores-ecommerce': { id: '/industries/stores-ecommerce'; path: '/stores-ecommerce'; fullPath: '/industries/stores-ecommerce'; preLoaderRoute: typeof IndustriesStoresEcommerceRouteImport; parentRoute: typeof IndustriesRoute }
   }
 }
+
+const IndustriesRouteChildren = {
+  IndustriesIndexRoute: IndustriesIndexRoute,
+  IndustriesContractorsRoute: IndustriesContractorsRoute,
+  IndustriesHospitalityRoute: IndustriesHospitalityRoute,
+  IndustriesLandscapingRoute: IndustriesLandscapingRoute,
+  IndustriesProfessionalServicesRoute: IndustriesProfessionalServicesRoute,
+  IndustriesServiceCompaniesRoute: IndustriesServiceCompaniesRoute,
+  IndustriesStoresEcommerceRoute: IndustriesStoresEcommerceRoute,
+}
+
+const IndustriesRouteWithChildren = IndustriesRoute._addFileChildren(IndustriesRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AutomationRoute: AutomationRoute,
   ContactRoute: ContactRoute,
   GrowthRoute: GrowthRoute,
+  IndustriesRoute: IndustriesRouteWithChildren,
   ProcessRoute: ProcessRoute,
   WebsitesRoute: WebsitesRoute,
   WorkRoute: WorkRoute,
