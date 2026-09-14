@@ -3,6 +3,7 @@ export type AppPath =
   | "/websites"
   | "/growth"
   | "/automation"
+  | "/industries"
   | "/contact"
   | "/work"
   | "/process";
@@ -34,6 +35,9 @@ export const allMainPages: readonly NavItem[] = [
   { to: "/websites", label: "Websites & Ecommerce" },
   { to: "/growth", label: "Growth & Lead Generation" },
   { to: "/automation", label: "AI & Automation" },
+  { to: "/industries", label: "Industries" },
+  { to: "/work", label: "Work" },
+  { to: "/process", label: "Process" },
   { to: "/contact", label: "Start a Project" },
 ];
 
