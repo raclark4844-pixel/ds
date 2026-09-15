@@ -4,6 +4,7 @@ import { FaqList } from "@/components/faq-list";
 import { IndustryLinks } from "@/components/industry-links";
 import { JsonLd } from "@/components/json-ld";
 import { PageHero } from "@/components/page-hero";
+import { PlatformComparison } from "@/components/platform-comparison";
 import { RelatedOffers } from "@/components/related-offers";
 import { DirectAnswer, GeoQuote, Section } from "@/components/section";
 import { growthGeoQuote, seoGeoAeoAnswer } from "@/lib/answers";
@@ -13,7 +14,8 @@ import { faqJsonLd, pageHead, serviceJsonLd } from "@/lib/seo";
 export const Route = createFileRoute("/growth")({
   head: () =>
     pageHead({
-      title: "AI Digital Marketing, Lead Generation, SEO, GEO, AEO & CRO | Demore Technology Solutions",
+      title:
+        "AI Digital Marketing, Lead Generation, SEO, GEO, AEO & CRO | Demore Technology Solutions",
       description:
         "Nationwide AI-assisted digital marketing, lead generation, SEO, geographic and generative optimization, AEO, CRO, analytics, performance, and conversion systems.",
       path: "/growth",
@@ -25,7 +27,8 @@ const disciplines = [
   {
     name: "SEO",
     full: "Search Engine Optimization",
-    meaning: "Can the right customer find you when they search for the service, product, or problem you solve?",
+    meaning:
+      "Can the right customer find you when they search for the service, product, or problem you solve?",
     teach: [
       "Unique titles and meta descriptions",
       "Logical heading structure and useful service pages",
@@ -39,7 +42,8 @@ const disciplines = [
   {
     name: "GEO",
     full: "Generative and Geographic Optimization",
-    meaning: "Can AI systems understand the business and can search systems understand where and to whom the company provides its services?",
+    meaning:
+      "Can AI systems understand the business and can search systems understand where and to whom the company provides its services?",
     teach: [
       "Clear entity, service, and service-area language",
       "Quotable definitions and direct answers",
@@ -53,7 +57,8 @@ const disciplines = [
   {
     name: "AEO",
     full: "Answer Engine Optimization",
-    meaning: "Can a search result, AI overview, assistant, or voice system extract a clean, accurate answer from the page?",
+    meaning:
+      "Can a search result, AI overview, assistant, or voice system extract a clean, accurate answer from the page?",
     teach: [
       "Question-led headings",
       "Direct-answer sections",
@@ -67,7 +72,8 @@ const disciplines = [
   {
     name: "CRO",
     full: "Conversion Rate Optimization",
-    meaning: "Once the visitor arrives, does the page make the next useful action obvious and easy?",
+    meaning:
+      "Once the visitor arrives, does the page make the next useful action obvious and easy?",
     teach: [
       "Clear primary calls to action",
       "Message match from search, social, or campaign to landing page",
@@ -128,7 +134,8 @@ function GrowthPage() {
       <JsonLd
         data={serviceJsonLd({
           name: "AI-assisted digital marketing, lead generation, SEO, GEO, AEO, CRO, and performance",
-          description: "Nationwide connected growth systems covering search, geographic relevance, AI visibility, lead capture, conversion, analytics, and technical UX.",
+          description:
+            "Nationwide connected growth systems covering search, geographic relevance, AI visibility, lead capture, conversion, analytics, and technical UX.",
           path: "/growth",
           serviceType: [
             "Digital marketing",
@@ -144,62 +151,142 @@ function GrowthPage() {
       />
       <PageHero
         kicker="Growth stack"
-        title="Found in search. Built to generate and convert demand."
-        lede={<p>AI-assisted digital marketing, lead generation, SEO, GEO, AEO, CRO, analytics, technical performance, and UX for businesses serving local, regional, or nationwide markets. The system connects discovery, campaign traffic, landing pages, lead capture, and follow-up.</p>}
+        title="The growth engine inside the complete AI-assisted platform."
+        lede={
+          <p>
+            AI-assisted digital marketing, lead generation, SEO, GEO, AEO, CRO, analytics, technical
+            performance, and UX for businesses serving local, regional, or nationwide markets. The
+            system connects discovery, campaign traffic, landing pages, lead capture, and follow-up.
+          </p>
+        }
         primary={{ to: "/contact", label: "Start a project brief", search: { need: "growth" } }}
-        secondary={{ to: "/automation", label: "See automation systems" }}
-        media={{ src: "/media/growth-rays.jpg", alt: "Radial geometric burst representing search visibility, lead generation, and growth optimization." }}
+        secondary={{ to: "/platform", label: "See the complete platform" }}
+        media={{
+          src: "/media/growth-rays.jpg",
+          alt: "Radial geometric burst representing search visibility, lead generation, and growth optimization.",
+        }}
       />
 
       <GeoQuote>{growthGeoQuote}</GeoQuote>
 
       <DirectAnswer question="What is an AI-assisted digital marketing and lead-generation platform?">
-        <p>It is a connected marketing system that combines website and landing-page strategy, search visibility, geographic relevance, AI-assisted content workflows, social distribution, lead capture, analytics, and conversion optimization. The goal is to reduce the gaps between getting attention and getting a qualified inquiry. AI can help accelerate research, drafting, analysis, repurposing, and repetitive marketing tasks, while the business offer, targeting, approvals, brand standards, and final decisions remain under human control.</p>
+        <p>
+          It is a connected marketing system that combines website and landing-page strategy, search
+          visibility, geographic relevance, AI-assisted content workflows, social distribution, lead
+          capture, analytics, and conversion optimization. The goal is to reduce the gaps between
+          getting attention and getting a qualified inquiry. AI can help accelerate research,
+          drafting, analysis, repurposing, and repetitive marketing tasks, while the business offer,
+          targeting, approvals, brand standards, and final decisions remain under human control.
+        </p>
       </DirectAnswer>
 
-      <Section kicker="Lead-generation platform" title="From discovery to qualified opportunity." lede="The platform is designed as a connected operating layer for marketing rather than a collection of unrelated tactics.">
+      <Section
+        kicker="Connected vs. disconnected"
+        title="Why the complete platform produces a stronger operating foundation."
+      >
+        <PlatformComparison compact />
+      </Section>
+
+      <Section
+        kicker="Lead-generation platform"
+        title="From discovery to qualified opportunity."
+        lede="The platform is designed as a connected operating layer for marketing rather than a collection of unrelated tactics."
+      >
         <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {leadSystem.map((item) => <li key={item.title} className="rounded-xl border border-line bg-surface p-6"><h3 className="font-display text-xl font-semibold tracking-tight">{item.title}</h3><p className="mt-3 text-sm leading-relaxed text-muted">{item.body}</p></li>)}
+          {leadSystem.map((item) => (
+            <li key={item.title} className="rounded-xl border border-line bg-surface p-6">
+              <h3 className="font-display text-xl font-semibold tracking-tight">{item.title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted">{item.body}</p>
+            </li>
+          ))}
         </ul>
       </Section>
 
-      <DirectAnswer question="What is the difference between SEO, GEO, and AEO?"><p>{seoGeoAeoAnswer}</p></DirectAnswer>
+      <DirectAnswer question="What is the difference between SEO, GEO, and AEO?">
+        <p>{seoGeoAeoAnswer}</p>
+      </DirectAnswer>
 
-      <Section kicker="Plain English" title="Visibility, geography, answers, and conversion solve different problems.">
+      <Section
+        kicker="Plain English"
+        title="Visibility, geography, answers, and conversion solve different problems."
+      >
         <div className="rounded-xl border border-line bg-surface p-6 sm:p-8">
           <ul className="space-y-3 text-lg text-fg">
             <li>SEO asks whether the right prospect can find you in search.</li>
-            <li>GEO asks whether systems understand your brand, expertise, service area, and geographic relevance — and whether generative systems can understand and potentially cite you.</li>
-            <li>AEO asks whether search and answer systems can lift a clean answer from your page.</li>
+            <li>
+              GEO asks whether systems understand your brand, expertise, service area, and
+              geographic relevance — and whether generative systems can understand and potentially
+              cite you.
+            </li>
+            <li>
+              AEO asks whether search and answer systems can lift a clean answer from your page.
+            </li>
             <li>CRO asks whether the visitor takes the next useful action.</li>
             <li>Analytics asks whether you can measure what happened and improve it.</li>
           </ul>
         </div>
       </Section>
 
-      <Section kicker="Five disciplines" title="Each discipline gets its own job." lede="These are not interchangeable buzzwords. Each improves a different part of acquisition and conversion.">
+      <Section
+        kicker="Five disciplines"
+        title="Each discipline gets its own job."
+        lede="These are not interchangeable buzzwords. Each improves a different part of acquisition and conversion."
+      >
         <div className="grid gap-4">
           {disciplines.map((item) => (
-            <article key={item.name} className="rounded-xl border border-line bg-surface p-6 sm:p-8">
+            <article
+              key={item.name}
+              className="rounded-xl border border-line bg-surface p-6 sm:p-8"
+            >
               <p className="kicker">{item.name}</p>
-              <h3 className="mt-2 font-display text-2xl font-semibold tracking-tight sm:text-3xl">{item.full}</h3>
+              <h3 className="mt-2 font-display text-2xl font-semibold tracking-tight sm:text-3xl">
+                {item.full}
+              </h3>
               <p className="mt-3 max-w-2xl text-muted">{item.meaning}</p>
               <div className="mt-6 grid gap-6 md:grid-cols-3">
-                <div><p className="text-sm font-medium text-volt">What the work includes</p><ul className="mt-3 space-y-2 text-sm leading-relaxed text-muted">{item.teach.map((line) => <li key={line}>{line}</li>)}</ul></div>
-                <div><p className="text-sm font-medium text-flare">How it shows up on the site</p><p className="mt-3 text-sm leading-relaxed text-muted">{item.here}</p></div>
-                <div><p className="text-sm font-medium text-hot">What Demore supplies</p><p className="mt-3 text-sm leading-relaxed text-muted">{item.sell}</p></div>
+                <div>
+                  <p className="text-sm font-medium text-volt">What the work includes</p>
+                  <ul className="mt-3 space-y-2 text-sm leading-relaxed text-muted">
+                    {item.teach.map((line) => (
+                      <li key={line}>{line}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-flare">How it shows up on the site</p>
+                  <p className="mt-3 text-sm leading-relaxed text-muted">{item.here}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-hot">What Demore supplies</p>
+                  <p className="mt-3 text-sm leading-relaxed text-muted">{item.sell}</p>
+                </div>
               </div>
             </article>
           ))}
         </div>
       </Section>
 
-      <Section kicker="Connected system" title="Growth works better when pages, measurement, and automation are connected.">
-        <p className="max-w-3xl text-sm leading-relaxed text-muted">Search visibility gets the business discovered. Landing pages explain the offer. Forms capture and qualify the opportunity. Analytics show which source and page produced the action. Automation can then route, publish, notify, or follow an approved workflow. The pieces can be used separately, but they create more value when they share one strategy and one measurement plan.</p>
+      <Section
+        kicker="Connected system"
+        title="Growth works better when pages, measurement, and automation are connected."
+      >
+        <p className="max-w-3xl text-sm leading-relaxed text-muted">
+          Search visibility gets the business discovered. Landing pages explain the offer. Forms
+          capture and qualify the opportunity. Analytics show which source and page produced the
+          action. Automation can then route, publish, notify, or follow an approved workflow. The
+          pieces can be used separately, but they create more value when they share one strategy and
+          one measurement plan.
+        </p>
         <div className="mt-6 flex flex-wrap gap-4 text-sm">
-          <Link to="/websites" className="text-fg underline underline-offset-4">Websites and landing pages</Link>
-          <Link to="/automation" className="text-fg underline underline-offset-4">Automation and content systems</Link>
-          <Link to="/contact" className="text-fg underline underline-offset-4">Start a project brief</Link>
+          <Link to="/websites" className="text-fg underline underline-offset-4">
+            Websites and landing pages
+          </Link>
+          <Link to="/automation" className="text-fg underline underline-offset-4">
+            Automation and content systems
+          </Link>
+          <Link to="/contact" className="text-fg underline underline-offset-4">
+            Start a project brief
+          </Link>
         </div>
       </Section>
 
@@ -207,10 +294,19 @@ function GrowthPage() {
         <IndustryLinks />
       </Section>
 
-      <Section kicker="Questions" title="Direct answers."><FaqList items={growthFaqs} /></Section>
+      <Section kicker="Questions" title="Direct answers.">
+        <FaqList items={growthFaqs} />
+      </Section>
       <RelatedOffers current="/growth" />
       <div className="mt-16">
-        <CtaBand kicker="Next" title="Build a growth system around the actual sales process." body="The brief collects the industry, website, offer, audience, service area, channels, budget, and the action you want prospects to take. Rankings, AI citations, traffic, lead volume, and conversion lifts are not guaranteed." primaryLabel="Start a project brief" primaryNeed="growth" secondary={{ to: "/automation", label: "See automation systems" }} />
+        <CtaBand
+          kicker="Next"
+          title="Build a growth system around the actual sales process."
+          body="The brief collects the industry, website, offer, audience, service area, channels, budget, and the action you want prospects to take. Rankings, AI citations, traffic, lead volume, and conversion lifts are not guaranteed."
+          primaryLabel="Start a project brief"
+          primaryNeed="growth"
+          secondary={{ to: "/automation", label: "See automation systems" }}
+        />
       </div>
     </main>
   );

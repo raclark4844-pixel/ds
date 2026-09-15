@@ -1,5 +1,6 @@
 export type AppPath =
   | "/"
+  | "/platform"
   | "/websites"
   | "/growth"
   | "/automation"
@@ -15,6 +16,7 @@ export type NavItem = {
 };
 
 export const featuredPills: readonly NavItem[] = [
+  { to: "/platform", label: "AI growth platform", short: "Platform" },
   { to: "/websites", label: "Websites & ecommerce", short: "Sites" },
   { to: "/growth", label: "Growth & leads", short: "Growth" },
   { to: "/automation", label: "AI & automation", short: "AI" },
@@ -24,7 +26,7 @@ export const featuredPillsWide = featuredPills;
 
 export const dockTabs: readonly NavItem[] = [
   { to: "/", label: "Home", short: "Home" },
-  { to: "/websites", label: "Websites", short: "Sites" },
+  { to: "/platform", label: "Platform", short: "Platform" },
   { to: "/growth", label: "Growth", short: "Growth" },
   { to: "/automation", label: "Automation", short: "AI" },
   { to: "/contact", label: "Brief", short: "Brief" },
@@ -32,6 +34,7 @@ export const dockTabs: readonly NavItem[] = [
 
 export const allMainPages: readonly NavItem[] = [
   { to: "/", label: "Home" },
+  { to: "/platform", label: "AI Marketing Platform" },
   { to: "/websites", label: "Websites & Ecommerce" },
   { to: "/growth", label: "Growth & Lead Generation" },
   { to: "/automation", label: "AI & Automation" },

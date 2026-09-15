@@ -9,15 +9,15 @@ export function NotFound() {
         That page is not here.
       </h1>
       <p className="mt-4 max-w-lg text-muted">
-        The URL does not match a live page. Home, websites, growth, automation,
-        claims, and the project brief are live.
+        The URL does not match a live page. Home, the AI growth platform, websites, growth,
+        automation, industries, and the project brief are live.
       </p>
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
         <Button asChild>
           <Link to="/">Back home</Link>
         </Button>
         <Button asChild variant="outline">
-          <Link to="/claims">Claims</Link>
+          <Link to="/platform">AI growth platform</Link>
         </Button>
         <Button asChild variant="outline">
           <Link to="/contact">Start a project brief</Link>

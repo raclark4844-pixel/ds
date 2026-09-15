@@ -6,6 +6,7 @@ import {
   Globe,
   Home,
   ListOrdered,
+  Sparkles,
   TrendingUp,
   type LucideIcon,
 } from "lucide-react";
@@ -13,6 +14,7 @@ import type { AppPath } from "@/lib/nav";
 
 export const navIcons: Record<AppPath, LucideIcon> = {
   "/": Home,
+  "/platform": Sparkles,
   "/websites": Globe,
   "/growth": TrendingUp,
   "/automation": Bot,

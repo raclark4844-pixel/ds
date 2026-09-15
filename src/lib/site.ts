@@ -32,6 +32,7 @@ export const THEME_COLOR = "#050505";
 
 export const primaryNav = [
   { to: "/", label: "Home" },
+  { to: "/platform", label: "AI Growth Platform" },
   { to: "/websites", label: "Websites" },
   { to: "/growth", label: "Growth" },
   { to: "/automation", label: "Automation" },
@@ -43,6 +44,13 @@ export const laterNav = [
 ] as const;
 
 export const offerCards = [
+  {
+    to: "/platform" as const,
+    kicker: "Flagship platform",
+    title: "Complete AI-assisted growth system",
+    body: "A custom platform connecting the website, search visibility, content, campaigns, lead capture, analytics, follow-up, and automation.",
+    accent: "volt" as const,
+  },
   {
     to: "/websites" as const,
     kicker: "Sites",

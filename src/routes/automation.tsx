@@ -13,7 +13,8 @@ import { faqJsonLd, pageHead, serviceJsonLd } from "@/lib/seo";
 export const Route = createFileRoute("/automation")({
   head: () =>
     pageHead({
-      title: "AI Marketing Automation, Social Bots, Auto-Posting, and Content | Demore Technology Solutions",
+      title:
+        "AI Marketing Automation, Social Bots, Auto-Posting, and Content | Demore Technology Solutions",
       description:
         "AI-assisted marketing automation, social publishing, content repurposing, Google Business Profile workflows, review workflows, lead routing, and custom business bots.",
       path: "/automation",
@@ -63,7 +64,8 @@ function AutomationPage() {
       <JsonLd
         data={serviceJsonLd({
           name: "AI-assisted marketing automation, social publishing, content, and business bots",
-          description: "Connected automation for social publishing, content production, lead routing, review workflows, Google Business Profile, and custom business processes.",
+          description:
+            "Connected automation for social publishing, content production, lead routing, review workflows, Google Business Profile, and custom business processes.",
           path: "/automation",
           serviceType: [
             "Marketing automation",
@@ -80,13 +82,14 @@ function AutomationPage() {
         title="Make the repetitive work run like a system."
         lede={
           <p>
-            AI-assisted content, social publishing, Google Business Profile workflows,
-            review workflows, lead routing, custom bots, and business automation.
-            The goal is not automation for its own sake — it is fewer manual handoffs and a faster path from activity to action.
+            AI-assisted content, social publishing, Google Business Profile workflows, review
+            workflows, lead routing, custom bots, and business automation. The goal is not
+            automation for its own sake — it is fewer manual handoffs and a faster path from
+            activity to action.
           </p>
         }
         primary={{ to: "/contact", label: "Start a project brief", search: { need: "automation" } }}
-        secondary={{ to: "/growth", label: "See AI marketing and lead generation" }}
+        secondary={{ to: "/platform", label: "See the complete platform" }}
         media={{
           src: "/media/automation-pulse.jpg",
           alt: "Pulsing geometric bars on a near-black field, used as the visual for auto-posting systems.",
@@ -97,12 +100,31 @@ function AutomationPage() {
 
       <DirectAnswer question="What can Demore Technology Solutions automate for marketing and lead generation?">
         <p>
-          Demore can build workflows around content creation, approvals, social publishing,
-          Google Business Profile activity, review reuse, website forms, lead routing,
-          notifications, CRM handoffs, campaign organization, and custom AI-assisted business tasks.
-          The exact workflow depends on the platforms, permissions, data sources, and approval rules available to the business.
+          Demore can build workflows around content creation, approvals, social publishing, Google
+          Business Profile activity, review reuse, website forms, lead routing, notifications, CRM
+          handoffs, campaign organization, and custom AI-assisted business tasks. The exact workflow
+          depends on the platforms, permissions, data sources, and approval rules available to the
+          business.
         </p>
       </DirectAnswer>
+
+      <Section
+        kicker="Automation or full platform"
+        title="Use automation à la carte—or connect it to the complete customer journey."
+      >
+        <p className="max-w-3xl text-base leading-relaxed text-muted">
+          Automation delivers more value when it knows where demand came from, what the prospect
+          needs, and what the next sales action should be. The complete platform connects those
+          workflows to the website, campaigns, content, lead capture, analytics, and human
+          approvals.
+        </p>
+        <a
+          href="/platform"
+          className="mt-5 inline-flex text-sm font-medium text-volt underline underline-offset-4"
+        >
+          See the platform comparison
+        </a>
+      </Section>
 
       <Section
         kicker="Automation offerings"
@@ -119,22 +141,40 @@ function AutomationPage() {
         </ul>
       </Section>
 
-      <Section kicker="How the pieces connect" title="Content should feed a destination. Leads should feed a workflow.">
+      <Section
+        kicker="How the pieces connect"
+        title="Content should feed a destination. Leads should feed a workflow."
+      >
         <div className="grid gap-4 md:grid-cols-3">
           <article className="rounded-xl border border-line bg-surface p-6">
             <p className="kicker">01</p>
-            <h3 className="mt-2 font-display text-xl font-semibold tracking-tight">Create and approve</h3>
-            <p className="mt-3 text-sm leading-relaxed text-muted">AI can accelerate drafts and repurposing while the business controls the final message, offer, claims, and approval rules.</p>
+            <h3 className="mt-2 font-display text-xl font-semibold tracking-tight">
+              Create and approve
+            </h3>
+            <p className="mt-3 text-sm leading-relaxed text-muted">
+              AI can accelerate drafts and repurposing while the business controls the final
+              message, offer, claims, and approval rules.
+            </p>
           </article>
           <article className="rounded-xl border border-line bg-surface p-6">
             <p className="kicker">02</p>
-            <h3 className="mt-2 font-display text-xl font-semibold tracking-tight">Publish and drive traffic</h3>
-            <p className="mt-3 text-sm leading-relaxed text-muted">Approved content is distributed to the channels that matter and points toward a useful landing page, service page, product, form, or campaign destination.</p>
+            <h3 className="mt-2 font-display text-xl font-semibold tracking-tight">
+              Publish and drive traffic
+            </h3>
+            <p className="mt-3 text-sm leading-relaxed text-muted">
+              Approved content is distributed to the channels that matter and points toward a useful
+              landing page, service page, product, form, or campaign destination.
+            </p>
           </article>
           <article className="rounded-xl border border-line bg-surface p-6">
             <p className="kicker">03</p>
-            <h3 className="mt-2 font-display text-xl font-semibold tracking-tight">Capture and route</h3>
-            <p className="mt-3 text-sm leading-relaxed text-muted">When a prospect acts, the inquiry can be categorized, measured, and routed to the right person or system with fewer manual handoffs.</p>
+            <h3 className="mt-2 font-display text-xl font-semibold tracking-tight">
+              Capture and route
+            </h3>
+            <p className="mt-3 text-sm leading-relaxed text-muted">
+              When a prospect acts, the inquiry can be categorized, measured, and routed to the
+              right person or system with fewer manual handoffs.
+            </p>
           </article>
         </div>
       </Section>

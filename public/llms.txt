@@ -1,6 +1,6 @@
 # Demore Technology Solutions
 
-Demore Technology Solutions builds connected digital growth systems for businesses nationwide.
+Demore Technology Solutions primarily builds custom AI-assisted digital marketing and lead-generation platforms for businesses nationwide. Each platform connects the website or ecommerce experience, visibility, content, campaigns, lead capture, analytics, follow-up, and automation around one business strategy. Every component is also available as an à la carte product or service.
 
 Core offerings:
 - Custom websites and ecommerce
@@ -23,7 +23,9 @@ CRO improves the path from qualified visit to useful action.
 Technical performance and UX support all of these by making pages fast, stable, accessible, mobile-friendly, and easy to use.
 
 ## AI-assisted marketing platform
-The platform can combine website and landing-page strategy, search visibility, content workflows, social distribution, lead capture, analytics, conversion tracking, follow-up, and automation. AI can assist with research, drafting, repurposing, analysis, and repetitive tasks while people retain control of business strategy, approvals, brand, and final decisions.
+This is Demore Technology Solutions' flagship offer. The platform can combine website and landing-page strategy, ecommerce, SEO, geographic and generative optimization, AEO, CRO, technical UX, content workflows, social distribution, paid and organic campaign destinations, lead qualification, analytics, conversion tracking, CRM handoffs, follow-up, reputation workflows, and custom automation. AI can assist with research, drafting, repurposing, analysis, optimization, and repetitive tasks while people retain control of business strategy, approvals, accuracy, brand, and final decisions.
+
+Unlike a standalone website or disconnected collection of marketing tools, the platform is designed around one customer journey and one measurement plan. Existing tools can be incorporated when useful. Individual websites, ecommerce, optimization, lead-generation, analytics, content, and automation services remain available à la carte.
 
 ## Industry strategies
 Industry pages explain how the same growth disciplines are adapted to different buying behavior, search intent, conversion paths, content needs, and operational workflows.
@@ -43,6 +45,7 @@ Rankings, AI citations, traffic, lead volume, engagement, and conversion lifts a
 
 ## Public pages
 - /
+- /platform
 - /websites
 - /growth
 - /automation

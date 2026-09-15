@@ -4,16 +4,11 @@ import { CtaBand } from "@/components/cta-band";
 import { FaqList } from "@/components/faq-list";
 import { JsonLd } from "@/components/json-ld";
 import { PageHero } from "@/components/page-hero";
+import { PlatformComparison } from "@/components/platform-comparison";
 import { RelatedOffers } from "@/components/related-offers";
 import { DirectAnswer, GeoQuote, Section } from "@/components/section";
 import { homeGeoQuote, whoForAnswer } from "@/lib/answers";
-import {
-  audiences,
-  engagementSteps,
-  homeFaqs,
-  offerCards,
-  proofPoints,
-} from "@/lib/site";
+import { audiences, engagementSteps, homeFaqs, offerCards, proofPoints } from "@/lib/site";
 import { faqJsonLd, pageHead } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
@@ -67,17 +62,16 @@ function Home() {
       <JsonLd data={faqJsonLd(homeFaqs)} />
       <PageHero
         kicker="Demore Technology Solutions"
-        title="Built loud. Tuned to convert."
+        title="We build custom AI-assisted digital marketing and lead-generation platforms."
         lede={
           <p>
-            Websites, ecommerce, AI-assisted digital marketing, lead-generation systems,
-            search optimization, analytics, automation, and content workflows. The goal is
-            not another disconnected tool. It is a working system that helps a business get
-            found, earn attention, capture demand, and move qualified opportunities forward.
+            One connected system built around your business: website or ecommerce, SEO, GEO, AEO,
+            CRO, content, social, campaigns, lead capture, analytics, follow-up, and automation.
+            Every service is also available à la carte when you need one focused solution.
           </p>
         }
-        primary={{ to: "/contact", label: "Start a project brief" }}
-        secondary={{ to: "/growth", label: "See the growth stack", variant: "volt" }}
+        primary={{ to: "/contact", label: "Build my platform", search: { need: "platform" } }}
+        secondary={{ to: "/platform", label: "See how the platform works", variant: "volt" }}
         media={{
           src: "/media/hero-orbs.jpg",
           alt: "Geometric fluorescent orbs on a near-black field, the visual mark of Demore Technology Solutions.",
@@ -89,6 +83,20 @@ function Home() {
       <DirectAnswer question="Who is Demore Technology Solutions for?">
         <p>{whoForAnswer}</p>
       </DirectAnswer>
+
+      <Section
+        kicker="Why the platform is different"
+        title="A connected growth system—not a website surrounded by disconnected tools."
+        lede="The website is the conversion hub. Search, content, campaigns, lead capture, measurement, and follow-up are designed around it as one system."
+      >
+        <PlatformComparison compact />
+        <Link
+          to="/platform"
+          className="mt-6 inline-flex text-sm font-medium text-volt underline underline-offset-4"
+        >
+          See the complete platform and full comparison
+        </Link>
+      </Section>
 
       <Section
         kicker="Proof, not slogans"
@@ -109,9 +117,9 @@ function Home() {
       </Section>
 
       <Section
-        kicker="Offers, in the open"
-        title="What does the studio actually build?"
-        lede="Websites and ecommerce, AI-assisted growth systems, lead generation, analytics, automation, and content workflows — designed as connected parts of the same customer journey."
+        kicker="Complete platform or à la carte"
+        title="Build the full system—or start with the service you need now."
+        lede="The flagship offer connects every part of the customer journey. Websites, ecommerce, growth, lead generation, content, analytics, and automation also remain available as individual services."
       >
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {offerCards.map((card) => (
@@ -153,13 +161,19 @@ function Home() {
           <Link to="/growth" className="text-sm font-medium text-volt underline underline-offset-4">
             Explore search, AI visibility, and lead generation
           </Link>
-          <Link to="/automation" className="text-sm font-medium text-flare underline underline-offset-4">
+          <Link
+            to="/automation"
+            className="text-sm font-medium text-flare underline underline-offset-4"
+          >
             Explore bots, publishing, and workflow automation
           </Link>
         </div>
       </Section>
 
-      <Section kicker="Who it is for" title="Businesses that need a working growth system — not disconnected tactics.">
+      <Section
+        kicker="Who it is for"
+        title="Businesses that need a working growth system — not disconnected tactics."
+      >
         <ul className="grid gap-4 sm:grid-cols-2">
           {audiences.map((item) => (
             <li key={item.title} className="rounded-xl border border-line bg-surface p-6">
@@ -175,7 +189,9 @@ function Home() {
           {engagementSteps.map((item) => (
             <li key={item.n} className="rounded-xl border border-line bg-surface p-6">
               <p className="font-display text-sm text-volt">{item.n}</p>
-              <h3 className="mt-2 font-display text-xl font-semibold tracking-tight">{item.title}</h3>
+              <h3 className="mt-2 font-display text-xl font-semibold tracking-tight">
+                {item.title}
+              </h3>
               <p className="mt-3 text-sm leading-relaxed text-muted">{item.body}</p>
             </li>
           ))}
@@ -193,7 +209,8 @@ function Home() {
           kicker="Next"
           title="Start a project brief."
           body="Tell us what needs to be built, what needs to generate leads, and what needs to be automated or measured. Rankings, AI citations, lead volume, and conversion lifts are not guaranteed."
-          primaryLabel="Start a project brief"
+          primaryLabel="Build my platform"
+          primaryNeed="platform"
           secondary={{ to: "/growth", label: "See the growth stack", variant: "volt" }}
         />
       </div>

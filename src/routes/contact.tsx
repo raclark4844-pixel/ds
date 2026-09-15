@@ -34,7 +34,8 @@ function ContactPage() {
       <JsonLd
         data={serviceJsonLd({
           name: "Digital project intake",
-          description: "Project brief for websites, ecommerce, custom AI-assisted marketing and lead generation, growth, analytics, content, and automation.",
+          description:
+            "Project brief for websites, ecommerce, custom AI-assisted marketing and lead generation, growth, analytics, content, and automation.",
           path: "/contact",
           serviceType: "ProfessionalService",
         })}
@@ -42,19 +43,19 @@ function ContactPage() {
       <header className="pt-10 sm:pt-16">
         <p className="kicker">Start a project</p>
         <h1 className="mt-4 font-display text-[2.4rem] font-semibold leading-[0.95] tracking-tight sm:text-6xl">
-          Tell us what the system needs to do.
+          Start your custom AI-assisted growth platform—or choose à la carte.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-          Select your industry first, choose what you are looking for, set your
-          project budget, then tell us about your goals, current stack, growth
-          priorities, and automation needs. Minimum project budget: $600.
+          Select your industry first, choose the complete platform or individual services, set your
+          project budget, then tell us about your goals, current stack, growth priorities, and
+          automation needs. Minimum project budget: $600.
         </p>
       </header>
 
       <GeoQuote>
-        The brief captures the industry, offer, audience, budget, current digital
-        stack, conversion goals, and workflows so the project can be scoped around
-        a real business outcome instead of a generic package.
+        The brief captures the industry, offer, audience, budget, current digital stack, conversion
+        goals, and workflows so the project can be scoped around a real business outcome instead of
+        a generic package.
       </GeoQuote>
 
       <DirectAnswer question="What goes in the project brief?">

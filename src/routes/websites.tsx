@@ -13,7 +13,8 @@ import { faqJsonLd, pageHead, serviceJsonLd } from "@/lib/seo";
 export const Route = createFileRoute("/websites")({
   head: () =>
     pageHead({
-      title: "Custom Websites, Ecommerce, Landing Pages, and Lead Capture | Demore Technology Solutions",
+      title:
+        "Custom Websites, Ecommerce, Landing Pages, and Lead Capture | Demore Technology Solutions",
       description:
         "Custom websites, ecommerce, campaign landing pages, contractor sites, lead capture, analytics, and conversion-focused web systems built around how the business gets paid.",
       path: "/websites",
@@ -82,7 +83,8 @@ function WebsitesPage() {
       <JsonLd
         data={serviceJsonLd({
           name: "Custom websites, ecommerce, landing pages, and lead capture",
-          description: "Web systems mapped to how the client gets discovered, generates leads, and gets paid.",
+          description:
+            "Web systems mapped to how the client gets discovered, generates leads, and gets paid.",
           path: "/websites",
           serviceType: [
             "Website design",
@@ -98,12 +100,13 @@ function WebsitesPage() {
         title="Mapped to how you get discovered, how you sell, and how you get paid."
         lede={
           <p>
-            Marketing sites, ecommerce, landing pages, contractor and service-company websites,
-            lead capture, analytics, and custom web tools. The website is built as the center of the growth system — not as a disconnected brochure.
+            Marketing sites, ecommerce, landing pages, contractor and service-company websites, lead
+            capture, analytics, and custom web tools. The website is built as the center of the
+            growth system — not as a disconnected brochure.
           </p>
         }
         primary={{ to: "/contact", label: "Start a project brief", search: { need: "website" } }}
-        secondary={{ to: "/growth", label: "See AI marketing and lead generation" }}
+        secondary={{ to: "/platform", label: "See the complete platform" }}
         media={{
           src: "/media/digital-grid.jpg",
           alt: "Geometric grid on a near-black field, used as the visual for custom websites.",
@@ -115,6 +118,23 @@ function WebsitesPage() {
       <DirectAnswer question="What does a custom tailored website include?">
         <p>{websiteCustomAnswer}</p>
       </DirectAnswer>
+
+      <Section
+        kicker="Website or full platform"
+        title="Choose the website à la carte—or make it the hub of the complete growth system."
+      >
+        <p className="max-w-3xl text-base leading-relaxed text-muted">
+          A standalone website is available when that is the right scope. The custom AI-assisted
+          platform goes further by connecting the site to search and answer visibility, content,
+          campaigns, lead qualification, analytics, follow-up, and automation under one strategy.
+        </p>
+        <a
+          href="/platform"
+          className="mt-5 inline-flex text-sm font-medium text-volt underline underline-offset-4"
+        >
+          Compare the complete platform
+        </a>
+      </Section>
 
       <Section
         kicker="Website offerings"
@@ -131,7 +151,10 @@ function WebsitesPage() {
         </ul>
       </Section>
 
-      <Section kicker="What custom means" title="A site built to connect with the rest of the business.">
+      <Section
+        kicker="What custom means"
+        title="A site built to connect with the rest of the business."
+      >
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {stakes.map((item) => (
             <li key={item.title} className="rounded-xl border border-line bg-surface p-6">
