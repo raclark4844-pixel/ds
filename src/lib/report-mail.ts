@@ -1,5 +1,6 @@
 import type { ComparisonReport } from "@/lib/report-pdf/report-types";
 import { reportFilename } from "@/lib/report-pdf/render-report.server";
+import { unifiedIds } from "@/lib/unified-ids";
 
 export function mailConfig() {
   return {
@@ -12,6 +13,7 @@ export function mailConfig() {
 
 export async function sendReportEmails(report: ComparisonReport, pdf: Buffer) {
   const cfg = mailConfig();
+  const ids = unifiedIds(report.reportNumber);
   if (!cfg.apiKey) {
     return {
       customer: { ok: false as const, error: "Email delivery is not configured." },
@@ -37,15 +39,15 @@ export async function sendReportEmails(report: ComparisonReport, pdf: Buffer) {
     from: `Demore Technology Solutions <${cfg.from}>`,
     to: [report.contactEmail],
     subject: "Your Demore Website Comparison Report",
-    text: [`Your Demore website comparison report is attached.`, `Company: ${report.companyName}`, `Report: ${report.reportNumber}`, `Path: ${report.path}`, `Start a project: ${cfg.site}/contact?need=platform&source=compare`, ``, `Rankings, AI citations, and conversion lifts are not guaranteed.`].join("\n"),
+    text: [`Your Demore website comparison report is attached.`, `Demore Report ID: ${ids.reportId}`, `Customer ID / Lead ID / Comparison ID: ${ids.reportId}`, `Company: ${report.companyName}`, `Path: ${report.path}`, `Start a project: ${cfg.site}/contact?need=platform&source=compare`, ``, `Rankings, AI citations, and conversion lifts are not guaranteed.`].join("\n"),
     attachments: [attachment],
   });
   const internal = await send({
     from: `Demore Technology Solutions <${cfg.from}>`,
     to: [cfg.internal],
     reply_to: report.contactEmail,
-    subject: `New Website Comparison — ${report.companyName}`,
-    text: [`New website comparison — ${report.companyName}`, `Report: ${report.reportNumber}`, `Contact: ${report.contactName} <${report.contactEmail}>`, `Industry: ${report.industry}`, `Market: ${report.market}`, `Website: ${report.website}`, `Scores: current ${report.currentTotal}, competitor avg ${report.competitorAverage}, leader ${report.marketLeader}, potential ${report.potential}`, `Path: ${report.path}`].join("\n"),
+    subject: `New Website Comparison — ${report.companyName} — ${ids.reportId}`,
+    text: [`New website comparison — ${report.companyName}`, `Demore Report ID: ${ids.reportId}`, `customerId: ${ids.customerId}`, `leadId: ${ids.leadId}`, `comparisonId: ${ids.comparisonId}`, `Contact: ${report.contactName} <${report.contactEmail}>`, `Industry: ${report.industry}`, `Market: ${report.market}`, `Website: ${report.website}`, `Scores: current ${report.currentTotal}, competitor avg ${report.competitorAverage}, leader ${report.marketLeader}, potential ${report.potential}`, `Path: ${report.path}`].join("\n"),
     attachments: [attachment],
   });
   return { customer, internal };
