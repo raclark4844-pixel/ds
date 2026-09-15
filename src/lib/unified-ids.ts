@@ -14,7 +14,30 @@ export function unifiedIds(reportId: string): UnifiedIds {
 export function idsFromUnknown(value: unknown): UnifiedIds | null {
   if (!value || typeof value !== "object") return null;
   const rec = value as Record<string, unknown>;
-  const id = [rec.reportId, rec.customerId, rec.leadId, rec.comparisonId, rec.reportNumber]
-    .find((item): item is string => typeof item === "string" && item.trim().length > 0);
-  return id ? unifiedIds(id) : null;
+  const canonical = typeof rec.reportId === "string" && rec.reportId.trim()
+    ? rec.reportId.trim()
+    : typeof rec.reportNumber === "string" && rec.reportNumber.trim()
+      ? rec.reportNumber.trim()
+      : "";
+  if (!canonical) return null;
+  assertUnifiedPayload({ ...rec, reportId: canonical }, canonical);
+  return unifiedIds(canonical);
+}
+
+export function assertUnifiedPayload(payload: Record<string, unknown>, reportId: string) {
+  const expected = reportId.trim();
+  if (!expected) throw new Error("reportId is required.");
+  for (const key of ["reportId", "customerId", "leadId", "comparisonId"] as const) {
+    const value = payload[key];
+    if (value == null || value === "") continue;
+    if (String(value).trim() !== expected) {
+      throw new Error(`${key} must equal reportId.`);
+    }
+  }
+}
+
+export function crmHandoffPayload(reportId: string, extra: Record<string, unknown> = {}) {
+  const ids = unifiedIds(reportId);
+  assertUnifiedPayload({ ...extra, ...ids }, ids.reportId);
+  return { ...extra, ...ids };
 }
