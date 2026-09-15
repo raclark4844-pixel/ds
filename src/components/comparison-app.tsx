@@ -38,8 +38,11 @@ export function ComparisonApp() {
           website: form.get("website"),
           industry: form.get("industry"),
           market: form.get("market"),
-          contactName: form.get("contactName"),
+          contactFirstName: form.get("contactFirstName"),
+          contactLastName: form.get("contactLastName"),
+          contactPhone: form.get("contactPhone"),
           contactEmail: form.get("contactEmail"),
+          timeframe: form.get("timeframe"),
           competitors,
           confirmedTools: form.get("confirmedTools"),
           access: form.get("access"),
@@ -125,9 +128,11 @@ export function ComparisonApp() {
         <label className="block text-sm">Website<input required name="website" placeholder="https://" className="mt-1 w-full rounded-md border border-line bg-bg px-3 py-2" /></label>
         <label className="block text-sm">Industry<select required name="industry" className="mt-1 w-full rounded-md border border-line bg-bg px-3 py-2">{industries.map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select></label>
         <label className="block text-sm">Market analyzed<input required name="market" placeholder="County, metro, or nationwide" className="mt-1 w-full rounded-md border border-line bg-bg px-3 py-2" /></label>
-        <label className="block text-sm">Your name<input required name="contactName" className="mt-1 w-full rounded-md border border-line bg-bg px-3 py-2" /></label>
+        <div className="grid gap-4 sm:grid-cols-2"><label className="block text-sm">First name<input required name="contactFirstName" autoComplete="given-name" className="mt-1 w-full rounded-md border border-line bg-bg px-3 py-2" /></label><label className="block text-sm">Last name<input required name="contactLastName" autoComplete="family-name" className="mt-1 w-full rounded-md border border-line bg-bg px-3 py-2" /></label></div>
+        <label className="block text-sm">Phone number<input required type="tel" name="contactPhone" autoComplete="tel" className="mt-1 w-full rounded-md border border-line bg-bg px-3 py-2" /></label>
         <label className="block text-sm">Email<input required type="email" name="contactEmail" className="mt-1 w-full rounded-md border border-line bg-bg px-3 py-2" /></label>
-        <label className="block text-sm">Competitor websites, optional<textarea name="competitors" rows={3} className="mt-1 w-full rounded-md border border-line bg-bg px-3 py-2" /></label>
+        <label className="block text-sm">Desired implementation timeframe<select required name="timeframe" className="mt-1 w-full rounded-md border border-line bg-bg px-3 py-2"><option value="">Select a timeframe</option><option value="As soon as possible">As soon as possible</option><option value="Within 30 days">Within 30 days</option><option value="Within 60 days">Within 60 days</option><option value="Within 90 days">Within 90 days</option><option value="More than 90 days">More than 90 days</option><option value="Researching options">Researching options</option></select></label>
+        <label className="block text-sm">Backup competitor websites, optional<span className="mt-1 block text-xs text-muted">Used only if live Google discovery is unavailable.</span><textarea name="competitors" rows={3} className="mt-1 w-full rounded-md border border-line bg-bg px-3 py-2" /></label>
         <label className="block text-sm">Tools you already use<input name="confirmedTools" className="mt-1 w-full rounded-md border border-line bg-bg px-3 py-2" /></label>
         <label className="block text-sm">Current access<select name="access" className="mt-1 w-full rounded-md border border-line bg-bg px-3 py-2"><option value="owner-controls">We control domain and site</option><option value="provider-controls">A vendor controls the site</option><option value="needs-recovery">Access is unclear</option></select></label>
         <Button type="submit" disabled={busy !== "off"}>{busy === "analyze" ? "Scoring public pages…" : "Run comparison"}</Button>
@@ -140,6 +145,8 @@ export function ComparisonApp() {
           <h2 className="font-display text-2xl">{report.companyName}</h2>
           <p className="text-muted">{report.summary.current}</p>
           <div className="grid gap-3 sm:grid-cols-4">{[["Current", report.currentTotal],["Competitor avg", report.competitorAverage],["Leader", report.marketLeader],["Potential", report.potential]].map(([label, value]) => (<div key={String(label)} className="rounded-md border border-line p-3"><p className="kicker">{label}</p><p className="font-display text-3xl text-volt">{value}</p></div>))}</div>
+          <div className="overflow-x-auto rounded-md border border-line"><table className="w-full min-w-[620px] text-left text-sm"><thead className="bg-bg text-muted"><tr><th className="p-3">Competitor / benchmark</th><th>Source</th><th>Maps</th><th>Organic</th><th>Rating</th><th>Site score</th></tr></thead><tbody>{report.competitors.map((row) => <tr key={`${row.name}-${row.website}`} className="border-t border-line"><td className="p-3 font-medium">{row.name}</td><td>{row.source || row.evidence}</td><td>{row.mapsRank ? `#${row.mapsRank}` : "—"}</td><td>{row.organicRank ? `#${row.organicRank}` : "—"}</td><td>{row.rating ? `${row.rating}/5 (${row.reviewCount ?? 0})` : "—"}</td><td>{row.total}</td></tr>)}</tbody></table></div>
+          <p className="text-sm text-muted">{report.competitorSelection}</p>
           <p>Recommended path: <strong>{report.path}</strong>. Confidence {report.confidence}%. Rankings and lifts are not guaranteed.</p>
           <div className="flex flex-wrap gap-2">
             <Button type="button" onClick={downloadPdf} disabled={busy !== "off"}>{busy === "pdf" ? "Generating PDF…" : "Download My Comparison Report"}</Button>

@@ -27,7 +27,7 @@ export function ScoreBar({
   const bar = Math.max(6, (safe / 100) * (width - 8));
   return (
     <Svg width={width} height={28} viewBox={`0 0 ${width} 28`}>
-      <SvgText x={0} y={10} fill={INK} fontSize={9}>
+      <SvgText x={0} y={10} fill={INK} style={{ fontSize: 9 }}>
         {`${label}  ${Math.round(safe)}`}
       </SvgText>
       <Rect x={0} y={16} width={width} height={8} fill={TRACK} />
@@ -50,12 +50,12 @@ export function CompetitorBars({
         const color = i === 0 ? GREEN : i === 1 ? RED : YELLOW;
         return (
           <G key={row.label}>
-            <SvgText x={0} y={y + 10} fill={INK} fontSize={8}>
+            <SvgText x={0} y={y + 10} fill={INK} style={{ fontSize: 8 }}>
               {row.label.slice(0, 28)}
             </SvgText>
             <Rect x={150} y={y + 3} width={360} height={8} fill={TRACK} />
             <Rect x={150} y={y + 3} width={w} height={8} fill={color} />
-            <SvgText x={488} y={y + 10} fill={MUTED} fontSize={8}>
+            <SvgText x={488} y={y + 10} fill={MUTED} style={{ fontSize: 8 }}>
               {String(Math.round(row.value))}
             </SvgText>
           </G>
@@ -79,12 +79,12 @@ export function CategoryComparison({
         const w = Math.max(4, (pct / 100) * 330);
         return (
           <G key={cat.label}>
-            <SvgText x={0} y={y + 10} fill={INK} fontSize={8}>
+            <SvgText x={0} y={y + 10} fill={INK} style={{ fontSize: 8 }}>
               {`${cat.label} ${cat.value}/${cat.max}`}
             </SvgText>
             <Rect x={150} y={y + 3} width={330} height={8} fill={TRACK} />
             <Rect x={150} y={y + 3} width={w} height={8} fill={i % 2 ? YELLOW : GREEN} />
-            <SvgText x={490} y={y + 10} fill={MUTED} fontSize={8}>
+            <SvgText x={490} y={y + 10} fill={MUTED} style={{ fontSize: 8 }}>
               {`${Math.round(pct)}%`}
             </SvgText>
           </G>
@@ -120,7 +120,7 @@ export function CapabilityGapChart({
         const node = (
           <G key={p.label}>
             <Rect x={x} y={0} width={Math.max(w, p.n ? 2 : 0)} height={14} fill={p.color} />
-            <SvgText x={x + 4} y={32} fill={INK} fontSize={8}>
+            <SvgText x={x + 4} y={32} fill={INK} style={{ fontSize: 8 }}>
               {`${p.label} ${p.n}`}
             </SvgText>
           </G>
@@ -168,7 +168,7 @@ export function GrowthRangeGraph({
       {coords.map((c) => (
         <G key={c.label}>
           <Circle cx={c.x} cy={c.y} r={3} fill={YELLOW} />
-          <SvgText x={Math.max(0, c.x - 16)} y={h - 4} fill={MUTED} fontSize={8}>
+          <SvgText x={Math.max(0, c.x - 16)} y={h - 4} fill={MUTED} style={{ fontSize: 8 }}>
             {`${c.label} ${Math.round(c.value)}`}
           </SvgText>
         </G>
@@ -190,10 +190,10 @@ export function PriorityEffortMatrix({
       <Rect x={0} y={0} width={w} height={h} fill="#111111" />
       <Line x1={pad} x2={w - pad} y1={h - pad} y2={h - pad} stroke={GRID} strokeWidth={1} />
       <Line x1={pad} x2={pad} y1={pad} y2={h - pad} stroke={GRID} strokeWidth={1} />
-      <SvgText x={pad} y={12} fill={MUTED} fontSize={7}>
+      <SvgText x={pad} y={12} fill={MUTED} style={{ fontSize: 7 }}>
         Higher impact
       </SvgText>
-      <SvgText x={w - 90} y={h - 8} fill={MUTED} fontSize={7}>
+      <SvgText x={w - 90} y={h - 8} fill={MUTED} style={{ fontSize: 7 }}>
         Higher effort
       </SvgText>
       {items.map((item) => {
@@ -203,7 +203,7 @@ export function PriorityEffortMatrix({
         return (
           <G key={item.label}>
             <Circle cx={x} cy={y} r={5} fill={color} />
-            <SvgText x={x + 8} y={y + 3} fill={INK} fontSize={8}>
+            <SvgText x={x + 8} y={y + 3} fill={INK} style={{ fontSize: 8 }}>
               {`${item.label} (I${item.impact}/E${item.effort})`}
             </SvgText>
           </G>
@@ -227,7 +227,7 @@ export function Timeline({
         return (
           <G key={item.window}>
             <Circle cx={x} cy={16} r={5} fill={YELLOW} />
-            <SvgText x={Math.max(0, x - 24)} y={36} fill={INK} fontSize={8}>
+            <SvgText x={Math.max(0, x - 24)} y={36} fill={INK} style={{ fontSize: 8 }}>
               {item.window}
             </SvgText>
           </G>
@@ -242,7 +242,7 @@ export function ConfidenceIndicator({ value }: { value: number }) {
   const color = safe >= 60 ? GREEN : safe >= 45 ? YELLOW : RED;
   return (
     <Svg width={220} height={22} viewBox="0 0 220 22">
-      <SvgText x={0} y={10} fill={INK} fontSize={9}>
+      <SvgText x={0} y={10} fill={INK} style={{ fontSize: 9 }}>
         {`Assessment confidence ${safe}%`}
       </SvgText>
       <Rect x={0} y={14} width={220} height={6} fill={TRACK} />

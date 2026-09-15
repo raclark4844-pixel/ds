@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { renderToBuffer } from "@react-pdf/renderer";
-import { createElement } from "react";
+import { renderToBuffer, type DocumentProps } from "@react-pdf/renderer";
+import { createElement, type ReactElement } from "react";
 import { ReportDocument } from "./report-document";
 import type { ComparisonReport } from "./report-types";
 
@@ -24,6 +24,7 @@ async function logoSrc() {
 
 export async function renderComparisonPdf(report: ComparisonReport): Promise<Buffer> {
   const logo = await logoSrc();
-  const buffer = await renderToBuffer(createElement(ReportDocument, { report, logoSrc: logo }));
+  const document = createElement(ReportDocument, { report, logoSrc: logo }) as unknown as ReactElement<DocumentProps>;
+  const buffer = await renderToBuffer(document);
   return Buffer.from(buffer);
 }

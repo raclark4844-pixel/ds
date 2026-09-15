@@ -15,7 +15,7 @@
  *   runtime hook's return value, and `render:html` does not exist in Nitro v3.
  */
 import installPageTemplate from "../../scripts/install-page.html?raw";
-import { grokOgIdentity } from "virtual:grok-og-identity";
+import site from "../../src/lib/og/site.json";
 import {
   acceptsHtml,
   createHeadInjector,
@@ -39,7 +39,7 @@ function requestHost(event: GrokPwaEvent): string {
 function injectHeadStreaming(response: Response, host: string): Response {
   const injector = createHeadInjector({
     host,
-    site: grokOgIdentity.site,
+    site,
   });
   const transformed = response.body!.pipeThrough(
     new TransformStream<Uint8Array, Uint8Array>({

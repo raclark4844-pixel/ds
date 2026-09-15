@@ -1,7 +1,7 @@
 /** Snapshot of the current comparison scoring helpers before PDF report implementation. */
 export const SCORING_VERSION = "dts-compare-v1";
 
-export const WEIGHTS = {
+export const DEFAULT_WEIGHTS = {
   seo: 20,
   geo: 15,
   conversion: 15,
@@ -12,7 +12,11 @@ export const WEIGHTS = {
   leadgen: 5,
 } as const;
 
-export type CategoryKey = keyof typeof WEIGHTS;
+export type ScoringWeights = { [K in keyof typeof DEFAULT_WEIGHTS]: number };
+export const WEIGHTS: ScoringWeights = DEFAULT_WEIGHTS;
+
+export type CategoryKey = keyof typeof DEFAULT_WEIGHTS;
+export const CATEGORY_KEYS = Object.keys(DEFAULT_WEIGHTS) as CategoryKey[];
 
 export function ratingLabel(score: number) {
   if (score >= 90) return "Market Leading";
@@ -36,7 +40,11 @@ export type EvidenceTag =
   | "Unknown"
   | "Not publicly verifiable";
 
-export function scoreFromHtml(html: string, industryKpis: string[]) {
+export function scoreFromHtml(
+  html: string,
+  industryKpis: string[],
+  weights: ScoringWeights = DEFAULT_WEIGHTS,
+) {
   const text = html.toLowerCase();
   const has = (re: RegExp) => re.test(text);
   const seo = clamp(8 + (has(/<title[^>]*>.{8,}/) ? 4 : 0) + (has(/name=["']description["']/) ? 3 : 0) + (has(/rel=["']canonical["']/) ? 2 : 0) + (has(/application\/ld\+json/) ? 3 : 0), 0, 20);
@@ -47,7 +55,13 @@ export function scoreFromHtml(html: string, industryKpis: string[]) {
   const ux = clamp(4 + (has(/aria-|alt=/) ? 3 : 0) + (has(/nav/) ? 2 : 0), 0, 10);
   const trust = clamp(3 + (has(/review|testimonial|google rating/) ? 3 : 0) + (has(/licensed|insured|warranty|privacy/) ? 2 : 0) + (has(/about/) ? 2 : 0), 0, 10);
   const leadgen = clamp(1 + (has(/utm_|gtag|gtm\.js|analytics/) ? 2 : 0) + industryKpis.filter((k) => text.includes(k.toLowerCase())).length, 0, 5);
-  const categories = { seo, geo, conversion, technical, aeo, ux, trust, leadgen };
+  const base = { seo, geo, conversion, technical, aeo, ux, trust, leadgen };
+  const categories = Object.fromEntries(
+    CATEGORY_KEYS.map((key) => [
+      key,
+      clamp((base[key] / DEFAULT_WEIGHTS[key]) * weights[key], 0, weights[key]),
+    ]),
+  ) as Record<CategoryKey, number>;
   const total = clamp(Object.values(categories).reduce((a, b) => a + b, 0));
   return { categories, total };
 }

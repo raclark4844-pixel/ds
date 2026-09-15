@@ -69,6 +69,7 @@ export function ReportDocument({ report, logoSrc }: { report: ComparisonReport; 
           <View style={s.card}><Text style={s.label}>Report number</Text><Text style={s.td}>{report.reportNumber}</Text></View>
           <View style={s.card}><Text style={s.label}>Report date</Text><Text style={s.td}>{report.reportDate}</Text></View>
         </View>
+        <Text style={s.meta}>{`${report.contactEmail}${report.contactPhone ? ` · ${report.contactPhone}` : ""}${report.timeframe ? ` · Target: ${report.timeframe}` : ""}`}</Text>
         <Text style={s.p}>Prepared by Demore Technology Solutions</Text>
         <Text style={s.meta}>www.demoretechnologysolutions.com</Text>
         <Text style={s.meta}>ryan@demoretechnologysolutions.com</Text>
@@ -105,13 +106,13 @@ export function ReportDocument({ report, logoSrc }: { report: ComparisonReport; 
         <Bar label="Market leader" value={report.marketLeader} color="#FFE14A" />
         <Bar label="Potential capability" value={report.potential} />
         <Text style={s.h2}>Named competitors</Text>
-        {report.competitors.map((c) => <Text key={c.name} style={s.p}>{`${c.name}: ${c.total} (${c.evidence}) ${c.note}`}</Text>)}
+        {report.competitors.map((c) => <Text key={c.name} style={s.p}>{`${c.name}: ${c.total} (${c.evidence})${c.mapsRank ? ` · Maps #${c.mapsRank}` : ""}${c.organicRank ? ` · Organic #${c.organicRank}` : ""}${c.rating ? ` · ${c.rating}/5 (${c.reviewCount ?? 0} reviews)` : ""}. ${c.note}`}</Text>)}
         <Text style={s.p}>{report.competitorSelection}</Text>
         <Text style={s.h2}>Category comparison</Text>
-        <Bar label={`SEO ${report.categories.seo}`} value={Math.round(report.categories.seo * 5)} />
-        <Bar label={`GEO ${report.categories.geo}`} value={Math.round(report.categories.geo * (100 / 15))} color="#FFE14A" />
-        <Bar label={`Conversion ${report.categories.conversion}`} value={Math.round(report.categories.conversion * (100 / 15))} color="#FF2A3A" />
-        <Bar label={`Technical ${report.categories.technical}`} value={Math.round(report.categories.technical * (100 / 15))} />
+        <Bar label={`SEO ${report.categories.seo}`} value={Math.round(report.categories.seo * (100 / (report.scoringWeights?.seo || 20)))} />
+        <Bar label={`GEO ${report.categories.geo}`} value={Math.round(report.categories.geo * (100 / (report.scoringWeights?.geo || 15)))} color="#FFE14A" />
+        <Bar label={`Conversion ${report.categories.conversion}`} value={Math.round(report.categories.conversion * (100 / (report.scoringWeights?.conversion || 15)))} color="#FF2A3A" />
+        <Bar label={`Technical ${report.categories.technical}`} value={Math.round(report.categories.technical * (100 / (report.scoringWeights?.technical || 15)))} />
       </Page>
       <Page size="LETTER" style={s.page}>
         <Chrome report={report} />

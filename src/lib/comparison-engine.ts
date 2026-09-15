@@ -14,7 +14,7 @@ const KPI: Record<string, string[]> = {
 
 export type AnalyzeInput = {
   companyName: string; website: string; industry: string; market: string;
-  contactName: string; contactEmail: string; competitors: string[]; confirmedTools: string; access: string;
+  contactName: string; contactEmail: string; contactPhone: string; timeframe: string; competitors: string[]; confirmedTools: string; access: string;
 };
 
 function normalizeUrl(raw: string) {
@@ -74,30 +74,50 @@ function capabilities(html: string): CapabilityRow[] {
 export async function buildComparisonReport(input: AnalyzeInput): Promise<ComparisonReport> {
   const website = normalizeUrl(input.website);
   const kpis = KPI[input.industry] || KPI.other;
-  const primary = await fetchHtml(website);
-  const scored = primary.html ? scoreFromHtml(primary.html, kpis) : { categories: emptyCats(), total: 28 };
+  const { getScoringSettings } = await import("@/lib/comparison-store");
+  const { discoverCompetitors } = await import("@/lib/dataforseo.server");
+  const [primary, scoring, discovery] = await Promise.all([
+    fetchHtml(website),
+    getScoringSettings(),
+    discoverCompetitors({ industry: input.industry, market: input.market, website }),
+  ]);
+  const scored = primary.html ? scoreFromHtml(primary.html, kpis, scoring.weights) : { categories: emptyCats(), total: 28 };
   const currentTotal = primary.ok ? scored.total : Math.max(22, scored.total);
   const path = recommendation(currentTotal, input.access) as PathChoice;
   const potential = potentialScore(currentTotal);
   const competitorRows = [];
-  for (const raw of input.competitors.slice(0, 3)) {
+  const candidates = discovery.live
+    ? discovery.competitors
+    : input.competitors.slice(0, 3).map((raw) => ({ website: raw, name: "", source: "Customer supplied" as const }));
+  for (const candidate of candidates) {
+    const raw = candidate.website;
     const url = normalizeUrl(raw);
     if (!url) continue;
     const fetched = await fetchHtml(url);
-    const result = fetched.html ? scoreFromHtml(fetched.html, kpis) : { categories: emptyCats(), total: 55 };
+    const result = fetched.html ? scoreFromHtml(fetched.html, kpis, scoring.weights) : { categories: emptyCats(), total: 55 };
     competitorRows.push({
-      name: new URL(url).hostname.replace(/^www\./, ""),
+      name: candidate.name || new URL(url).hostname.replace(/^www\./, ""),
       website: url,
       total: fetched.ok ? result.total : 50,
       categories: result.categories,
-      evidence: fetched.ok ? ("Publicly detected" as const) : ("Estimated" as const),
-      note: fetched.ok ? "Scored from public HTML." : "Fetch failed. Labeled estimated.",
+      evidence: fetched.ok
+        ? discovery.live ? ("Third-party sourced" as const) : ("Customer provided" as const)
+        : ("Estimated" as const),
+      note: fetched.ok ? `Website scored from public HTML. ${discovery.note}` : `Website fetch failed; score is estimated. ${discovery.note}`,
+      source: candidate.source,
+      mapsRank: "mapsRank" in candidate ? candidate.mapsRank : undefined,
+      organicRank: "organicRank" in candidate ? candidate.organicRank : undefined,
+      rating: "rating" in candidate ? candidate.rating : undefined,
+      reviewCount: "reviewCount" in candidate ? candidate.reviewCount : undefined,
+      placeId: "placeId" in candidate ? candidate.placeId : undefined,
+      discoveredAt: "discoveredAt" in candidate ? candidate.discoveredAt : undefined,
+      query: "query" in candidate ? candidate.query : undefined,
     });
   }
   if (!competitorRows.length) {
     competitorRows.push(
-      { name: "Industry benchmark A", website: "estimated", total: Math.min(88, currentTotal + 14), categories: emptyCats(), evidence: "Estimated", note: "No competitor URL supplied." },
-      { name: "Industry benchmark B", website: "estimated", total: Math.min(80, currentTotal + 8), categories: emptyCats(), evidence: "Estimated", note: "No competitor URL supplied." },
+      { name: "Leading-industry capability benchmark", website: "benchmark", total: Math.min(88, currentTotal + 14), categories: emptyCats(), evidence: "Estimated" as const, source: "Industry benchmark" as const, note: `${discovery.note} This is not presented as a real business.` },
+      { name: "Typical-industry capability benchmark", website: "benchmark", total: Math.min(80, currentTotal + 8), categories: emptyCats(), evidence: "Estimated" as const, source: "Industry benchmark" as const, note: `${discovery.note} This is not presented as a real business.` },
     );
   }
   const competitorAverage = Math.round(competitorRows.reduce((s, r) => s + r.total, 0) / competitorRows.length);
@@ -106,13 +126,17 @@ export async function buildComparisonReport(input: AnalyzeInput): Promise<Compar
   const today = new Date().toISOString().slice(0, 10);
   const platform = detectPlatform(primary.html, primary.headers);
   return {
-    reportNumber: createReportId(), reportDate: today, measurementDate: today, scoringVersion: SCORING_VERSION,
+    reportNumber: createReportId(), reportDate: today, measurementDate: today, scoringVersion: `${SCORING_VERSION}-weights-${scoring.version}`,
     companyName: input.companyName, website, industry: input.industry, market: input.market,
-    contactName: input.contactName, contactEmail: input.contactEmail,
+    contactName: input.contactName, contactEmail: input.contactEmail, contactPhone: input.contactPhone, timeframe: input.timeframe,
     currentTotal, competitorAverage, marketLeader, potential, confidence, path,
     summary: {
       current: primary.ok ? `The public site at ${website} is reachable. This is a public-page score, not a ranking.` : `The public site at ${website} could not be fully fetched. Confidence is lower.`,
-      competitors: competitorRows.some((r) => r.evidence === "Estimated") ? "At least one competitor score is an industry benchmark." : "Competitor scores come from fetched HTML.",
+      competitors: discovery.live
+        ? "Competitors were found in live Google Maps and organic results, then their public websites were compared."
+        : competitorRows[0]?.source === "Industry benchmark"
+          ? "Live competitors were unavailable, so the comparison uses clearly labeled, non-business benchmarks."
+          : "Live discovery was unavailable; customer-supplied sites were compared.",
       strongest: "Strongest public signals are listed in the category bars.",
       opportunities: "Largest gaps are usually answers, intake, and follow-up.",
       holdingBack: path === "Rebuild" ? "The current stack looks hard to extend." : "The site publishes, but follow-up still looks disconnected.",
@@ -120,8 +144,13 @@ export async function buildComparisonReport(input: AnalyzeInput): Promise<Compar
       nextStep: `Recommended path: ${path}. Start a project and keep this report number.`,
     },
     categories: scored.categories,
+    scoringWeights: scoring.weights,
     competitors: competitorRows,
-    competitorSelection: competitorRows[0]?.website === "estimated" ? "Competitors were not supplied. Benchmarks are labeled estimated." : "Competitors are the supplied URLs.",
+    competitorSelection: discovery.live
+      ? `Competitors were selected from live Google Maps and organic results for ${input.market}. Rankings are a point-in-time observation.`
+      : competitorRows[0]?.source === "Industry benchmark"
+        ? "No verified competitor websites were available. Generic benchmarks are labeled estimated and are not real businesses."
+        : "Live discovery was unavailable, so customer-supplied competitor URLs were used.",
     capabilities: capabilities(primary.html),
     tech: {
       platform,
@@ -157,8 +186,8 @@ export async function buildComparisonReport(input: AnalyzeInput): Promise<Compar
       measured: ["Public HTML fetch", "Titles", "Forms", "Viewport", "FAQ/schema signatures"],
       detected: [platform],
       supplied: [input.companyName, input.industry, input.market],
-      sources: ["Customer URLs", "Public HTTP response"],
-      benchmarks: ["dts-compare-v1"],
+      sources: discovery.live ? ["DataForSEO live Google Maps SERP", "DataForSEO live Google organic SERP", "Public HTTP responses"] : ["Customer URLs", "Public HTTP responses"],
+      benchmarks: [`dts-compare-v1 weights version ${scoring.version}`],
       assumptions: ["Homepage represents the current site"],
       unknowns: ["Private CRM", "Ad spend", "Actual conversion rate"],
       confidenceNote: `Assessment confidence is ${confidence}%.`,

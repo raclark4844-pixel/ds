@@ -14,17 +14,17 @@ export default async function comparisonReport(event: { req: Request }) {
   try { raw = await req.json(); } catch { return Response.json({ error: "Invalid request." }, { status: 400 }); }
   const parsed = schema.safeParse(raw);
   if (!parsed.success) return Response.json({ error: "Report access is invalid." }, { status: 400 });
-  const record = getAuthorizedComparison(parsed.data.reportId, parsed.data.token);
+  const record = await getAuthorizedComparison(parsed.data.reportId, parsed.data.token);
   if (!record) return Response.json({ error: "That report is not available." }, { status: 404 });
   try {
     const { renderComparisonPdf, reportFilename } = await import("../../../src/lib/report-pdf/render-report.server");
     const pdf = await renderComparisonPdf(record.report);
     if (!pdf.subarray(0, 5).toString().startsWith("%PDF-")) throw new Error("renderer-did-not-return-pdf");
-    patchStatus(record.id, { pdfStatus: "ok" });
+    await patchStatus(record.id, { pdfStatus: "ok" });
     if (parsed.data.email) {
       const { sendReportEmails } = await import("../../../src/lib/report-mail");
       const mailed = await sendReportEmails(record.report, pdf);
-      patchStatus(record.id, {
+      await patchStatus(record.id, {
         customerEmailStatus: mailed.customer.ok ? "ok" : "failed",
         internalEmailStatus: mailed.internal.ok ? "ok" : "failed",
       });
@@ -41,7 +41,7 @@ export default async function comparisonReport(event: { req: Request }) {
     });
   } catch (err) {
     console.error("[comparison-report] pdf failed", err instanceof Error ? err.message : "unknown");
-    patchStatus(record.id, { pdfStatus: "failed" });
+    await patchStatus(record.id, { pdfStatus: "failed" });
     return Response.json({ error: "The PDF could not be generated. Retry without losing the comparison." }, { status: 500 });
   }
 }
