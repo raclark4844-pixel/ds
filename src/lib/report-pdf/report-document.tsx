@@ -2,9 +2,9 @@ import { Document, Image, Page, StyleSheet, Text, View } from "@react-pdf/render
 import type { ComparisonReport } from "./report-types";
 
 const s = StyleSheet.create({
-  page: { backgroundColor: "#050505", color: "#F4F4F1", fontFamily: "Helvetica", fontSize: 10, paddingTop: 64, paddingBottom: 48, paddingHorizontal: 40 },
+  page: { backgroundColor: "#050505", color: "#F4F4F1", fontFamily: "Helvetica", fontSize: 10, paddingTop: 64, paddingBottom: 72, paddingHorizontal: 40 },
   header: { position: "absolute", top: 18, left: 40, right: 40, flexDirection: "row", justifyContent: "space-between", borderBottomWidth: 1, borderBottomColor: "#2A2A28", paddingBottom: 8 },
-  footer: { position: "absolute", bottom: 18, left: 40, right: 40, flexDirection: "row", justifyContent: "space-between", borderTopWidth: 1, borderTopColor: "#2A2A28", paddingTop: 6 },
+  footer: { position: "absolute", bottom: 14, left: 40, right: 40, height: 44, flexDirection: "row", alignItems: "center", justifyContent: "space-between", borderTopWidth: 1, borderTopColor: "#2A2A28", paddingTop: 6 },
   brand: { color: "#00FF9C", fontSize: 8, letterSpacing: 1.1, fontFamily: "Helvetica-Bold" },
   meta: { color: "#8B8B86", fontSize: 8 },
   kicker: { color: "#8B8B86", fontSize: 8, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 6 },
@@ -18,21 +18,39 @@ const s = StyleSheet.create({
   barTrack: { height: 8, backgroundColor: "#1A1A1A", marginBottom: 4 },
   barFill: { height: 8, backgroundColor: "#00FF9C" },
   disc: { color: "#A8A8A3", fontSize: 8, lineHeight: 1.4, marginTop: 8 },
-  logo: { width: 150, height: 40, marginBottom: 14 },
+  customerLogo: { width: 150, height: 54, objectFit: "contain", objectPosition: "left center" },
+  smallCustomerLogo: { width: 64, height: 18, objectFit: "contain", objectPosition: "left center" },
+  headerCustomer: { flexDirection: "row", alignItems: "center", gap: 7 },
+  headerCustomerName: { color: "#F4F4F1", fontSize: 7.2, fontFamily: "Helvetica-Bold" },
+  providerFooterLogo: { width: 92, height: 25, objectFit: "contain", objectPosition: "left center" },
+  footerProvider: { flexDirection: "row", alignItems: "center", gap: 8, width: "68%" },
+  footerProviderText: { color: "#BDBDB8", fontSize: 6.8, lineHeight: 1.35 },
+  customerHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 18, marginBottom: 18, padding: 12, borderWidth: 1, borderColor: "#2A2A28", backgroundColor: "#0D0D0D" },
+  customerDetails: { flexGrow: 1, flexBasis: 0 },
   tr: { flexDirection: "row", borderBottomWidth: 1, borderBottomColor: "#2A2A28", paddingVertical: 4 },
   th: { color: "#FFE14A", fontSize: 8, fontFamily: "Helvetica-Bold" },
   td: { color: "#E8E8E4", fontSize: 8 },
 });
 
-function Chrome({ report }: { report: ComparisonReport }) {
+function Chrome({ report, providerLogoSrc, customerLogoSrc }: { report: ComparisonReport; providerLogoSrc?: string; customerLogoSrc?: string }) {
   return (
     <>
       <View style={s.header} fixed>
-        <Text style={s.brand}>DEMORE TECHNOLOGY SOLUTIONS</Text>
+        <View style={s.headerCustomer}>
+          {customerLogoSrc ? <Image src={customerLogoSrc} style={s.smallCustomerLogo} /> : null}
+          <Text style={s.headerCustomerName}>{report.customerBrand?.name || report.companyName}</Text>
+        </View>
         <Text style={s.meta}>{report.reportNumber}</Text>
       </View>
       <View style={s.footer} fixed>
-        <Text style={s.meta}>www.demoretechnologysolutions.com</Text>
+        <View style={s.footerProvider}>
+          {providerLogoSrc ? <Image src={providerLogoSrc} style={s.providerFooterLogo} /> : <Text style={s.brand}>DEMORE</Text>}
+          <View>
+            <Text style={s.footerProviderText}>Solution provider: Demore Technology Solutions</Text>
+            <Text style={s.footerProviderText}>www.demoretechnologysolutions.com · ryan@demoretechnologysolutions.com</Text>
+            <Text style={s.footerProviderText}>Mentor, Ohio · Serving businesses nationwide</Text>
+          </View>
+        </View>
         <Text style={s.meta} render={({ pageNumber, totalPages }) => `${report.reportNumber}  ·  ${pageNumber} / ${totalPages}`} />
       </View>
     </>
@@ -48,15 +66,25 @@ function Bar({ label, value, color = "#00FF9C" }: { label: string; value: number
   );
 }
 
-export function ReportDocument({ report, logoSrc }: { report: ComparisonReport; logoSrc?: string }) {
+export function ReportDocument({ report, providerLogoSrc, customerLogoSrc }: { report: ComparisonReport; providerLogoSrc?: string; customerLogoSrc?: string }) {
   return (
     <Document title={`Demore comparison — ${report.companyName}`} author="Demore Technology Solutions">
       <Page size="LETTER" style={s.page}>
-        <Chrome report={report} />
-        {logoSrc ? <Image src={logoSrc} style={s.logo} /> : <Text style={s.kicker}>Demore Technology Solutions</Text>}
+        <Chrome report={report} providerLogoSrc={providerLogoSrc} customerLogoSrc={customerLogoSrc} />
         <Text style={s.kicker}>Prepared comparison report</Text>
         <Text style={s.h1}>AI Website, Competitor & Growth Comparison</Text>
-        <Text style={s.p}>{report.companyName}</Text>
+        <View style={s.customerHeader}>
+          <View style={s.customerDetails}>
+            <Text style={s.label}>Prepared for</Text>
+            <Text style={s.h2}>{report.customerBrand?.name || report.companyName}</Text>
+            <Text style={s.p}>{report.customerBrand?.website || report.website}</Text>
+            {report.customerBrand?.phone ? <Text style={s.p}>{report.customerBrand.phone}</Text> : null}
+            {report.customerBrand?.email ? <Text style={s.p}>{report.customerBrand.email}</Text> : null}
+            {report.customerBrand?.address ? <Text style={s.p}>{report.customerBrand.address}</Text> : null}
+            <Text style={s.meta}>{report.customerBrand?.source || "Submitted information"}</Text>
+          </View>
+          {customerLogoSrc ? <Image src={customerLogoSrc} style={s.customerLogo} /> : <View style={{ width: 150 }}><Text style={s.brand}>{report.companyName.toUpperCase()}</Text><Text style={s.meta}>Logo not publicly detected</Text></View>}
+        </View>
         <View style={s.row}>
           <View style={s.card}><Text style={s.label}>Website</Text><Text style={s.td}>{report.website}</Text></View>
           <View style={s.card}><Text style={s.label}>Industry</Text><Text style={s.td}>{report.industry}</Text></View>
@@ -71,11 +99,9 @@ export function ReportDocument({ report, logoSrc }: { report: ComparisonReport; 
         </View>
         <Text style={s.meta}>{`${report.contactEmail}${report.contactPhone ? ` · ${report.contactPhone}` : ""}${report.timeframe ? ` · Target: ${report.timeframe}` : ""}`}</Text>
         <Text style={s.p}>Prepared by Demore Technology Solutions</Text>
-        <Text style={s.meta}>www.demoretechnologysolutions.com</Text>
-        <Text style={s.meta}>ryan@demoretechnologysolutions.com</Text>
       </Page>
       <Page size="LETTER" style={s.page}>
-        <Chrome report={report} />
+        <Chrome report={report} providerLogoSrc={providerLogoSrc} customerLogoSrc={customerLogoSrc} />
         <Text style={s.kicker}>Executive summary</Text>
         <Text style={s.h1}>What the site is doing, in plain language.</Text>
         <View style={s.row}>
@@ -97,7 +123,7 @@ export function ReportDocument({ report, logoSrc }: { report: ComparisonReport; 
         <Text style={s.h2}>Next step</Text><Text style={s.p}>{`${report.path}. ${report.summary.nextStep}`}</Text>
       </Page>
       <Page size="LETTER" style={s.page}>
-        <Chrome report={report} />
+        <Chrome report={report} providerLogoSrc={providerLogoSrc} customerLogoSrc={customerLogoSrc} />
         <Text style={s.kicker}>Scores</Text>
         <Text style={s.h1}>Score and competitor comparison</Text>
         <Text style={s.p}>{`Market: ${report.market}. Measured ${report.measurementDate}. These are capability scores, not rankings or revenue.`}</Text>
@@ -115,7 +141,7 @@ export function ReportDocument({ report, logoSrc }: { report: ComparisonReport; 
         <Bar label={`Technical ${report.categories.technical}`} value={Math.round(report.categories.technical * (100 / (report.scoringWeights?.technical || 15)))} />
       </Page>
       <Page size="LETTER" style={s.page}>
-        <Chrome report={report} />
+        <Chrome report={report} providerLogoSrc={providerLogoSrc} customerLogoSrc={customerLogoSrc} />
         <Text style={s.kicker}>Platform gap</Text>
         <Text style={s.h1}>Current website versus Demore platform</Text>
         <View style={s.tr}><Text style={[s.th, { width: "22%" }]}>Capability</Text><Text style={[s.th, { width: "28%" }]}>Current</Text><Text style={[s.th, { width: "32%" }]}>Demore platform</Text><Text style={[s.th, { width: "18%" }]}>Status</Text></View>
@@ -130,7 +156,7 @@ export function ReportDocument({ report, logoSrc }: { report: ComparisonReport; 
         <Text style={s.disc}>Unknown items are labeled. No passwords or secrets are stored.</Text>
       </Page>
       <Page size="LETTER" style={s.page}>
-        <Chrome report={report} />
+        <Chrome report={report} providerLogoSrc={providerLogoSrc} customerLogoSrc={customerLogoSrc} />
         <Text style={s.kicker}>Access</Text>
         <Text style={s.h1}>Enhance the current site or rebuild?</Text>
         {report.accessComparison ? (
@@ -180,7 +206,7 @@ export function ReportDocument({ report, logoSrc }: { report: ComparisonReport; 
       </Page>
       {report.accessComparison ? (
         <Page size="LETTER" style={s.page}>
-          <Chrome report={report} />
+          <Chrome report={report} providerLogoSrc={providerLogoSrc} customerLogoSrc={customerLogoSrc} />
           <Text style={s.kicker}>Automation opportunities</Text>
           <Text style={s.h1}>Where bots can improve the customer journey</Text>
           <Text style={s.p}>Bots should use approved business information, disclose limitations, capture consent where required and hand sensitive or uncertain questions to a person.</Text>
@@ -202,7 +228,7 @@ export function ReportDocument({ report, logoSrc }: { report: ComparisonReport; 
         </Page>
       ) : null}
       <Page size="LETTER" style={s.page}>
-        <Chrome report={report} />
+        <Chrome report={report} providerLogoSrc={providerLogoSrc} customerLogoSrc={customerLogoSrc} />
         <Text style={s.kicker}>Outlook</Text>
         <Text style={s.h1}>Growth and capability outlook</Text>
         <Text style={s.p}>{report.outlook.current}</Text>
@@ -217,7 +243,7 @@ export function ReportDocument({ report, logoSrc }: { report: ComparisonReport; 
         {report.outlook.priorities.map((item) => <Text key={item.label} style={s.p}>{`${item.label}: impact ${item.impact}, effort ${item.effort}`}</Text>)}
       </Page>
       <Page size="LETTER" style={s.page}>
-        <Chrome report={report} />
+        <Chrome report={report} providerLogoSrc={providerLogoSrc} customerLogoSrc={customerLogoSrc} />
         <Text style={s.kicker}>Actions</Text>
         <Text style={s.h1}>Detailed recommendations</Text>
         {report.recommendations.map((item, i) => (
@@ -232,7 +258,7 @@ export function ReportDocument({ report, logoSrc }: { report: ComparisonReport; 
         ))}
       </Page>
       <Page size="LETTER" style={s.page}>
-        <Chrome report={report} />
+        <Chrome report={report} providerLogoSrc={providerLogoSrc} customerLogoSrc={customerLogoSrc} />
         <Text style={s.kicker}>Limits</Text>
         <Text style={s.h1}>Methodology, sources and limitations</Text>
         <Text style={s.h2}>Measured</Text><Text style={s.p}>{report.methodology.measured.join(" ")}</Text>

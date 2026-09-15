@@ -1,6 +1,6 @@
 import { potentialScore, recommendation, scoreFromHtml, SCORING_VERSION } from "@/lib/comparison";
 import { createReportId } from "@/lib/comparison-store";
-import type { AccessComparison, CapabilityRow, CategoryScores, ComparisonReport, PathChoice } from "@/lib/report-pdf/report-types";
+import type { AccessComparison, CapabilityRow, CategoryScores, ComparisonReport, CustomerBrand, PathChoice } from "@/lib/report-pdf/report-types";
 
 const KPI: Record<string, string[]> = {
   contractors: ["estimate", "roof", "siding", "storm"],
@@ -95,6 +95,116 @@ async function fetchHtml(url: string) {
   } catch {
     return { html: "", ok: false, headers: {} as Record<string, string> };
   }
+}
+
+function decodeHtml(value: string) {
+  return value
+    .replace(/&amp;/gi, "&")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">");
+}
+
+function tagAttribute(tag: string, name: string) {
+  const match = tag.match(new RegExp(`\\b${name}\\s*=\\s*(["'])(.*?)\\1`, "i"));
+  return match ? decodeHtml(match[2].trim()) : "";
+}
+
+function absolutePublicUrl(raw: unknown, website: string) {
+  const candidate = typeof raw === "string"
+    ? raw
+    : raw && typeof raw === "object" && "url" in raw && typeof raw.url === "string"
+      ? raw.url
+      : "";
+  if (!candidate) return undefined;
+  try {
+    const parsed = new URL(candidate, website);
+    return parsed.protocol === "https:" || parsed.protocol === "http:" ? parsed.toString() : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function addressLine(raw: unknown) {
+  if (typeof raw === "string") return raw.trim() || undefined;
+  if (!raw || typeof raw !== "object") return undefined;
+  const address = raw as Record<string, unknown>;
+  const locality = [address.addressLocality, address.addressRegion, address.postalCode]
+    .filter((part): part is string => typeof part === "string" && Boolean(part.trim()))
+    .join(", ");
+  return [address.streetAddress, locality, address.addressCountry]
+    .filter((part): part is string => typeof part === "string" && Boolean(part.trim()))
+    .join(" · ") || undefined;
+}
+
+function publicOrganization(html: string) {
+  const organizations: Record<string, unknown>[] = [];
+  const scripts = html.matchAll(/<script\b[^>]*type\s*=\s*(["'])application\/ld\+json\1[^>]*>([\s\S]*?)<\/script>/gi);
+  const visit = (value: unknown) => {
+    if (Array.isArray(value)) return value.forEach(visit);
+    if (!value || typeof value !== "object") return;
+    const item = value as Record<string, unknown>;
+    const types = Array.isArray(item["@type"]) ? item["@type"] : [item["@type"]];
+    if (types.some((type) => typeof type === "string" && /organization|business|service|restaurant|store|corporation/i.test(type))) {
+      organizations.push(item);
+    }
+    if (item["@graph"]) visit(item["@graph"]);
+  };
+  for (const script of scripts) {
+    try { visit(JSON.parse(script[2].trim())); } catch { /* Invalid third-party JSON-LD is ignored. */ }
+  }
+  return organizations.find((item) => item.logo || item.telephone || item.email || item.address) || organizations[0];
+}
+
+function metaValue(html: string, key: string) {
+  for (const match of html.matchAll(/<meta\b[^>]*>/gi)) {
+    const tag = match[0];
+    const identity = tagAttribute(tag, "property") || tagAttribute(tag, "name") || tagAttribute(tag, "itemprop");
+    if (identity.toLowerCase() === key.toLowerCase()) return tagAttribute(tag, "content") || undefined;
+  }
+  return undefined;
+}
+
+function detectedLogo(html: string, website: string, organization?: Record<string, unknown>) {
+  const structured = absolutePublicUrl(organization?.logo, website);
+  if (structured) return structured;
+  const metaLogo = absolutePublicUrl(metaValue(html, "logo") || metaValue(html, "og:logo"), website);
+  if (metaLogo) return metaLogo;
+  for (const match of html.matchAll(/<img\b[^>]*>/gi)) {
+    const tag = match[0];
+    const identity = `${tagAttribute(tag, "alt")} ${tagAttribute(tag, "title")} ${tagAttribute(tag, "class")} ${tagAttribute(tag, "id")}`;
+    if (/\blogo\b/i.test(identity)) {
+      const src = tagAttribute(tag, "src") || tagAttribute(tag, "data-src");
+      const resolved = absolutePublicUrl(src, website);
+      if (resolved) return resolved;
+    }
+  }
+  const socialImage = metaValue(html, "og:image");
+  return /logo|brand/i.test(socialImage || "") ? absolutePublicUrl(socialImage, website) : undefined;
+}
+
+function hrefContact(html: string, protocol: "tel" | "mailto") {
+  const match = html.match(new RegExp(`href\\s*=\\s*(["'])${protocol}:([^"']+)\\1`, "i"));
+  return match ? decodeURIComponent(decodeHtml(match[2])).split("?")[0].trim() || undefined : undefined;
+}
+
+function extractCustomerBrand(html: string, website: string, submittedName: string): CustomerBrand {
+  const organization = publicOrganization(html);
+  const publicName = typeof organization?.name === "string" ? organization.name.trim() : "";
+  const phone = typeof organization?.telephone === "string" ? organization.telephone.trim() : hrefContact(html, "tel");
+  const email = typeof organization?.email === "string" ? organization.email.replace(/^mailto:/i, "").trim() : hrefContact(html, "mailto");
+  const address = addressLine(organization?.address);
+  const logoUrl = detectedLogo(html, website, organization);
+  return {
+    name: publicName || submittedName,
+    website,
+    ...(logoUrl ? { logoUrl } : {}),
+    ...(phone ? { phone } : {}),
+    ...(email ? { email } : {}),
+    ...(address ? { address } : {}),
+    source: organization || logoUrl || phone || email ? "Public website" : "Submitted information",
+  };
 }
 function emptyCats(): CategoryScores {
   return { seo: 0, geo: 0, conversion: 0, technical: 0, aeo: 0, ux: 0, trust: 0, leadgen: 0 };
@@ -201,10 +311,12 @@ export async function buildComparisonReport(input: AnalyzeInput): Promise<Compar
     : { status: "available", source: "DataForSEO Labs bulk traffic estimation", monthlyOrganic: currentTraffic, market: input.market, note: "Estimated monthly organic traffic, not first-party analytics." };
   const accessComparison = buildAccessComparison(input, currentTotal, platform);
   const path = accessComparison.recommendedPath || preliminaryPath;
+  const customerBrand = extractCustomerBrand(primary.html, website, input.companyName);
   return {
     reportNumber: createReportId(), reportDate: today, measurementDate: today, scoringVersion: `${SCORING_VERSION}-weights-${scoring.version}`,
     companyName: input.companyName, website, industry: input.industry, market: input.market,
     contactName: input.contactName, contactEmail: input.contactEmail, contactPhone: input.contactPhone, timeframe: input.timeframe,
+    customerBrand,
     currentTotal, competitorAverage, marketLeader, potential, confidence, path,
     summary: {
       current: primary.ok ? `The public site at ${website} is reachable. This is a public-page score, not a ranking.` : `The public site at ${website} could not be fully fetched. Confidence is lower.`,
@@ -262,7 +374,7 @@ export async function buildComparisonReport(input: AnalyzeInput): Promise<Compar
     ],
     methodology: {
       measured: ["Public HTML fetch", "Titles", "Forms", "Viewport", "FAQ/schema signatures", performance.pageSpeed.status === "available" ? "Google PageSpeed Insights mobile lab" : "PageSpeed requested but unavailable", performance.coreWebVitals.status === "available" ? "Chrome UX Report field data" : "CrUX field data unavailable"],
-      detected: [platform],
+      detected: [platform, customerBrand.source === "Public website" ? "Public company branding and contact details" : "No public company branding detected"],
       supplied: [input.companyName, input.industry, input.market],
       sources: discovery.live ? ["DataForSEO live Google Maps SERP", "DataForSEO live Google organic SERP", "DataForSEO Labs traffic estimates when returned", "Google PageSpeed Insights / CrUX when returned", "Public HTTP responses"] : ["Customer URLs", "Google PageSpeed Insights / CrUX when returned", "Public HTTP responses"],
       benchmarks: [`dts-compare-v1 weights version ${scoring.version}`],

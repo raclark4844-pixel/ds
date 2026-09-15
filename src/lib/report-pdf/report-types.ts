@@ -120,6 +120,16 @@ export type AccessComparison = {
   }>;
 };
 
+export type CustomerBrand = {
+  name: string;
+  website: string;
+  logoUrl?: string;
+  phone?: string;
+  email?: string;
+  address?: string;
+  source: "Public website" | "Submitted information";
+};
+
 export type ComparisonReport = {
   reportNumber: string;
   reportDate: string;
@@ -133,6 +143,7 @@ export type ComparisonReport = {
   contactEmail: string;
   contactPhone?: string;
   timeframe?: string;
+  customerBrand?: CustomerBrand;
   currentTotal: number;
   competitorAverage: number;
   marketLeader: number;
