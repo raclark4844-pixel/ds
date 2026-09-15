@@ -145,8 +145,9 @@ export function ComparisonApp() {
             <Button type="button" onClick={downloadPdf} disabled={busy !== "off"}>{busy === "pdf" ? "Generating PDF…" : "Download My Comparison Report"}</Button>
             <Button type="button" variant="outline" onClick={retryEmail} disabled={busy !== "off"}>{busy === "email" ? "Retrying email…" : "Retry email delivery"}</Button>
             <Button asChild variant="outline"><Link to="/contact" search={{ need: "platform" }}>Start a project</Link></Button>
+            <Button type="button" variant="outline" onClick={() => window.print()}>Print this page</Button>
           </div>
-          <p className="text-xs text-faint">The download requests a real application/pdf file. It does not open the print dialog.</p>
+          <p className="text-xs text-faint">Download My Comparison Report requests a real application/pdf file from the server. It does not open the print dialog. Print this page is a separate browser print option.</p>
         </section>
       ) : null}
     </div>
