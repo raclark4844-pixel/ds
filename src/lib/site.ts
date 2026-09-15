@@ -36,6 +36,7 @@ export const primaryNav = [
   { to: "/websites", label: "Websites" },
   { to: "/growth", label: "Growth" },
   { to: "/automation", label: "Automation" },
+  { to: "/compare", label: "Free Comparison" },
 ] as const;
 
 export const laterNav = [
