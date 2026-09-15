@@ -132,7 +132,27 @@ export function ReportDocument({ report, logoSrc }: { report: ComparisonReport; 
       <Page size="LETTER" style={s.page}>
         <Chrome report={report} />
         <Text style={s.kicker}>Access</Text>
-        <Text style={s.h1}>Technology and access readiness</Text>
+        <Text style={s.h1}>Enhance the current site or rebuild?</Text>
+        {report.accessComparison ? (
+          <>
+            <View style={s.row}>
+              <View style={s.card}><Text style={s.label}>Enhance current site</Text><Text style={s.value}>{`${report.accessComparison.enhanceFit}/100`}</Text></View>
+              <View style={s.card}><Text style={s.label}>Strategic rebuild</Text><Text style={s.value}>{`${report.accessComparison.rebuildFit}/100`}</Text></View>
+              <View style={s.card}><Text style={s.label}>Information confidence</Text><Text style={s.value}>{report.accessComparison.confidence}</Text></View>
+            </View>
+            <Text style={s.p}>{report.accessComparison.explanation}</Text>
+            <View style={s.tr}><Text style={[s.th, { width: "19%" }]}>Factor</Text><Text style={[s.th, { width: "27%" }]}>Enhance current</Text><Text style={[s.th, { width: "27%" }]}>Rebuild</Text><Text style={[s.th, { width: "27%" }]}>Advantage</Text></View>
+            {report.accessComparison.rows.map((row) => (
+              <View key={row.factor} style={s.tr} wrap={false}>
+                <Text style={[s.td, { width: "19%", paddingRight: 4 }]}>{row.factor}</Text>
+                <Text style={[s.td, { width: "27%", paddingRight: 4 }]}>{row.enhanceCurrent}</Text>
+                <Text style={[s.td, { width: "27%", paddingRight: 4 }]}>{row.rebuild}</Text>
+                <Text style={[s.td, { width: "27%" }]}>{row.advantage}</Text>
+              </View>
+            ))}
+          </>
+        ) : null}
+        <Text style={s.h2}>Technology and access details</Text>
         <Text style={s.p}>{`Platform: ${report.tech.platform}`}</Text>
         <Text style={s.p}>{`Hosting: ${report.tech.hosting}`}</Text>
         <Text style={s.p}>{`Domain / DNS: ${report.tech.domainDns}`}</Text>
@@ -150,6 +170,29 @@ export function ReportDocument({ report, logoSrc }: { report: ComparisonReport; 
         <Text style={s.p}>{report.tech.accessNeeded}</Text>
         <Text style={s.p}>{`Recommended path: ${report.path}.`}</Text>
       </Page>
+      {report.accessComparison ? (
+        <Page size="LETTER" style={s.page}>
+          <Chrome report={report} />
+          <Text style={s.kicker}>Automation opportunities</Text>
+          <Text style={s.h1}>Where bots can improve the customer journey</Text>
+          <Text style={s.p}>Bots should use approved business information, disclose limitations, capture consent where required and hand sensitive or uncertain questions to a person.</Text>
+          <View style={s.tr}><Text style={[s.th, { width: "20%" }]}>Opportunity</Text><Text style={[s.th, { width: "25%" }]}>On the current site</Text><Text style={[s.th, { width: "25%" }]}>With a rebuild</Text><Text style={[s.th, { width: "30%" }]}>Business value</Text></View>
+          {report.accessComparison.botOpportunities.map((bot) => (
+            <View key={bot.name} style={s.tr} wrap={false}>
+              <Text style={[s.td, { width: "20%", paddingRight: 4 }]}>{bot.name}</Text>
+              <Text style={[s.td, { width: "25%", paddingRight: 4 }]}>{bot.currentSite}</Text>
+              <Text style={[s.td, { width: "25%", paddingRight: 4 }]}>{bot.rebuild}</Text>
+              <Text style={[s.td, { width: "30%" }]}>{bot.businessValue}</Text>
+            </View>
+          ))}
+          <Text style={s.h2}>Provided ownership details</Text>
+          <Text style={s.p}>{`Registrar: ${report.accessComparison.registrar}`}</Text>
+          <Text style={s.p}>{`Host/platform: ${report.accessComparison.hostingProvider}`}</Text>
+          <Text style={s.p}>{`Creator/maintainer: ${report.accessComparison.siteCreator}`}</Text>
+          <Text style={s.p}>{`Code access: ${report.accessComparison.codeAccess}`}</Text>
+          <Text style={s.disc}>These optional details are customer supplied unless separately labeled as publicly detected. Demore does not request or store passwords in this comparison form.</Text>
+        </Page>
+      ) : null}
       <Page size="LETTER" style={s.page}>
         <Chrome report={report} />
         <Text style={s.kicker}>Outlook</Text>
