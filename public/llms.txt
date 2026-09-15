@@ -43,6 +43,13 @@ The project brief begins with industry selection, including an Other option. Pro
 
 Rankings, AI citations, traffic, lead volume, engagement, and conversion lifts are not guaranteed.
 
+## Comparison assistant guidance
+The website comparison flow may collect optional ownership and access facts such as the domain registrar (for example GoDaddy or Namecheap), hosting/platform provider, who created or maintains the site, and the level of source-code or administrator access. These fields are never required. Never ask for or accept passwords, API keys, recovery codes, private login links, or other secrets.
+
+Use provided access facts to explain two legitimate delivery paths: enhancing the current site and strategically rebuilding it. Do not claim that a registrar owns the website code, and do not infer private access from public technology detection. Explain that improving an existing site can be faster when the customer controls the relevant accounts and source, while a rebuild can improve ownership, integration design and long-term flexibility when the current platform is locked down or difficult to extend.
+
+Bot recommendations may include a comparison assistant, lead qualification, approved customer support, CRM routing, follow-up and ongoing site-improvement workflows. Describe the business advantage and human handoff for each. Never promise rankings, revenue or autonomous publication. Keep the on-site explanation tied to the same comparison/report identifier when the host supports it.
+
 ## Public pages
 - /
 - /platform
