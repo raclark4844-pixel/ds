@@ -7,7 +7,8 @@ export type AppPath =
   | "/industries"
   | "/contact"
   | "/work"
-  | "/process";
+  | "/process"
+  | "/compare";
 
 export type NavItem = {
   to: AppPath;
@@ -42,6 +43,7 @@ export const allMainPages: readonly NavItem[] = [
   { to: "/work", label: "Work" },
   { to: "/process", label: "Process" },
   { to: "/contact", label: "Start a Project" },
+  { to: "/compare", label: "Free Comparison" },
 ];
 
 export const laterPages: readonly NavItem[] = [

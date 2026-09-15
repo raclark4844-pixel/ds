@@ -6,6 +6,7 @@ import {
   Globe,
   Home,
   ListOrdered,
+  Scale,
   Sparkles,
   TrendingUp,
   type LucideIcon,
@@ -22,4 +23,5 @@ export const navIcons: Record<AppPath, LucideIcon> = {
   "/contact": ClipboardList,
   "/work": Briefcase,
   "/process": ListOrdered,
+  "/compare": Scale,
 };
