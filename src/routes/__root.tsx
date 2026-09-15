@@ -4,6 +4,7 @@ import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteDock } from "@/components/site-dock";
+import { SiteAssistant } from "@/components/site-assistant";
 import { JsonLd } from "@/components/json-ld";
 import { organizationJsonLd } from "@/lib/seo";
 import { SITE_NAME, THEME_COLOR } from "@/lib/site";
@@ -21,7 +22,7 @@ export const Route = createRootRoute({
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
       { rel: "icon", href: "/favicon.ico" },
       { rel: "stylesheet", href: appCss },
-      { rel: "manifest", href: "/__grok/manifest.webmanifest" },
+      { rel: "rel", href: "/__grok/manifest.webmanifest" },
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       {
@@ -54,6 +55,7 @@ function RootDocument() {
           <Outlet />
           <SiteFooter />
           <SiteDock />
+          <SiteAssistant />
           <JsonLd data={organizationJsonLd()} />
         </AuthProvider>
         <Scripts />
