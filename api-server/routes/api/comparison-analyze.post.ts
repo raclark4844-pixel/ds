@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { unifiedIds } from "../../../src/lib/unified-ids";
 
 const schema = z.object({
   companyName: z.string().trim().min(2).max(160),
@@ -43,5 +44,11 @@ export default async function comparisonAnalyze(event: { req: Request }) {
   });
   const token = issueReportTicket(report);
   await saveComparison(report, token);
-  return Response.json({ ok: true, reportId: report.reportNumber, token, report });
+  const ids = unifiedIds(report.reportNumber);
+  return Response.json({
+    ok: true,
+    ...ids,
+    token,
+    report,
+  });
 }
