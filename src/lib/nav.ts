@@ -27,10 +27,13 @@ export const featuredPillsWide = featuredPills;
 
 export const dockTabs: readonly NavItem[] = [
   { to: "/", label: "Home", short: "Home" },
-  { to: "/platform", label: "Platform", short: "Platform" },
+  { to: "/platform", label: "AI Growth Platform", short: "Platform" },
+  { to: "/websites", label: "Websites", short: "Sites" },
   { to: "/growth", label: "Growth", short: "Growth" },
   { to: "/automation", label: "Automation", short: "AI" },
-  { to: "/contact", label: "Brief", short: "Brief" },
+  { to: "/compare", label: "Free Comparison", short: "Compare" },
+  { to: "/industries", label: "Industries", short: "Industries" },
+  { to: "/contact", label: "Start a Project", short: "Brief" },
 ];
 
 export const allMainPages: readonly NavItem[] = [

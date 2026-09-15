@@ -52,8 +52,10 @@ export function SiteDock() {
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl print:hidden" data-site-dock>
-      <div className="mx-auto max-w-6xl px-3 pt-3"><FeaturedPills /></div>
-      <nav aria-label="Site sections" className="mx-auto grid max-w-6xl grid-cols-5 px-1 pb-1.5 pt-1.5">
+      <nav
+        aria-label="Site sections"
+        className="site-dock-scroll mx-auto flex max-w-6xl snap-x snap-mandatory overflow-x-auto px-2 py-1.5"
+      >
         {dockTabs.map((item) => {
           const Icon = navIcons[item.to];
           const active = pathMatches(item.to, pathname);
@@ -64,14 +66,14 @@ export function SiteDock() {
               aria-current={active ? "page" : undefined}
               aria-label={item.label}
               className={cn(
-                "flex min-h-14 flex-col items-center justify-center gap-1 rounded-md px-0.5 text-center no-underline transition-colors duration-200",
+                "flex min-h-14 min-w-[4.75rem] flex-1 snap-start flex-col items-center justify-center gap-1 rounded-md px-1 text-center no-underline transition-colors duration-200",
                 active ? "bg-volt-dim text-volt" : "text-muted hover:text-fg",
               )}
             >
               <Icon className="size-5" strokeWidth={active ? 2 : 1.5} aria-hidden="true" />
               <span className="max-w-full truncate text-[9px] font-medium leading-none tracking-wide min-[400px]:text-[10px]" aria-hidden="true">
-                <span className="sm:hidden">{item.short ?? item.label}</span>
-                <span className="hidden sm:inline">{item.label}</span>
+                <span className="md:hidden">{item.short ?? item.label}</span>
+                <span className="hidden md:inline">{item.label}</span>
               </span>
             </Link>
           );
