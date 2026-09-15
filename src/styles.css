@@ -133,7 +133,15 @@
   }
 
   .site-dock-offset {
-    padding-bottom: calc(8.75rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .site-dock-scroll {
+    scrollbar-width: none;
+  }
+
+  .site-dock-scroll::-webkit-scrollbar {
+    display: none;
   }
 }
 
