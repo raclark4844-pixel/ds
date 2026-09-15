@@ -252,3 +252,19 @@ export function rateLimit(ip: string, limit = 8, windowMs = 10 * 60 * 1000) {
   hits.set(ip, list);
   return true;
 }
+
+export async function mergeSearchConsole(reportId: string, snapshot: { status?: string }) {
+  try {
+    const sql = await getSql();
+    await sql.query(
+      `update search_console_connections
+         set last_status = coalesce($2, last_status),
+             last_success_at = case when $2 = 'connected' then now() else last_success_at end,
+             updated_at = now()
+       where report_id = $1`,
+      [reportId, snapshot?.status ?? null],
+    );
+  } catch {
+    // Search Console table may not exist in preview.
+  }
+}
