@@ -3,8 +3,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { RefreshCw, Save, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CATEGORY_KEYS, DEFAULT_WEIGHTS, type ScoringWeights } from "@/lib/comparison";
-import { SignInButtons } from "@/lib/auth/gates";
-import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { pageHead } from "@/lib/seo";
 import type { ComparisonReport } from "@/lib/report-pdf/report-types";
 
@@ -35,15 +33,6 @@ async function readJson<T>(response: Response): Promise<T> {
 }
 
 function AdminRoute() {
-  const { user, isPending } = useCurrentUserState();
-  if (isPending) return <main id="main" className="mx-auto max-w-6xl px-4 py-16 text-muted">Checking administrator access…</main>;
-  if (!user) return (
-    <main id="main" className="mx-auto max-w-lg px-4 py-16 sm:px-6">
-      <p className="kicker">Private administration</p>
-      <h1 className="mt-4 font-display text-4xl font-semibold">Administrator sign in required.</h1>
-      <div className="mt-8"><SignInButtons callbackURL="/admin" /></div>
-    </main>
-  );
   return <AdminDashboard />;
 }
 
@@ -103,7 +92,7 @@ function AdminDashboard() {
         <div><p className="kicker">Private administration</p><h1 className="mt-3 font-display text-4xl font-semibold sm:text-5xl">Comparison queue</h1><p className="mt-3 max-w-2xl text-muted">Durable customer reports, delivery status, live-discovery evidence, follow-up notes, and scoring controls.</p></div>
         <Button variant="outline" onClick={() => void load()} disabled={busy}><RefreshCw className="size-4" /> Refresh</Button>
       </div>
-      {error && <div role="alert" className="mt-6 rounded-lg border border-hot/50 bg-hot-dim p-4 text-sm">{error}</div>}
+      {error && <div role="alert" className="mt-6 rounded-lg border border-hot/50 bg-hot-dim p-4 text-sm">{error} {/sign in|administrator/i.test(error) && <a href="/login" className="ml-2 text-volt underline">Open admin sign in</a>}</div>}
       {notice && <div role="status" className="mt-6 rounded-lg border border-volt/40 bg-volt-dim p-4 text-sm text-volt">{notice}</div>}
 
       <section className="mt-10 rounded-xl border border-line bg-surface p-5 sm:p-7">
