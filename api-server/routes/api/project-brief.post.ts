@@ -1,4 +1,6 @@
 type ProjectBrief = {
+  reportId?: string;
+  handoffToken?: string;
   industry?: string;
   name?: string;
   role?: string;
@@ -68,6 +70,8 @@ export default async function projectBrief(event: { req: Request }) {
   const email = clean(raw.email, 254);
   const budget = Number(raw.budget);
   const wants = list(raw.wants);
+  const reportId = clean(raw.reportId, 40);
+  const handoffToken = clean(raw.handoffToken, 200);
 
   if (!industry || !name || !email || !email.includes("@")) {
     return Response.json({ error: "Industry, name, and a valid email are required." }, { status: 400 });
@@ -82,6 +86,29 @@ export default async function projectBrief(event: { req: Request }) {
     return Response.json({ error: "Consent is required." }, { status: 400 });
   }
 
+  if (reportId) {
+    const { recordProjectHandoff, verifyHandoffToken } = await import("../../../src/lib/comparison-store");
+    if (!handoffToken || !verifyHandoffToken(reportId, handoffToken)) {
+      return Response.json({ error: "The Demore Report ID handoff is invalid. Return to your comparison and use Start a project." }, { status: 403 });
+    }
+    const saved = await recordProjectHandoff(reportId, {
+      submittedAt: clean(raw.submittedAt, 80) || new Date().toISOString(),
+      industry,
+      name,
+      email,
+      phone: clean(raw.phone, 80),
+      businessName: clean(raw.businessName, 160),
+      website: clean(raw.website, 500),
+      wants,
+      budget,
+      goal: clean(raw.goal),
+      timeline: clean(raw.timeline, 300),
+      crmTools: clean(raw.crmTools),
+      followUpStatus: "new",
+    });
+    if (!saved) return Response.json({ error: "That comparison report was not found." }, { status: 404 });
+  }
+
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     console.error("[project-brief] RESEND_API_KEY is not configured");
@@ -90,6 +117,7 @@ export default async function projectBrief(event: { req: Request }) {
 
   const fields = [
     "DEMORE TECHNOLOGY SOLUTIONS — NEW PROJECT BRIEF",
+    textLine("Demore Report ID", reportId),
     textLine("Submitted", clean(raw.submittedAt, 80) || new Date().toISOString()),
     "",
     textLine("Industry", industry),
@@ -149,5 +177,48 @@ export default async function projectBrief(event: { req: Request }) {
     return Response.json({ error: "We could not send the project brief. Please try again." }, { status: 502 });
   }
 
-  return Response.json({ ok: true });
+  const crmWebhook = process.env.CRM_HANDOFF_WEBHOOK_URL?.trim();
+  if (reportId && crmWebhook) {
+    let crmStatus: "crm_sent" | "crm_failed" = "crm_failed";
+    try {
+      const crmResponse = await fetch(crmWebhook, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          reportId,
+          customerId: reportId,
+          leadId: reportId,
+          comparisonId: reportId,
+          companyName: clean(raw.businessName, 160),
+          contactName: name,
+          email,
+          phone: clean(raw.phone, 80),
+          website: clean(raw.website, 500),
+          industry,
+          wants,
+          budget,
+          timeline: clean(raw.timeline, 300),
+        }),
+        signal: AbortSignal.timeout(10_000),
+      });
+      crmStatus = crmResponse.ok ? "crm_sent" : "crm_failed";
+    } catch {
+      crmStatus = "crm_failed";
+    }
+    const { recordProjectHandoff } = await import("../../../src/lib/comparison-store");
+    await recordProjectHandoff(reportId, {
+      submittedAt: clean(raw.submittedAt, 80) || new Date().toISOString(),
+      industry, name, email,
+      phone: clean(raw.phone, 80),
+      businessName: clean(raw.businessName, 160),
+      website: clean(raw.website, 500),
+      wants, budget,
+      goal: clean(raw.goal),
+      timeline: clean(raw.timeline, 300),
+      crmTools: clean(raw.crmTools),
+      followUpStatus: "new",
+    }, crmStatus);
+  }
+
+  return Response.json({ ok: true, reportId: reportId || null });
 }

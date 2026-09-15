@@ -8,12 +8,14 @@ import { intakeStartAnswer } from "@/lib/answers";
 import { contactFaqs } from "@/lib/site";
 import { faqJsonLd, pageHead, serviceJsonLd } from "@/lib/seo";
 
-type ContactSearch = { need?: string; industry?: string };
+type ContactSearch = { need?: string; industry?: string; reportId?: string; handoffToken?: string };
 
 export const Route = createFileRoute("/contact")({
   validateSearch: (search: Record<string, unknown>): ContactSearch => ({
     need: typeof search.need === "string" ? search.need : undefined,
     industry: typeof search.industry === "string" ? search.industry : undefined,
+    reportId: typeof search.reportId === "string" ? search.reportId : undefined,
+    handoffToken: typeof search.handoffToken === "string" ? search.handoffToken : undefined,
   }),
   head: () =>
     pageHead({
@@ -26,7 +28,7 @@ export const Route = createFileRoute("/contact")({
 });
 
 function ContactPage() {
-  const { need, industry } = Route.useSearch();
+  const { need, industry, reportId, handoffToken } = Route.useSearch();
 
   return (
     <main id="main" className="mx-auto max-w-3xl px-4 pb-20 sm:px-6">
@@ -63,7 +65,7 @@ function ContactPage() {
       </DirectAnswer>
 
       <div className="mt-10">
-        <IntakeForm need={need} industry={industry} />
+        <IntakeForm need={need} industry={industry} reportId={reportId} handoffToken={handoffToken} />
       </div>
 
       <Section kicker="Also on this site" title="Which service is this brief for?">

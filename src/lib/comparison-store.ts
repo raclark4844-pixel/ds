@@ -14,6 +14,8 @@ export type StoredComparison = {
   internalEmailStatus: DeliveryStatus;
   adminStatus: AdminStatus;
   internalNotes: string;
+  handoff: Record<string, unknown> | null;
+  handoffStatus: "not_started" | "submitted" | "crm_sent" | "crm_failed";
   discoverySource: string;
   discoveredAt: string | null;
   createdAt: string;
@@ -36,6 +38,8 @@ type DbRow = {
   internal_email_status: DeliveryStatus;
   admin_status: AdminStatus;
   internal_notes: string;
+  handoff: Record<string, unknown> | string | null;
+  handoff_status: StoredComparison["handoffStatus"];
   discovery_source: string;
   discovered_at: string | Date | null;
   created_at: string | Date;
@@ -57,6 +61,8 @@ function toRecord(row: DbRow): StoredComparison {
     internalEmailStatus: row.internal_email_status,
     adminStatus: row.admin_status,
     internalNotes: row.internal_notes,
+    handoff: typeof row.handoff === "string" ? JSON.parse(row.handoff) : row.handoff,
+    handoffStatus: row.handoff_status,
     discoverySource: row.discovery_source,
     discoveredAt: iso(row.discovered_at),
     createdAt: iso(row.created_at) as string,
@@ -81,6 +87,16 @@ export function issueReportTicket(report: ComparisonReport) {
   const body = Buffer.from(JSON.stringify({ v: 1, report }), "utf8").toString("base64url");
   const sig = createHmac("sha256", signingSecret()).update(body).digest("base64url");
   return `${body}.${sig}`;
+}
+
+export function issueHandoffToken(reportId: string) {
+  return createHmac("sha256", signingSecret()).update(`handoff:${reportId}`).digest("base64url");
+}
+
+export function verifyHandoffToken(reportId: string, token: string) {
+  const actual = Buffer.from(token);
+  const wanted = Buffer.from(issueHandoffToken(reportId));
+  return actual.length === wanted.length && timingSafeEqual(actual, wanted);
 }
 
 export function readReportTicket(ticket: string): ComparisonReport | null {
@@ -142,6 +158,21 @@ export async function patchStatus(
      where id = $1`,
     [id, patch.pdfStatus ?? null, patch.customerEmailStatus ?? null, patch.internalEmailStatus ?? null],
   );
+}
+
+export async function recordProjectHandoff(
+  id: string,
+  handoff: Record<string, unknown>,
+  status: StoredComparison["handoffStatus"] = "submitted",
+) {
+  const sql = await getSql();
+  const rows = await sql.query<DbRow>(
+    `update comparison_reports
+       set handoff = $2::jsonb, handoff_status = $3, updated_at = now()
+     where id = $1 returning *`,
+    [id, JSON.stringify({ ...handoff, reportId: id }), status],
+  );
+  return rows[0] ? toRecord(rows[0]) : null;
 }
 
 export async function listComparisons(status?: AdminStatus, limit = 50, offset = 0) {

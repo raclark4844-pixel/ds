@@ -42,7 +42,7 @@ function toggle(list: string[], id: string) {
   return list.includes(id) ? list.filter((item) => item !== id) : [...list, id];
 }
 
-export function IntakeForm({ need, industry }: { need?: string; industry?: string }) {
+export function IntakeForm({ need, industry, reportId, handoffToken }: { need?: string; industry?: string; reportId?: string; handoffToken?: string }) {
   const [step, setStep] = useState(1);
   const [brief, setBrief] = useState<Brief>(emptyBrief);
   const [hydrated, setHydrated] = useState(false);
@@ -60,12 +60,14 @@ export function IntakeForm({ need, industry }: { need?: string; industry?: strin
     }
     next = applyNeed(next, need);
     if (industry) next.industry = industry;
+    if (reportId) next.reportId = reportId;
+    if (handoffToken) next.handoffToken = handoffToken;
     if (!Array.isArray(next.wants)) next.wants = [];
     if (!Array.isArray(next.features)) next.features = [];
     if (!Array.isArray(next.platforms)) next.platforms = [];
     setBrief(next);
     setHydrated(true);
-  }, [need, industry]);
+  }, [need, industry, reportId, handoffToken]);
 
   useEffect(() => {
     if (hydrated) localStorage.setItem(STORAGE_KEY, JSON.stringify(brief));
@@ -123,6 +125,8 @@ export function IntakeForm({ need, industry }: { need?: string; industry?: strin
   function reset() {
     const next = applyNeed(emptyBrief(), need);
     if (industry) next.industry = industry;
+    if (reportId) next.reportId = reportId;
+    if (handoffToken) next.handoffToken = handoffToken;
     setBrief(next);
     setStep(1);
     setCopied(false);
@@ -155,11 +159,12 @@ export function IntakeForm({ need, industry }: { need?: string; industry?: strin
   }
 
   return (
-    <form className="rounded-xl border border-line bg-surface p-5 sm:p-8" onSubmit={(event) => { event.preventDefault(); step < 5 ? next() : void submit(); }}>
+    <form className="rounded-xl border border-line bg-surface p-5 sm:p-8" onSubmit={(event) => { event.preventDefault(); if (step < 5) next(); else void submit(); }}>
       <div className="flex items-center justify-between gap-4">
         <p className="kicker">Step {step} of 5 — {STEPS[step - 1]?.label}</p>
         <p className="text-xs text-faint">Saved locally while you complete it</p>
       </div>
+      {brief.reportId ? <p className="mt-4 rounded-lg border border-volt/40 bg-volt-dim px-4 py-3 text-sm text-volt">Continuing Demore Report ID <strong>{brief.reportId}</strong>. This same ID stays with the project brief, admin queue, CRM handoff and follow-up.</p> : null}
       <div className="mt-4 h-1 overflow-hidden rounded-pill bg-elevated" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress)} aria-label="Brief progress">
         <div className="h-full bg-hot transition-[width] duration-300" style={{ width: `${progress}%` }} />
       </div>
