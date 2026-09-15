@@ -5,8 +5,11 @@ const schema = z.object({
   website: z.string().trim().min(4).max(300),
   industry: z.string().trim().min(2).max(80),
   market: z.string().trim().min(2).max(160),
-  contactName: z.string().trim().min(2).max(120),
+  contactFirstName: z.string().trim().min(1).max(80),
+  contactLastName: z.string().trim().min(1).max(80),
+  contactPhone: z.string().trim().min(7).max(40),
   contactEmail: z.string().trim().min(5).max(254).refine((v) => v.includes("@")),
+  timeframe: z.string().trim().min(2).max(120),
   competitors: z.array(z.string().trim().max(300)).max(3).optional(),
   confirmedTools: z.string().trim().max(400).optional(),
   access: z.string().trim().max(80).optional(),
@@ -25,11 +28,12 @@ export default async function comparisonAnalyze(event: { req: Request }) {
   const { buildComparisonReport } = await import("../../../src/lib/comparison-engine");
   const report = await buildComparisonReport({
     ...parsed.data,
+    contactName: `${parsed.data.contactFirstName} ${parsed.data.contactLastName}`,
     competitors: parsed.data.competitors || [],
     confirmedTools: parsed.data.confirmedTools || "",
     access: parsed.data.access || "",
   });
   const token = issueReportTicket(report);
-  saveComparison(report, token);
+  await saveComparison(report, token);
   return Response.json({ ok: true, reportId: report.reportNumber, token, report });
 }

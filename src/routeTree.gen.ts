@@ -10,10 +10,13 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AutomationRouteImport } from './routes/automation'
+import { Route as CompareRouteImport } from './routes/compare'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as GrowthRouteImport } from './routes/growth'
 import { Route as IndustriesRouteImport } from './routes/industries'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as PlatformRouteImport } from './routes/platform'
 import { Route as ProcessRouteImport } from './routes/process'
 import { Route as WebsitesRouteImport } from './routes/websites'
@@ -31,9 +34,19 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AutomationRoute = AutomationRouteImport.update({
   id: '/automation',
   path: '/automation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompareRoute = CompareRouteImport.update({
+  id: '/compare',
+  path: '/compare',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -49,6 +62,11 @@ const GrowthRoute = GrowthRouteImport.update({
 const IndustriesRoute = IndustriesRouteImport.update({
   id: '/industries',
   path: '/industries',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlatformRoute = PlatformRouteImport.update({
@@ -112,10 +130,13 @@ const IndustriesStoresEcommerceRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/automation': typeof AutomationRoute
+  '/compare': typeof CompareRoute
   '/contact': typeof ContactRoute
   '/growth': typeof GrowthRoute
   '/industries': typeof IndustriesRouteWithChildren
+  '/login': typeof LoginRoute
   '/platform': typeof PlatformRoute
   '/process': typeof ProcessRoute
   '/websites': typeof WebsitesRoute
@@ -130,9 +151,12 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/automation': typeof AutomationRoute
+  '/compare': typeof CompareRoute
   '/contact': typeof ContactRoute
   '/growth': typeof GrowthRoute
+  '/login': typeof LoginRoute
   '/platform': typeof PlatformRoute
   '/process': typeof ProcessRoute
   '/websites': typeof WebsitesRoute
@@ -148,10 +172,13 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/automation': typeof AutomationRoute
+  '/compare': typeof CompareRoute
   '/contact': typeof ContactRoute
   '/growth': typeof GrowthRoute
   '/industries': typeof IndustriesRouteWithChildren
+  '/login': typeof LoginRoute
   '/platform': typeof PlatformRoute
   '/process': typeof ProcessRoute
   '/websites': typeof WebsitesRoute
@@ -168,10 +195,13 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/automation'
+    | '/compare'
     | '/contact'
     | '/growth'
     | '/industries'
+    | '/login'
     | '/platform'
     | '/process'
     | '/websites'
@@ -186,9 +216,12 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin'
     | '/automation'
+    | '/compare'
     | '/contact'
     | '/growth'
+    | '/login'
     | '/platform'
     | '/process'
     | '/websites'
@@ -203,10 +236,13 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/automation'
+    | '/compare'
     | '/contact'
     | '/growth'
     | '/industries'
+    | '/login'
     | '/platform'
     | '/process'
     | '/websites'
@@ -222,10 +258,13 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
   AutomationRoute: typeof AutomationRoute
+  CompareRoute: typeof CompareRoute
   ContactRoute: typeof ContactRoute
   GrowthRoute: typeof GrowthRoute
   IndustriesRoute: typeof IndustriesRouteWithChildren
+  LoginRoute: typeof LoginRoute
   PlatformRoute: typeof PlatformRoute
   ProcessRoute: typeof ProcessRoute
   WebsitesRoute: typeof WebsitesRoute
@@ -241,11 +280,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/automation': {
       id: '/automation'
       path: '/automation'
       fullPath: '/automation'
       preLoaderRoute: typeof AutomationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/compare': {
+      id: '/compare'
+      path: '/compare'
+      fullPath: '/compare'
+      preLoaderRoute: typeof CompareRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -267,6 +320,13 @@ declare module '@tanstack/react-router' {
       path: '/industries'
       fullPath: '/industries'
       preLoaderRoute: typeof IndustriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/platform': {
@@ -375,10 +435,13 @@ const IndustriesRouteWithChildren = IndustriesRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
   AutomationRoute: AutomationRoute,
+  CompareRoute: CompareRoute,
   ContactRoute: ContactRoute,
   GrowthRoute: GrowthRoute,
   IndustriesRoute: IndustriesRouteWithChildren,
+  LoginRoute: LoginRoute,
   PlatformRoute: PlatformRoute,
   ProcessRoute: ProcessRoute,
   WebsitesRoute: WebsitesRoute,

@@ -14,14 +14,14 @@ export default async function comparisonEmail(event: { req: Request }) {
   try { raw = await req.json(); } catch { return Response.json({ error: "Invalid request." }, { status: 400 }); }
   const parsed = schema.safeParse(raw);
   if (!parsed.success) return Response.json({ error: "Report access is invalid." }, { status: 400 });
-  const record = getAuthorizedComparison(parsed.data.reportId, parsed.data.token);
+  const record = await getAuthorizedComparison(parsed.data.reportId, parsed.data.token);
   if (!record) return Response.json({ error: "That report is not available." }, { status: 404 });
   try {
     const { renderComparisonPdf } = await import("../../../src/lib/report-pdf/render-report.server");
     const { sendReportEmails } = await import("../../../src/lib/report-mail");
     const pdf = await renderComparisonPdf(record.report);
     const mailed = await sendReportEmails(record.report, pdf);
-    patchStatus(record.id, {
+    await patchStatus(record.id, {
       pdfStatus: "ok",
       customerEmailStatus: mailed.customer.ok ? "ok" : "failed",
       internalEmailStatus: mailed.internal.ok ? "ok" : "failed",
@@ -34,7 +34,7 @@ export default async function comparisonEmail(event: { req: Request }) {
       internalError: mailed.internal.ok ? undefined : mailed.internal.error,
     });
   } catch {
-    patchStatus(record.id, { customerEmailStatus: "failed", internalEmailStatus: "failed" });
+    await patchStatus(record.id, { customerEmailStatus: "failed", internalEmailStatus: "failed" });
     return Response.json({ error: "Email retry failed. The comparison is still saved." }, { status: 502 });
   }
 }

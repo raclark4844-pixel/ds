@@ -27,6 +27,14 @@ export type CompetitorRow = {
   categories: CategoryScores;
   evidence: EvidenceTag;
   note: string;
+  source?: "Google Maps" | "Google organic" | "Customer supplied" | "Industry benchmark";
+  mapsRank?: number;
+  organicRank?: number;
+  rating?: number;
+  reviewCount?: number;
+  placeId?: string;
+  discoveredAt?: string;
+  query?: string;
 };
 
 export type CapabilityRow = {
@@ -73,6 +81,8 @@ export type ComparisonReport = {
   market: string;
   contactName: string;
   contactEmail: string;
+  contactPhone?: string;
+  timeframe?: string;
   currentTotal: number;
   competitorAverage: number;
   marketLeader: number;
@@ -89,6 +99,7 @@ export type ComparisonReport = {
     nextStep: string;
   };
   categories: CategoryScores;
+  scoringWeights?: CategoryScores;
   competitors: CompetitorRow[];
   competitorSelection: string;
   capabilities: CapabilityRow[];
