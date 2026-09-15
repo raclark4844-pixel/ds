@@ -46,6 +46,10 @@ export function ComparisonApp() {
           competitors,
           confirmedTools: form.get("confirmedTools"),
           access: form.get("access"),
+          domainRegistrar: form.get("domainRegistrar"),
+          websiteHost: form.get("websiteHost"),
+          siteBuilder: form.get("siteBuilder"),
+          codeAccess: form.get("codeAccess"),
         }),
       });
       const data = await res.json();
@@ -133,8 +137,20 @@ export function ComparisonApp() {
         <label className="block text-sm">Email<input required type="email" name="contactEmail" className="mt-1 w-full rounded-md border border-line bg-bg px-3 py-2" /></label>
         <label className="block text-sm">Desired implementation timeframe<select required name="timeframe" className="mt-1 w-full rounded-md border border-line bg-bg px-3 py-2"><option value="">Select a timeframe</option><option value="As soon as possible">As soon as possible</option><option value="Within 30 days">Within 30 days</option><option value="Within 60 days">Within 60 days</option><option value="Within 90 days">Within 90 days</option><option value="More than 90 days">More than 90 days</option><option value="Researching options">Researching options</option></select></label>
         <label className="block text-sm">Backup competitor websites, optional<span className="mt-1 block text-xs text-muted">Used only if live Google discovery is unavailable.</span><textarea name="competitors" rows={3} className="mt-1 w-full rounded-md border border-line bg-bg px-3 py-2" /></label>
-        <label className="block text-sm">Tools you already use<input name="confirmedTools" className="mt-1 w-full rounded-md border border-line bg-bg px-3 py-2" /></label>
-        <label className="block text-sm">Current access<select name="access" className="mt-1 w-full rounded-md border border-line bg-bg px-3 py-2"><option value="owner-controls">We control domain and site</option><option value="provider-controls">A vendor controls the site</option><option value="needs-recovery">Access is unclear</option></select></label>
+        <label className="block text-sm">Tools you already use, optional<input name="confirmedTools" placeholder="Toast, Shopify, HubSpot, Mailchimp…" className="mt-1 w-full rounded-md border border-line bg-bg px-3 py-2" /></label>
+        <fieldset className="space-y-4 rounded-lg border border-line p-4">
+          <legend className="px-2 font-display text-lg">Ownership &amp; access <span className="font-sans text-xs text-muted">optional</span></legend>
+          <p className="text-sm text-muted">More detail improves the enhance-versus-rebuild recommendation. Do not enter passwords, API keys or login links.</p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="block text-sm">Domain registrar<input name="domainRegistrar" list="registrar-options" placeholder="GoDaddy, Namecheap, Cloudflare, not sure…" className="mt-1 w-full rounded-md border border-line bg-bg px-3 py-2" /></label>
+            <label className="block text-sm">Website host or platform<input name="websiteHost" list="host-options" placeholder="Vercel, Wix, Squarespace, Shopify, not sure…" className="mt-1 w-full rounded-md border border-line bg-bg px-3 py-2" /></label>
+            <label className="block text-sm">Who created or maintains it?<input name="siteBuilder" placeholder="Agency, freelancer, employee, platform vendor, not sure…" className="mt-1 w-full rounded-md border border-line bg-bg px-3 py-2" /></label>
+            <label className="block text-sm">Source-code access<select name="codeAccess" defaultValue="" className="mt-1 w-full rounded-md border border-line bg-bg px-3 py-2"><option value="">Not provided</option><option value="full-source">Full source/repository access</option><option value="cms-admin">CMS or site-builder access only</option><option value="vendor-managed">Vendor manages it; source access unknown</option><option value="no-source">No source-code access</option><option value="unknown">Not sure</option></select></label>
+          </div>
+          <label className="block text-sm">Overall account access<select name="access" defaultValue="" className="mt-1 w-full rounded-md border border-line bg-bg px-3 py-2"><option value="">Not provided</option><option value="owner-controls">We control the domain and website accounts</option><option value="shared-controls">We share access with a provider</option><option value="provider-controls">A provider controls the website</option><option value="needs-recovery">Access is unclear or needs recovery</option></select></label>
+          <datalist id="registrar-options"><option value="GoDaddy" /><option value="Namecheap" /><option value="Cloudflare" /><option value="Squarespace Domains" /><option value="Network Solutions" /></datalist>
+          <datalist id="host-options"><option value="GoDaddy" /><option value="Vercel" /><option value="Netlify" /><option value="Cloudflare" /><option value="WordPress" /><option value="Wix" /><option value="Squarespace" /><option value="Shopify" /><option value="Toast" /></datalist>
+        </fieldset>
         <Button type="submit" disabled={busy !== "off"}>{busy === "analyze" ? "Scoring public pages…" : "Run comparison"}</Button>
       </form>
       {error ? <p className="rounded-md border border-hot/40 bg-hot-dim px-3 py-2 text-sm">{error}</p> : null}
@@ -147,6 +163,21 @@ export function ComparisonApp() {
           <div className="grid gap-3 sm:grid-cols-4">{[["Current", report.currentTotal],["Competitor avg", report.competitorAverage],["Leader", report.marketLeader],["Potential", report.potential]].map(([label, value]) => (<div key={String(label)} className="rounded-md border border-line p-3"><p className="kicker">{label}</p><p className="font-display text-3xl text-volt">{value}</p></div>))}</div>
           <div className="overflow-x-auto rounded-md border border-line"><table className="w-full min-w-[620px] text-left text-sm"><thead className="bg-bg text-muted"><tr><th className="p-3">Competitor / benchmark</th><th>Source</th><th>Maps</th><th>Organic</th><th>Rating</th><th>Site score</th></tr></thead><tbody>{report.competitors.map((row) => <tr key={`${row.name}-${row.website}`} className="border-t border-line"><td className="p-3 font-medium">{row.name}</td><td>{row.source || row.evidence}</td><td>{row.mapsRank ? `#${row.mapsRank}` : "—"}</td><td>{row.organicRank ? `#${row.organicRank}` : "—"}</td><td>{row.rating ? `${row.rating}/5 (${row.reviewCount ?? 0})` : "—"}</td><td>{row.total}</td></tr>)}</tbody></table></div>
           <p className="text-sm text-muted">{report.competitorSelection}</p>
+          {report.accessComparison ? (
+            <div className="space-y-4 rounded-lg border border-line bg-bg p-4">
+              <div>
+                <p className="kicker">Delivery path</p>
+                <h3 className="font-display text-xl">Enhance the current site or rebuild?</h3>
+                <p className="mt-1 text-sm text-muted">{report.accessComparison.explanation}</p>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="rounded-md border border-line p-3"><div className="flex justify-between text-sm"><span>Enhance current site</span><strong>{report.accessComparison.enhanceFit}/100</strong></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-surface"><div className="h-full bg-volt" style={{ width: `${report.accessComparison.enhanceFit}%` }} /></div></div>
+                <div className="rounded-md border border-line p-3"><div className="flex justify-between text-sm"><span>Strategic rebuild</span><strong>{report.accessComparison.rebuildFit}/100</strong></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-surface"><div className="h-full bg-sun" style={{ width: `${report.accessComparison.rebuildFit}%` }} /></div></div>
+              </div>
+              <div className="overflow-x-auto rounded-md border border-line"><table className="w-full min-w-[720px] text-left text-sm"><thead className="bg-surface text-muted"><tr><th className="p-3">Decision factor</th><th>Enhance current site</th><th>Strategic rebuild</th><th>Business advantage</th></tr></thead><tbody>{report.accessComparison.rows.map((row) => <tr key={row.factor} className="border-t border-line"><td className="p-3 font-medium">{row.factor}</td><td className="pr-3">{row.enhanceCurrent}</td><td className="pr-3">{row.rebuild}</td><td className="pr-3">{row.advantage}</td></tr>)}</tbody></table></div>
+              <div><h3 className="font-display text-lg">Bot and automation opportunities</h3><div className="mt-2 grid gap-2 sm:grid-cols-2">{report.accessComparison.botOpportunities.map((bot) => <div key={bot.name} className="rounded-md border border-line p-3"><p className="font-medium">{bot.name}</p><p className="mt-1 text-sm text-muted">{bot.businessValue}</p></div>)}</div></div>
+            </div>
+          ) : null}
           <p>Recommended path: <strong>{report.path}</strong>. Confidence {report.confidence}%. Rankings and lifts are not guaranteed.</p>
           <div className="flex flex-wrap gap-2">
             <Button type="button" onClick={downloadPdf} disabled={busy !== "off"}>{busy === "pdf" ? "Generating PDF…" : "Download My Comparison Report"}</Button>

@@ -70,6 +70,30 @@ export type TechReadiness = {
   accessNeeded: string;
 };
 
+export type AccessComparison = {
+  registrar: string;
+  hostingProvider: string;
+  siteCreator: string;
+  codeAccess: string;
+  enhanceFit: number;
+  rebuildFit: number;
+  recommendedPath: PathChoice;
+  confidence: "High" | "Medium" | "Limited";
+  explanation: string;
+  rows: Array<{
+    factor: string;
+    enhanceCurrent: string;
+    rebuild: string;
+    advantage: string;
+  }>;
+  botOpportunities: Array<{
+    name: string;
+    currentSite: string;
+    rebuild: string;
+    businessValue: string;
+  }>;
+};
+
 export type ComparisonReport = {
   reportNumber: string;
   reportDate: string;
@@ -104,6 +128,7 @@ export type ComparisonReport = {
   competitorSelection: string;
   capabilities: CapabilityRow[];
   tech: TechReadiness;
+  accessComparison?: AccessComparison;
   outlook: {
     current: string;
     websiteOnly: string;

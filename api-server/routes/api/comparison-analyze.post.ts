@@ -13,6 +13,10 @@ const schema = z.object({
   competitors: z.array(z.string().trim().max(300)).max(3).optional(),
   confirmedTools: z.string().trim().max(400).optional(),
   access: z.string().trim().max(80).optional(),
+  domainRegistrar: z.string().trim().max(120).optional(),
+  websiteHost: z.string().trim().max(120).optional(),
+  siteBuilder: z.string().trim().max(160).optional(),
+  codeAccess: z.string().trim().max(80).optional(),
 });
 
 export default async function comparisonAnalyze(event: { req: Request }) {
@@ -32,6 +36,10 @@ export default async function comparisonAnalyze(event: { req: Request }) {
     competitors: parsed.data.competitors || [],
     confirmedTools: parsed.data.confirmedTools || "",
     access: parsed.data.access || "",
+    domainRegistrar: parsed.data.domainRegistrar || "",
+    websiteHost: parsed.data.websiteHost || "",
+    siteBuilder: parsed.data.siteBuilder || "",
+    codeAccess: parsed.data.codeAccess || "",
   });
   const token = issueReportTicket(report);
   await saveComparison(report, token);
