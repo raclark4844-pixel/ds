@@ -139,10 +139,12 @@ export async function buildComparisonReport(input: AnalyzeInput): Promise<Compar
   const kpis = KPI[input.industry] || KPI.other;
   const { getScoringSettings } = await import("@/lib/comparison-store");
   const { discoverCompetitors } = await import("@/lib/dataforseo.server");
-  const [primary, scoring, discovery] = await Promise.all([
+  const { estimateOrganicTraffic, measurePerformance } = await import("@/lib/performance-signals.server");
+  const [primary, scoring, discovery, performance] = await Promise.all([
     fetchHtml(website),
     getScoringSettings(),
     discoverCompetitors({ industry: input.industry, market: input.market, website }),
+    measurePerformance(website),
   ]);
   const scored = primary.html ? scoreFromHtml(primary.html, kpis, scoring.weights) : { categories: emptyCats(), total: 28 };
   const currentTotal = primary.ok ? scored.total : Math.max(22, scored.total);
@@ -152,6 +154,10 @@ export async function buildComparisonReport(input: AnalyzeInput): Promise<Compar
   const candidates = discovery.live
     ? discovery.competitors
     : input.competitors.slice(0, 3).map((raw) => ({ website: raw, name: "", source: "Customer supplied" as const }));
+  const traffic = await estimateOrganicTraffic([website, ...candidates.map((candidate) => normalizeUrl(candidate.website))], input.market);
+  const trafficFor = (url: string) => {
+    try { return traffic.get(new URL(url).hostname.replace(/^www\./, "")); } catch { return undefined; }
+  };
   for (const candidate of candidates) {
     const raw = candidate.website;
     const url = normalizeUrl(raw);
@@ -175,6 +181,7 @@ export async function buildComparisonReport(input: AnalyzeInput): Promise<Compar
       placeId: "placeId" in candidate ? candidate.placeId : undefined,
       discoveredAt: "discoveredAt" in candidate ? candidate.discoveredAt : undefined,
       query: "query" in candidate ? candidate.query : undefined,
+      estimatedMonthlyOrganicTraffic: trafficFor(url),
     });
   }
   if (!competitorRows.length) {
@@ -188,6 +195,10 @@ export async function buildComparisonReport(input: AnalyzeInput): Promise<Compar
   const confidence = primary.ok ? 62 : 42;
   const today = new Date().toISOString().slice(0, 10);
   const platform = detectPlatform(primary.html, primary.headers);
+  const currentTraffic = trafficFor(website);
+  performance.trafficEstimate = currentTraffic === undefined
+    ? { status: "unavailable", source: "DataForSEO Labs", market: input.market, note: "No licensed traffic estimate was returned. No value was inferred." }
+    : { status: "available", source: "DataForSEO Labs bulk traffic estimation", monthlyOrganic: currentTraffic, market: input.market, note: "Estimated monthly organic traffic, not first-party analytics." };
   const accessComparison = buildAccessComparison(input, currentTotal, platform);
   const path = accessComparison.recommendedPath || preliminaryPath;
   return {
@@ -233,6 +244,7 @@ export async function buildComparisonReport(input: AnalyzeInput): Promise<Compar
       accessNeeded: "Domain DNS, CMS or hosting admin, analytics. No passwords stored.",
     },
     accessComparison,
+    performance,
     outlook: {
       current: "Public website plus whatever private tools the owner already runs.",
       websiteOnly: "A website-only pass tightens pages, answers, and the form.",
@@ -249,13 +261,13 @@ export async function buildComparisonReport(input: AnalyzeInput): Promise<Compar
       { stage: "Long-term", finding: "No public improvement cadence.", evidence: "No change log", impact: "The site ages after launch.", action: "Run approved site-improvement bots.", priority: "Later", implementation: "Growth loop" },
     ],
     methodology: {
-      measured: ["Public HTML fetch", "Titles", "Forms", "Viewport", "FAQ/schema signatures"],
+      measured: ["Public HTML fetch", "Titles", "Forms", "Viewport", "FAQ/schema signatures", performance.pageSpeed.status === "available" ? "Google PageSpeed Insights mobile lab" : "PageSpeed requested but unavailable", performance.coreWebVitals.status === "available" ? "Chrome UX Report field data" : "CrUX field data unavailable"],
       detected: [platform],
       supplied: [input.companyName, input.industry, input.market],
-      sources: discovery.live ? ["DataForSEO live Google Maps SERP", "DataForSEO live Google organic SERP", "Public HTTP responses"] : ["Customer URLs", "Public HTTP responses"],
+      sources: discovery.live ? ["DataForSEO live Google Maps SERP", "DataForSEO live Google organic SERP", "DataForSEO Labs traffic estimates when returned", "Google PageSpeed Insights / CrUX when returned", "Public HTTP responses"] : ["Customer URLs", "Google PageSpeed Insights / CrUX when returned", "Public HTTP responses"],
       benchmarks: [`dts-compare-v1 weights version ${scoring.version}`],
       assumptions: ["Homepage represents the current site"],
-      unknowns: ["Private CRM", "Ad spend", "Actual conversion rate"],
+      unknowns: ["Private CRM", "Ad spend", "Actual conversion rate", "Search Console metrics until the verified owner connects OAuth"],
       confidenceNote: `Assessment confidence is ${confidence}%.`,
     },
   };

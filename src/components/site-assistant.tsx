@@ -16,6 +16,12 @@ export function SiteAssistant() {
 
   useEffect(() => {
     setReportId(readStoredReportId());
+    const onComparisonReady = (event: Event) => {
+      const id = (event as CustomEvent<{ reportId?: string }>).detail?.reportId?.trim();
+      if (id) setReportId(id);
+    };
+    window.addEventListener("demore:comparison-ready", onComparisonReady);
+    return () => window.removeEventListener("demore:comparison-ready", onComparisonReady);
   }, []);
 
   async function send() {

@@ -69,6 +69,8 @@ export const NEED_MAP: Record<string, string[]> = {
 };
 
 export type Brief = {
+  reportId: string;
+  handoffToken: string;
   industry: string;
   name: string;
   role: string;
@@ -104,6 +106,8 @@ export type Brief = {
 };
 
 export const emptyBrief = (): Brief => ({
+  reportId: "",
+  handoffToken: "",
   industry: "",
   name: "",
   role: "",
@@ -149,6 +153,7 @@ export function formatBrief(brief: Brief): string {
   const wantLabels = brief.wants.map((id) => wantBuilt.find((item) => item.id === id)?.label ?? id);
   return [
     "DEMORE TECHNOLOGY SOLUTIONS — PROJECT BRIEF",
+    brief.reportId ? `Demore Report ID: ${brief.reportId}` : "",
     brief.submittedAt ? `Submitted: ${brief.submittedAt}` : "",
     "",
     "STEP 1 — BUSINESS",

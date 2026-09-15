@@ -35,6 +35,32 @@ export type CompetitorRow = {
   placeId?: string;
   discoveredAt?: string;
   query?: string;
+  estimatedMonthlyOrganicTraffic?: number;
+};
+
+export type PerformanceSignals = {
+  measuredAt: string;
+  pageSpeed: {
+    status: "available" | "unavailable";
+    source: string;
+    performanceScore?: number;
+    seoScore?: number;
+    accessibilityScore?: number;
+    lcpMs?: number;
+    cls?: number;
+    tbtMs?: number;
+    note?: string;
+  };
+  coreWebVitals: {
+    status: "available" | "insufficient_data" | "unavailable";
+    source: string;
+    assessment: string;
+    lcpMs?: number;
+    inpMs?: number;
+    cls?: number;
+  };
+  searchConsole: { status: "connection_required" | "connected"; source: string; note: string };
+  trafficEstimate: { status: "available" | "unavailable"; source: string; monthlyOrganic?: number; market?: string; note: string };
 };
 
 export type CapabilityRow = {
@@ -129,6 +155,7 @@ export type ComparisonReport = {
   capabilities: CapabilityRow[];
   tech: TechReadiness;
   accessComparison?: AccessComparison;
+  performance?: PerformanceSignals;
   outlook: {
     current: string;
     websiteOnly: string;

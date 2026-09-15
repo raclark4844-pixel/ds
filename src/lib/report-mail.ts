@@ -1,4 +1,5 @@
 import type { ComparisonReport } from "@/lib/report-pdf/report-types";
+import { issueHandoffToken } from "@/lib/comparison-store";
 import { reportFilename } from "@/lib/report-pdf/render-report.server";
 import { unifiedIds } from "@/lib/unified-ids";
 
@@ -21,6 +22,7 @@ export async function sendReportEmails(report: ComparisonReport, pdf: Buffer) {
     };
   }
   const filename = reportFilename(report);
+  const handoffUrl = `${cfg.site}/contact?need=platform&source=compare&reportId=${encodeURIComponent(report.reportNumber)}&handoffToken=${encodeURIComponent(issueHandoffToken(report.reportNumber))}`;
   const attachment = { filename, content: pdf.toString("base64"), content_type: "application/pdf" };
   async function send(payload: Record<string, unknown>) {
     const res = await fetch("https://api.resend.com/emails", {
@@ -39,7 +41,7 @@ export async function sendReportEmails(report: ComparisonReport, pdf: Buffer) {
     from: `Demore Technology Solutions <${cfg.from}>`,
     to: [report.contactEmail],
     subject: "Your Demore Website Comparison Report",
-    text: [`Your Demore website comparison report is attached.`, `Demore Report ID: ${ids.reportId}`, `Customer ID / Lead ID / Comparison ID: ${ids.reportId}`, `Company: ${report.companyName}`, `Path: ${report.path}`, `Start a project: ${cfg.site}/contact?need=platform&source=compare`, ``, `Rankings, AI citations, and conversion lifts are not guaranteed.`].join("\n"),
+    text: [`Your Demore website comparison report is attached.`, `Demore Report ID: ${ids.reportId}`, `Customer ID / Lead ID / Comparison ID: ${ids.reportId}`, `Company: ${report.companyName}`, `Path: ${report.path}`, `Start a project using this same report ID: ${handoffUrl}`, ``, `Rankings, AI citations, and conversion lifts are not guaranteed.`].join("\n"),
     attachments: [attachment],
   });
   const internal = await send({

@@ -6,7 +6,7 @@ import { JsonLd } from "@/components/json-ld";
 import { PageHero } from "@/components/page-hero";
 import { RelatedOffers } from "@/components/related-offers";
 import { DirectAnswer, GeoQuote, Section } from "@/components/section";
-import { automationAnswer, automationGeoQuote } from "@/lib/answers";
+import { automationGeoQuote } from "@/lib/answers";
 import { automationFaqs } from "@/lib/site";
 import { faqJsonLd, pageHead, serviceJsonLd } from "@/lib/seo";
 

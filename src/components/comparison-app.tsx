@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import type { ComparisonReport } from "@/lib/report-pdf/report-types";
+import { storeReportId } from "@/lib/site-assistant-ids";
 
 const industries = [
   ["contractors", "Contractors & home services"],
@@ -19,6 +20,7 @@ export function ComparisonApp() {
   const [emailNote, setEmailNote] = useState("");
   const [reportId, setReportId] = useState("");
   const [token, setToken] = useState("");
+  const [handoffToken, setHandoffToken] = useState("");
   const [report, setReport] = useState<ComparisonReport | null>(null);
 
   async function analyze(event: React.FormEvent<HTMLFormElement>) {
@@ -56,7 +58,12 @@ export function ComparisonApp() {
       if (!res.ok || !data.ok) throw new Error(data.error || "Comparison failed.");
       setReportId(data.reportId);
       setToken(data.token);
+      setHandoffToken(data.handoffToken || "");
       setReport(data.report);
+      storeReportId(data.reportId);
+      sessionStorage.setItem("demore-report-token", data.token);
+      sessionStorage.setItem("demore-handoff-token", data.handoffToken || "");
+      window.dispatchEvent(new CustomEvent("demore:comparison-ready", { detail: { reportId: data.reportId } }));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Comparison failed.");
     } finally {
@@ -77,7 +84,7 @@ export function ComparisonApp() {
       const type = res.headers.get("content-type") || "";
       if (!res.ok || !type.includes("application/pdf")) {
         let message = "PDF generation failed. Retry — the comparison is still saved.";
-        try { const data = await res.json(); if (data.error) message = data.error; } catch {}
+        try { const data = await res.json(); if (data.error) message = data.error; } catch { /* keep the safe fallback message */ }
         throw new Error(message);
       }
       const blob = await res.blob();
@@ -156,13 +163,25 @@ export function ComparisonApp() {
       {error ? <p className="rounded-md border border-hot/40 bg-hot-dim px-3 py-2 text-sm">{error}</p> : null}
       {emailNote ? <p className="text-sm text-muted">{emailNote}</p> : null}
       {report ? (
-        <section className="space-y-4 rounded-xl border border-line bg-surface p-5">
+        <section data-report-id={report.reportNumber} className="space-y-4 rounded-xl border border-line bg-surface p-5">
           <p className="kicker">Result {report.reportNumber}</p>
           <h2 className="font-display text-2xl">{report.companyName}</h2>
           <p className="text-muted">{report.summary.current}</p>
           <div className="grid gap-3 sm:grid-cols-4">{[["Current", report.currentTotal],["Competitor avg", report.competitorAverage],["Leader", report.marketLeader],["Potential", report.potential]].map(([label, value]) => (<div key={String(label)} className="rounded-md border border-line p-3"><p className="kicker">{label}</p><p className="font-display text-3xl text-volt">{value}</p></div>))}</div>
-          <div className="overflow-x-auto rounded-md border border-line"><table className="w-full min-w-[620px] text-left text-sm"><thead className="bg-bg text-muted"><tr><th className="p-3">Competitor / benchmark</th><th>Source</th><th>Maps</th><th>Organic</th><th>Rating</th><th>Site score</th></tr></thead><tbody>{report.competitors.map((row) => <tr key={`${row.name}-${row.website}`} className="border-t border-line"><td className="p-3 font-medium">{row.name}</td><td>{row.source || row.evidence}</td><td>{row.mapsRank ? `#${row.mapsRank}` : "—"}</td><td>{row.organicRank ? `#${row.organicRank}` : "—"}</td><td>{row.rating ? `${row.rating}/5 (${row.reviewCount ?? 0})` : "—"}</td><td>{row.total}</td></tr>)}</tbody></table></div>
+          <div className="overflow-x-auto rounded-md border border-line"><table className="w-full min-w-[760px] text-left text-sm"><thead className="bg-bg text-muted"><tr><th className="p-3">Competitor / benchmark</th><th>Source</th><th>Maps</th><th>Organic</th><th>Rating</th><th>Est. organic traffic/mo.</th><th>Site score</th></tr></thead><tbody>{report.competitors.map((row) => <tr key={`${row.name}-${row.website}`} className="border-t border-line"><td className="p-3 font-medium">{row.name}</td><td>{row.source || row.evidence}</td><td>{row.mapsRank ? `#${row.mapsRank}` : "—"}</td><td>{row.organicRank ? `#${row.organicRank}` : "—"}</td><td>{row.rating ? `${row.rating}/5 (${row.reviewCount ?? 0})` : "—"}</td><td>{row.estimatedMonthlyOrganicTraffic === undefined ? "Unavailable" : row.estimatedMonthlyOrganicTraffic.toLocaleString()}</td><td>{row.total}</td></tr>)}</tbody></table></div>
           <p className="text-sm text-muted">{report.competitorSelection}</p>
+          {report.performance ? (
+            <div className="space-y-3 rounded-lg border border-line bg-bg p-4">
+              <div><p className="kicker">Performance &amp; search data</p><h3 className="font-display text-xl">Measured values only</h3></div>
+              <div className="grid gap-3 sm:grid-cols-4">
+                <div className="rounded-md border border-line p-3"><p className="text-xs text-muted">PageSpeed mobile</p><strong>{report.performance.pageSpeed.performanceScore ?? "Unavailable"}</strong></div>
+                <div className="rounded-md border border-line p-3"><p className="text-xs text-muted">Field LCP</p><strong>{report.performance.coreWebVitals.lcpMs === undefined ? "Unavailable" : `${report.performance.coreWebVitals.lcpMs} ms`}</strong></div>
+                <div className="rounded-md border border-line p-3"><p className="text-xs text-muted">Field INP</p><strong>{report.performance.coreWebVitals.inpMs === undefined ? "Unavailable" : `${report.performance.coreWebVitals.inpMs} ms`}</strong></div>
+                <div className="rounded-md border border-line p-3"><p className="text-xs text-muted">Est. organic traffic/mo.</p><strong>{report.performance.trafficEstimate.monthlyOrganic?.toLocaleString() ?? "Unavailable"}</strong></div>
+              </div>
+              <p className="text-xs text-muted">PageSpeed is lab data. CrUX is public field data and may be unavailable for low-traffic sites. Traffic is a licensed estimate, not analytics. Search Console remains unavailable until the verified owner connects it.</p>
+            </div>
+          ) : null}
           {report.accessComparison ? (
             <div className="space-y-4 rounded-lg border border-line bg-bg p-4">
               <div>
@@ -182,7 +201,7 @@ export function ComparisonApp() {
           <div className="flex flex-wrap gap-2">
             <Button type="button" onClick={downloadPdf} disabled={busy !== "off"}>{busy === "pdf" ? "Generating PDF…" : "Download My Comparison Report"}</Button>
             <Button type="button" variant="outline" onClick={retryEmail} disabled={busy !== "off"}>{busy === "email" ? "Retrying email…" : "Retry email delivery"}</Button>
-            <Button asChild variant="outline"><Link to="/contact" search={{ need: "platform" }}>Start a project</Link></Button>
+            <Button asChild variant="outline"><Link to="/contact" search={{ need: "platform", reportId, handoffToken }}>Start a project</Link></Button>
             <Button type="button" variant="outline" onClick={() => window.print()}>Print this page</Button>
           </div>
           <p className="text-xs text-faint">Download My Comparison Report requests a real application/pdf file from the server. It does not open the print dialog. Print this page is a separate browser print option.</p>

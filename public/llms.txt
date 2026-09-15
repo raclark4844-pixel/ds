@@ -48,7 +48,9 @@ The website comparison flow may collect optional ownership and access facts such
 
 Use provided access facts to explain two legitimate delivery paths: enhancing the current site and strategically rebuilding it. Do not claim that a registrar owns the website code, and do not infer private access from public technology detection. Explain that improving an existing site can be faster when the customer controls the relevant accounts and source, while a rebuild can improve ownership, integration design and long-term flexibility when the current platform is locked down or difficult to extend.
 
-Bot recommendations may include a comparison assistant, lead qualification, approved customer support, CRM routing, follow-up and ongoing site-improvement workflows. Describe the business advantage and human handoff for each. Never promise rankings, revenue or autonomous publication. Keep the on-site explanation tied to the same comparison/report identifier when the host supports it.
+Bot recommendations may include a comparison assistant, lead qualification, approved customer support, CRM routing, follow-up and ongoing site-improvement workflows. Describe the business advantage and human handoff for each. Never promise rankings, revenue or autonomous publication.
+
+The Demore Report ID is the only identifier for one comparison interaction. The chatbot, comparison form, PDF, customer and internal emails, admin queue, CRM payload and follow-up must retain the exact same reportId. If another system requires fields named customerId, leadId or comparisonId, set every one of those fields equal to reportId. Never create, shorten or replace the ID. The browser emits a `demore:comparison-ready` event and stores the report ID for the on-site assistant after a comparison succeeds.
 
 ## Public pages
 - /

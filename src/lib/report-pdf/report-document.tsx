@@ -169,6 +169,14 @@ export function ReportDocument({ report, logoSrc }: { report: ComparisonReport; 
         <Text style={s.p}>{report.tech.restrictions}</Text>
         <Text style={s.p}>{report.tech.accessNeeded}</Text>
         <Text style={s.p}>{`Recommended path: ${report.path}.`}</Text>
+        {report.performance ? <>
+          <Text style={s.h2}>PageSpeed, Core Web Vitals and search data</Text>
+          <Text style={s.p}>{`PageSpeed mobile performance: ${report.performance.pageSpeed.performanceScore ?? "Unavailable"}/100 · SEO ${report.performance.pageSpeed.seoScore ?? "Unavailable"}/100 · accessibility ${report.performance.pageSpeed.accessibilityScore ?? "Unavailable"}/100.`}</Text>
+          <Text style={s.p}>{`Lighthouse lab: LCP ${report.performance.pageSpeed.lcpMs === undefined ? "unavailable" : `${report.performance.pageSpeed.lcpMs} ms`} · CLS ${report.performance.pageSpeed.cls ?? "unavailable"} · TBT ${report.performance.pageSpeed.tbtMs === undefined ? "unavailable" : `${report.performance.pageSpeed.tbtMs} ms`}.`}</Text>
+          <Text style={s.p}>{`CrUX field: ${report.performance.coreWebVitals.assessment} · LCP ${report.performance.coreWebVitals.lcpMs === undefined ? "unavailable" : `${report.performance.coreWebVitals.lcpMs} ms`} · INP ${report.performance.coreWebVitals.inpMs === undefined ? "unavailable" : `${report.performance.coreWebVitals.inpMs} ms`} · CLS ${report.performance.coreWebVitals.cls ?? "unavailable"}.`}</Text>
+          <Text style={s.p}>{`Estimated monthly organic traffic: ${report.performance.trafficEstimate.monthlyOrganic?.toLocaleString() ?? "Unavailable"} (${report.performance.trafficEstimate.source}).`}</Text>
+          <Text style={s.p}>{`Search Console: ${report.performance.searchConsole.note}`}</Text>
+        </> : null}
       </Page>
       {report.accessComparison ? (
         <Page size="LETTER" style={s.page}>
