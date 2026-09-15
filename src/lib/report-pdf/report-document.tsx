@@ -9,13 +9,13 @@ const s = StyleSheet.create({
   meta: { color: "#8B8B86", fontSize: 8 },
   kicker: { color: "#8B8B86", fontSize: 8, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 6 },
   h1: { fontSize: 20, fontFamily: "Helvetica-Bold", color: "#FFFFFF", marginBottom: 10 },
-  h2: { fontSize: 13, fontFamily: "Helvetica-Bold", color: "#FFFFFF", marginTop: 8, marginBottom: 6 },
-  p: { color: "#D8D8D5", lineHeight: 1.45, marginBottom: 6 },
-  row: { flexDirection: "row", gap: 8, marginBottom: 8 },
+  h2: { fontSize: 13, fontFamily: "Helvetica-Bold", color: "#FFFFFF", marginTop: 6, marginBottom: 4 },
+  p: { color: "#D8D8D5", fontSize: 9, lineHeight: 1.35, marginBottom: 4 },
+  row: { flexDirection: "row", gap: 8, marginBottom: 6 },
   card: { flexGrow: 1, flexBasis: 0, borderWidth: 1, borderColor: "#2A2A28", backgroundColor: "#111111", padding: 8 },
   label: { color: "#8B8B86", fontSize: 7, textTransform: "uppercase", marginBottom: 4 },
   value: { color: "#00FF9C", fontSize: 16, fontFamily: "Helvetica-Bold" },
-  barTrack: { height: 8, backgroundColor: "#1A1A1A", marginBottom: 6 },
+  barTrack: { height: 8, backgroundColor: "#1A1A1A", marginBottom: 4 },
   barFill: { height: 8, backgroundColor: "#00FF9C" },
   disc: { color: "#A8A8A3", fontSize: 8, lineHeight: 1.4, marginTop: 8 },
   logo: { width: 150, height: 40, marginBottom: 14 },
@@ -41,7 +41,7 @@ function Chrome({ report }: { report: ComparisonReport }) {
 
 function Bar({ label, value, color = "#00FF9C" }: { label: string; value: number; color?: string }) {
   return (
-    <View style={{ marginBottom: 6 }}>
+    <View style={{ marginBottom: 4 }} wrap={false}>
       <Text style={s.p}>{`${label}  ${value}`}</Text>
       <View style={s.barTrack}><View style={[s.barFill, { width: `${Math.max(4, Math.min(100, value))}%`, backgroundColor: color }]} /></View>
     </View>
