@@ -15,7 +15,7 @@ const schema = z.object({
 export default async function comparisonAnalyze(event: { req: Request }) {
   const req = event.req;
   if (req.method.toUpperCase() !== "POST") return Response.json({ error: "Method not allowed." }, { status: 405 });
-  const { rateLimit, createAccessToken, saveComparison } = await import("../../../src/lib/comparison-store");
+  const { rateLimit, issueReportTicket, saveComparison } = await import("../../../src/lib/comparison-store");
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
   if (!rateLimit(ip)) return Response.json({ error: "Too many comparison requests. Try again later." }, { status: 429 });
   let raw: unknown;
@@ -29,7 +29,7 @@ export default async function comparisonAnalyze(event: { req: Request }) {
     confirmedTools: parsed.data.confirmedTools || "",
     access: parsed.data.access || "",
   });
-  const token = createAccessToken();
+  const token = issueReportTicket(report);
   saveComparison(report, token);
   return Response.json({ ok: true, reportId: report.reportNumber, token, report });
 }

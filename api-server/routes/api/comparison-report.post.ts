@@ -1,7 +1,7 @@
 import { z } from "zod";
 const schema = z.object({
   reportId: z.string().trim().min(8).max(40),
-  token: z.string().trim().min(16).max(80),
+  token: z.string().trim().min(16).max(200000),
   email: z.boolean().optional(),
 });
 export default async function comparisonReport(event: { req: Request }) {
