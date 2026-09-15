@@ -1,6 +1,6 @@
 import { potentialScore, recommendation, scoreFromHtml, SCORING_VERSION } from "@/lib/comparison";
 import { createReportId } from "@/lib/comparison-store";
-import type { CapabilityRow, CategoryScores, ComparisonReport, PathChoice } from "@/lib/report-pdf/report-types";
+import type { AccessComparison, CapabilityRow, CategoryScores, ComparisonReport, PathChoice } from "@/lib/report-pdf/report-types";
 
 const KPI: Record<string, string[]> = {
   contractors: ["estimate", "roof", "siding", "storm"],
@@ -15,7 +15,70 @@ const KPI: Record<string, string[]> = {
 export type AnalyzeInput = {
   companyName: string; website: string; industry: string; market: string;
   contactName: string; contactEmail: string; contactPhone: string; timeframe: string; competitors: string[]; confirmedTools: string; access: string;
+  domainRegistrar: string; websiteHost: string; siteBuilder: string; codeAccess: string;
 };
+
+function clamp(value: number) {
+  return Math.max(20, Math.min(90, Math.round(value)));
+}
+
+function displayAccess(value: string, labels: Record<string, string>) {
+  return value ? labels[value] || value : "Not provided";
+}
+
+function buildAccessComparison(input: AnalyzeInput, currentTotal: number, detectedPlatform: string): AccessComparison {
+  const accountLabels: Record<string, string> = {
+    "owner-controls": "Owner controls domain and website accounts",
+    "shared-controls": "Access is shared with a provider",
+    "provider-controls": "A provider controls the website",
+    "needs-recovery": "Access is unclear or needs recovery",
+  };
+  const codeLabels: Record<string, string> = {
+    "full-source": "Full source/repository access",
+    "cms-admin": "CMS or site-builder access only",
+    "vendor-managed": "Vendor-managed; source access unknown",
+    "no-source": "No source-code access",
+    unknown: "Not sure",
+  };
+  const accessBoost = input.access === "owner-controls" ? 15 : input.access === "shared-controls" ? 7 : input.access === "provider-controls" ? -10 : input.access === "needs-recovery" ? -18 : 0;
+  const sourceBoost = input.codeAccess === "full-source" ? 15 : input.codeAccess === "cms-admin" ? 7 : input.codeAccess === "vendor-managed" ? -8 : input.codeAccess === "no-source" ? -20 : 0;
+  const enhanceFit = clamp(42 + (currentTotal - 50) * 0.45 + accessBoost + sourceBoost);
+  const rebuildFit = clamp(52 + (55 - currentTotal) * 0.45 - accessBoost * 0.35 - sourceBoost * 0.55);
+  const difference = rebuildFit - enhanceFit;
+  const recommendedPath: PathChoice = difference >= 12 ? "Rebuild" : difference <= -12 ? "Optimize" : "Hybrid";
+  const supplied = [input.domainRegistrar, input.websiteHost, input.siteBuilder, input.codeAccess, input.access].filter(Boolean).length;
+  const confidence = supplied >= 4 ? "High" : supplied >= 2 ? "Medium" : "Limited";
+  const explanation = supplied
+    ? `${recommendedPath} is the current fit based on the public-site score and ${supplied} optional ownership/access details. Confirm account ownership before implementation.`
+    : `${recommendedPath} is a preliminary fit based on public pages only. Ownership and access details were not provided, so both paths remain subject to verification.`;
+  const accessSummary = displayAccess(input.access, accountLabels);
+  const codeSummary = displayAccess(input.codeAccess, codeLabels);
+  return {
+    registrar: input.domainRegistrar || "Not provided",
+    hostingProvider: input.websiteHost || detectedPlatform,
+    siteCreator: input.siteBuilder || "Not provided",
+    codeAccess: codeSummary,
+    enhanceFit,
+    rebuildFit,
+    recommendedPath,
+    confidence,
+    explanation,
+    rows: [
+      { factor: "Ownership & access", enhanceCurrent: accessSummary, rebuild: "New owner-controlled accounts and documented handoff", advantage: "Reduces lock-in and makes future changes easier" },
+      { factor: "Existing code & content", enhanceCurrent: codeSummary === "Full source/repository access" ? "Reuse and improve verified source" : "Reuse depends on provider access", rebuild: "Migrate useful content into a documented codebase", advantage: "Preserves useful assets without preserving every limitation" },
+      { factor: "Speed to first improvement", enhanceCurrent: "Usually faster when admin/source access is available", rebuild: "More setup before launch", advantage: "Choose quick wins when the current foundation is dependable" },
+      { factor: "Bots & integrations", enhanceCurrent: "Add through supported APIs, embeds or server-side hooks", rebuild: "Design lead, support and reporting bots into the architecture", advantage: "Creates cleaner handoffs, measurement and automation" },
+      { factor: "Long-term flexibility", enhanceCurrent: "Limited by the existing host, builder and code quality", rebuild: "Modern stack selected around ownership and integrations", advantage: "Lowers the cost of future capabilities" },
+      { factor: "SEO continuity", enhanceCurrent: "Existing URLs can remain in place", rebuild: "Requires URL mapping, redirects and launch monitoring", advantage: "Protects existing visibility during either path" },
+    ],
+    botOpportunities: [
+      { name: "Comparison assistant", currentSite: "Embed when the host supports scripts or APIs", rebuild: "Share the report and lead ID across the complete flow", businessValue: "Explains scores and captures better-qualified follow-up questions" },
+      { name: "Lead qualification bot", currentSite: "Connect to the existing form or CRM where access allows", rebuild: "Built into routing, consent and analytics", businessValue: "Collects service, urgency and location before staff follow-up" },
+      { name: "Customer support bot", currentSite: "Answer from approved site content", rebuild: "Use a maintained knowledge source with escalation", businessValue: "Provides faster answers while handing sensitive requests to people" },
+      { name: "Site improvement bot", currentSite: "Audit pages and propose changes for approval", rebuild: "Monitor performance and maintain an approved backlog", businessValue: "Turns one-time launch work into an ongoing improvement process" },
+    ],
+  };
+}
 
 function normalizeUrl(raw: string) {
   const value = raw.trim();
@@ -83,7 +146,7 @@ export async function buildComparisonReport(input: AnalyzeInput): Promise<Compar
   ]);
   const scored = primary.html ? scoreFromHtml(primary.html, kpis, scoring.weights) : { categories: emptyCats(), total: 28 };
   const currentTotal = primary.ok ? scored.total : Math.max(22, scored.total);
-  const path = recommendation(currentTotal, input.access) as PathChoice;
+  const preliminaryPath = recommendation(currentTotal, input.access) as PathChoice;
   const potential = potentialScore(currentTotal);
   const competitorRows = [];
   const candidates = discovery.live
@@ -125,6 +188,8 @@ export async function buildComparisonReport(input: AnalyzeInput): Promise<Compar
   const confidence = primary.ok ? 62 : 42;
   const today = new Date().toISOString().slice(0, 10);
   const platform = detectPlatform(primary.html, primary.headers);
+  const accessComparison = buildAccessComparison(input, currentTotal, platform);
+  const path = accessComparison.recommendedPath || preliminaryPath;
   return {
     reportNumber: createReportId(), reportDate: today, measurementDate: today, scoringVersion: `${SCORING_VERSION}-weights-${scoring.version}`,
     companyName: input.companyName, website, industry: input.industry, market: input.market,
@@ -154,19 +219,20 @@ export async function buildComparisonReport(input: AnalyzeInput): Promise<Compar
     capabilities: capabilities(primary.html),
     tech: {
       platform,
-      hosting: primary.headers.server ? `${primary.headers.server} — publicly detected` : "Unknown — not publicly verifiable",
-      domainDns: "Public hostname only.",
+      hosting: input.websiteHost || (primary.headers.server ? `${primary.headers.server} — publicly detected` : "Unknown — not publicly verifiable"),
+      domainDns: input.domainRegistrar ? `${input.domainRegistrar} — customer provided registrar` : "Public hostname only; registrar not provided.",
       analytics: /gtag|gtm\.js|analytics/i.test(primary.html) ? "Analytics snippet publicly detected" : "Unknown — not publicly verifiable",
       crm: input.confirmedTools || "Unknown — not publicly verifiable",
       scheduling: /calendly|book|reserv|checkout/i.test(primary.html) ? "Booking or commerce language detected" : "Unknown — not publicly verifiable",
       marketing: "Public pixels only.",
       confirmed: input.confirmedTools ? input.confirmedTools.split(",").map((x) => x.trim()).filter(Boolean) : [],
       unknown: ["Private CRM", "Email/SMS vendors", "Call tracking"],
-      accessStatus: input.access || "Not specified",
-      transferability: "Depends on domain and hosting ownership. Not verified.",
-      restrictions: "Platform lock-in cannot be confirmed without owner access.",
+      accessStatus: accessComparison.rows[0]?.enhanceCurrent || "Not specified",
+      transferability: input.codeAccess === "full-source" ? "Source is reported available; ownership and license still require confirmation." : "Transferability depends on account control, licenses and source availability.",
+      restrictions: input.codeAccess === "no-source" ? "Existing code cannot be assumed reusable without source access." : "Platform lock-in and code quality require access verification.",
       accessNeeded: "Domain DNS, CMS or hosting admin, analytics. No passwords stored.",
     },
+    accessComparison,
     outlook: {
       current: "Public website plus whatever private tools the owner already runs.",
       websiteOnly: "A website-only pass tightens pages, answers, and the form.",
