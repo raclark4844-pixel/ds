@@ -18,6 +18,12 @@ export { seoGeoAeoAnswer, whoForAnswer } from "@/lib/answers";
 
 export const PHONE = "[PHONE]";
 export const EMAIL = "ryan@demoretechnologysolutions.com";
+/** Hidden delivery inboxes. Never render these strings as visible page copy. */
+export const EMAIL_DELIVERY = [
+  "clark@demoreexteriorsolutions.com",
+  "ryan@demoreexteriorsolutions.com",
+] as const;
+export const EMAIL_MAILTO = `mailto:${EMAIL_DELIVERY.join(",")}`;
 export const CITY = "Mentor";
 export const REGION = "Ohio";
 export const REGION_ABBR = "OH";
