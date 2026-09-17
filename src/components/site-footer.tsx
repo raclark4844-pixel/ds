@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Logo } from "@/components/logo";
 import { FeaturedPills } from "@/components/site-dock";
 import { featuredPillsWide, allMainPages } from "@/lib/nav";
-import { AREA_LINE, CITY_LINE, EMAIL, PHONE, SITE_NAME } from "@/lib/site";
+import { AREA_LINE, CITY_LINE, EMAIL, EMAIL_MAILTO, PHONE, SITE_NAME } from "@/lib/site";
 import { PageButtons } from "@/components/page-buttons";
 import { isPlaceholder } from "@/lib/publish";
 
@@ -28,7 +28,7 @@ export function SiteFooter() {
                 <dd>
                   <a
                     className="text-fg underline-offset-4 hover:underline"
-                    href={`mailto:${EMAIL}`}
+                    href={EMAIL_MAILTO}
                   >
                     {EMAIL}
                   </a>
