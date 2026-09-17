@@ -162,7 +162,7 @@ export function IntakeForm({ need, industry, reportId, handoffToken }: { need?: 
   }
 
   const progress = useMemo(() => (brief.submittedAt ? 100 : (step / 5) * 100), [step, brief.submittedAt]);
-  const emailHref = `${EMAIL_MAILTO}?subject=${encodeURIComponent("Project brief follow-up")}&body=${encodeURIComponent(formatBrief(brief))}`;
+  const emailHref = `${EMAIL_MAILTO}&subject=${encodeURIComponent("Project brief follow-up")}&body=${encodeURIComponent(formatBrief(brief))}`;
 
   if (!hydrated) return <div className="rounded-xl border border-line bg-surface p-6 text-muted">Loading brief…</div>;
 
