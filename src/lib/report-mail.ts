@@ -3,16 +3,15 @@ import { issueHandoffToken } from "@/lib/comparison-store";
 import { reportFilename } from "@/lib/report-pdf/render-report.server";
 import { unifiedIds } from "@/lib/unified-ids";
 
-const INTERNAL_TO = [
-  "clark@demoreexteriorsolutions.com",
-  "ryan@demoreexteriorsolutions.com",
-];
+const INTERNAL_TO = ["ryan@demoretechnologysolutions.com"];
+const INTERNAL_CC = ["ryan@demoreexteriorsolutions.com"];
 
 export function mailConfig() {
   return {
     apiKey: process.env.RESEND_API_KEY || "",
     from: process.env.REPORT_FROM_EMAIL || "projects@demorehomesolutions.com",
     internal: INTERNAL_TO,
+    internalCc: INTERNAL_CC,
     site: process.env.NEXT_PUBLIC_SITE_URL || "https://www.demoretechnologysolutions.com",
   };
 }
@@ -52,6 +51,7 @@ export async function sendReportEmails(report: ComparisonReport, pdf: Buffer) {
   const internal = await send({
     from: `Demore Technology Solutions <${cfg.from}>`,
     to: cfg.internal,
+    cc: cfg.internalCc,
     reply_to: report.contactEmail,
     subject: `New Website Comparison — ${report.companyName} — ${ids.reportId}`,
     text: [`New website comparison — ${report.companyName}`, `Demore Report ID: ${ids.reportId}`, `customerId: ${ids.customerId}`, `leadId: ${ids.leadId}`, `comparisonId: ${ids.comparisonId}`, `Contact: ${report.contactName} <${report.contactEmail}>`, `Industry: ${report.industry}`, `Market: ${report.market}`, `Website: ${report.website}`, `Scores: current ${report.currentTotal}, competitor avg ${report.competitorAverage}, leader ${report.marketLeader}, potential ${report.potential}`, `Path: ${report.path}`].join("\n"),
