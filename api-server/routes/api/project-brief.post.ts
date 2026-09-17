@@ -36,10 +36,8 @@ type ProjectBrief = {
 };
 
 const MIN_BUDGET = 600;
-const TO_EMAILS = [
-  "clark@demoreexteriorsolutions.com",
-  "ryan@demoreexteriorsolutions.com",
-];
+const TO_EMAIL = "ryan@demoretechnologysolutions.com";
+const CC_EMAIL = "ryan@demoreexteriorsolutions.com";
 const FROM_EMAIL = "projects@demorehomesolutions.com";
 
 function clean(value: unknown, max = 4000): string {
@@ -173,7 +171,8 @@ export default async function projectBrief(event: { req: Request }) {
     },
     body: JSON.stringify({
       from: `Demore Technology Project Brief <${FROM_EMAIL}>`,
-      to: TO_EMAILS,
+      to: [TO_EMAIL],
+      cc: [CC_EMAIL],
       reply_to: email,
       subject: `${isTest ? "TEST — discard, not a lead — " : ""}New project brief — ${industry} — ${clean(raw.businessName, 100) || name}`,
       text: fields.join("\n"),
