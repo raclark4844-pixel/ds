@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,6 +15,7 @@ import {
   wantBuilt,
   type Brief,
 } from "@/lib/intake";
+import { EMAIL, EMAIL_MAILTO } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 function Field({ label, hint, htmlFor, required, children }: {
@@ -42,6 +43,17 @@ function toggle(list: string[], id: string) {
   return list.includes(id) ? list.filter((item) => item !== id) : [...list, id];
 }
 
+function scrollBriefIntoView() {
+  const el = document.getElementById("project-brief");
+  const header = document.querySelector("header.sticky") as HTMLElement | null;
+  const headerHeight = header?.offsetHeight ?? 64;
+  const gap = 12;
+  const top = el
+    ? el.getBoundingClientRect().top + window.scrollY - headerHeight - gap
+    : Math.max(0, window.scrollY - headerHeight);
+  window.scrollTo({ top: Math.max(0, top), behavior: "auto" });
+}
+
 export function IntakeForm({ need, industry, reportId, handoffToken }: { need?: string; industry?: string; reportId?: string; handoffToken?: string }) {
   const [step, setStep] = useState(1);
   const [brief, setBrief] = useState<Brief>(emptyBrief);
@@ -49,6 +61,7 @@ export function IntakeForm({ need, industry, reportId, handoffToken }: { need?: 
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const skipInitialScroll = useRef(true);
 
   useEffect(() => {
     let next = emptyBrief();
@@ -72,6 +85,15 @@ export function IntakeForm({ need, industry, reportId, handoffToken }: { need?: 
   useEffect(() => {
     if (hydrated) localStorage.setItem(STORAGE_KEY, JSON.stringify(brief));
   }, [brief, hydrated]);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    if (skipInitialScroll.current) {
+      skipInitialScroll.current = false;
+      return;
+    }
+    scrollBriefIntoView();
+  }, [step, brief.submittedAt, hydrated]);
 
   function patch(partial: Partial<Brief>) {
     setBrief((current) => ({ ...current, ...partial }));
@@ -140,26 +162,31 @@ export function IntakeForm({ need, industry, reportId, handoffToken }: { need?: 
   }
 
   const progress = useMemo(() => (brief.submittedAt ? 100 : (step / 5) * 100), [step, brief.submittedAt]);
+  const emailHref = `${EMAIL_MAILTO}?subject=${encodeURIComponent("Project brief follow-up")}&body=${encodeURIComponent(formatBrief(brief))}`;
 
   if (!hydrated) return <div className="rounded-xl border border-line bg-surface p-6 text-muted">Loading brief…</div>;
 
   if (brief.submittedAt) {
     return (
-      <div className="rounded-xl border border-line bg-surface p-5 sm:p-8">
+      <div id="project-brief" className="rounded-xl border border-line bg-surface p-5 sm:p-8">
         <p className="kicker">Brief submitted</p>
         <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight">Your project brief was sent.</h2>
         <p className="mt-3 max-w-2xl text-muted">A copy remains saved in this browser. This is a project brief, not a contract, and it does not guarantee rankings, AI citations, traffic, lead volume, engagement, or conversion lifts.</p>
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
           <Button type="button" onClick={copy}>{copied ? <Check className="size-4" /> : <Copy className="size-4" />}{copied ? "Copied" : "Copy brief"}</Button>
+          <Button type="button" variant="outline" asChild>
+            <a href={emailHref}>Email this brief</a>
+          </Button>
           <Button type="button" variant="outline" onClick={reset}>Start a new brief</Button>
         </div>
+        <p className="mt-4 text-sm text-muted">Shop address: {EMAIL}</p>
         <pre className="mt-8 overflow-x-auto whitespace-pre-wrap rounded-lg bg-bg p-4 text-sm leading-relaxed text-fg">{formatBrief(brief)}</pre>
       </div>
     );
   }
 
   return (
-    <form className="rounded-xl border border-line bg-surface p-5 sm:p-8" onSubmit={(event) => { event.preventDefault(); if (step < 5) next(); else void submit(); }}>
+    <form id="project-brief" className="rounded-xl border border-line bg-surface p-5 sm:p-8" onSubmit={(event) => { event.preventDefault(); if (step < 5) next(); else void submit(); }}>
       <div className="flex items-center justify-between gap-4">
         <p className="kicker">Step {step} of 5 — {STEPS[step - 1]?.label}</p>
         <p className="text-xs text-faint">Saved locally while you complete it</p>
