@@ -36,7 +36,10 @@ type ProjectBrief = {
 };
 
 const MIN_BUDGET = 600;
-const TO_EMAIL = "ryan@demoretechnologysolutions.com";
+const TO_EMAILS = [
+  "clark@demoreexteriorsolutions.com",
+  "ryan@demoreexteriorsolutions.com",
+];
 const FROM_EMAIL = "projects@demorehomesolutions.com";
 
 function clean(value: unknown, max = 4000): string {
@@ -116,6 +119,7 @@ export default async function projectBrief(event: { req: Request }) {
   }
 
   const fields = [
+    "TEST — discard, not a lead.",
     "DEMORE TECHNOLOGY SOLUTIONS — NEW PROJECT BRIEF",
     textLine("Demore Report ID", reportId),
     textLine("Submitted", clean(raw.submittedAt, 80) || new Date().toISOString()),
@@ -156,6 +160,11 @@ export default async function projectBrief(event: { req: Request }) {
     textLine("Anything else", clean(raw.anythingElse)),
   ];
 
+  const isTest = /TEST\s*[\u2014-]\s*discard|TEST ONLY/i.test(clean(raw.anythingElse) + " " + name + " " + clean(raw.businessName, 160));
+  if (!isTest) {
+    fields.shift();
+  }
+
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -164,9 +173,9 @@ export default async function projectBrief(event: { req: Request }) {
     },
     body: JSON.stringify({
       from: `Demore Technology Project Brief <${FROM_EMAIL}>`,
-      to: [TO_EMAIL],
+      to: TO_EMAILS,
       reply_to: email,
-      subject: `New project brief — ${industry} — ${clean(raw.businessName, 100) || name}`,
+      subject: `${isTest ? "TEST — discard, not a lead — " : ""}New project brief — ${industry} — ${clean(raw.businessName, 100) || name}`,
       text: fields.join("\n"),
     }),
   });
