@@ -85,7 +85,7 @@ function Admin() {
         <>
           <p className="mt-6 text-muted">
             {data.mode} · Configuration snapshot {data.updatedAt}. These are readiness records, not
-            live telemetry. Hosted execution is not connected.
+            live telemetry. Automatic inbox first-assignment is connected; general website-editing execution is not connected.
           </p>
           <label className="mt-8 block">
             Site profile

@@ -6,9 +6,10 @@ export default async function controlCenter(event: { req: Request }) {
     const { capabilities } = await import("../../../../src/lib/control-capabilities");
     return Response.json(
       {
-        mode: "Read-only readiness registry",
+        mode: "Automatic lead routing plus capability readiness registry",
         updatedAt: "2026-09-21",
         executionConnected: false,
+        leadRoutingConnected: process.env.INBOX_AUTO_ROUTING_DISABLED !== "1",
         sites: [
           {
             id: "demore",
@@ -16,7 +17,7 @@ export default async function controlCenter(event: { req: Request }) {
             url: "https://demoreexteriorsolutions.com/",
             email: "ryan@demoreexteriorsolutions.com",
             platform: "Base44",
-            status: "Existing Grok roles preserved; new control-center execution inactive",
+            status: "Existing Grok roles preserved; automatic inbox first-assignment connected; general bot execution inactive",
           },
           {
             id: "demore-technology",
@@ -24,7 +25,7 @@ export default async function controlCenter(event: { req: Request }) {
             url: "https://www.demoretechnologysolutions.com/",
             email: "ryan@demoretechnologysolutions.com",
             platform: "Vercel",
-            status: "Capability preview and administrator registry; hosted execution not connected",
+            status: "Automatic inbox first-assignment connected; broader website-editing executor not connected",
           },
         ],
         capabilities,

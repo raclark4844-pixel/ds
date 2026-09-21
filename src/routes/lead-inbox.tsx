@@ -120,7 +120,7 @@ function Inbox() {
         Separate pipelines for both businesses. Capture leads manually, assign an owner, and track
         progress. New Technology Solutions project briefs are captured here before their existing
         notifications. New Exterior Solutions leads are checked every five minutes, with tracked
-        delivery and retries. Existing records are not imported automatically. Administrator action alerts go to both Ryan email addresses. Customer email, SMS and automatic follow-up remain separate.
+        delivery and retries. Existing records are not imported automatically. New, untouched, unassigned leads are automatically assigned to Ryan during the five-minute sync. Existing human routing decisions are preserved. Administrator action alerts go to both Ryan email addresses. Customer email, SMS and automatic follow-up remain separate.
       </p>
       <Link to="/control-center-admin" className="mt-4 inline-block text-volt">
         ← Control center

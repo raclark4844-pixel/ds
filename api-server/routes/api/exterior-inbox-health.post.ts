@@ -8,6 +8,12 @@ export default async function handler(event: { req: Request }) {
     const { saveHealth } = await import("../../../src/lib/inbox-health");
     const sql = await getSql();
     const result = await saveHealth(sql, body);
+    if (process.env.INBOX_AUTO_ROUTING_DISABLED !== "1") {
+      try {
+        const { routeNewLeads } = await import("../../../src/lib/automatic-lead-routing");
+        await routeNewLeads(sql);
+      } catch { console.error("[inbox-routing] Assignment run incomplete"); }
+    }
     // Mail failure must not fail the sync heartbeat or lead delivery.
     try {
       const { queueInboxAlert, deliverInboxAlert } = await import("../../../src/lib/inbox-alerts");
