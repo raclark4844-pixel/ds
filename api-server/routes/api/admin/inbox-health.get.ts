@@ -7,6 +7,8 @@ export default async function handler(event: { req: Request }) {
   try {
     const { getSql } = await import("../../../../src/lib/db");
     const { readHealth } = await import("../../../../src/lib/inbox-health");
-    return Response.json(await readHealth(await getSql()), { headers: { "Cache-Control": "private, no-store" } });
+    const sql = await getSql();
+    const { inboxAlertStatus } = await import("../../../../src/lib/inbox-alerts");
+    return Response.json({ ...await readHealth(sql), alerts: await inboxAlertStatus(sql), emailConfigured: !!process.env.RESEND_API_KEY }, { headers: { "Cache-Control": "private, no-store" } });
   } catch (e) { return leadErrorResponse(e); }
 }

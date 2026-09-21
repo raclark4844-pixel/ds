@@ -120,8 +120,7 @@ function Inbox() {
         Separate pipelines for both businesses. Capture leads manually, assign an owner, and track
         progress. New Technology Solutions project briefs are captured here before their existing
         notifications. New Exterior Solutions leads are checked every five minutes, with tracked
-        delivery and retries. Existing records are not imported automatically. This inbox does not send
-        email, SMS or automatic follow-up.
+        delivery and retries. Existing records are not imported automatically. Administrator action alerts go to both Ryan email addresses. Customer email, SMS and automatic follow-up remain separate.
       </p>
       <Link to="/control-center-admin" className="mt-4 inline-block text-volt">
         ← Control center
@@ -133,7 +132,7 @@ function Inbox() {
           </a>
         ))}
       </div>
-      {items !== null && site === "demore" && <SyncHealth />}
+      {items !== null && <SyncHealth />}
       <label className="mt-8 block max-w-xl">
         Business pipeline
         <select
@@ -267,8 +266,10 @@ function LeadCard({
   const [history, setHistory] = useState<
     { action: string; created_at: string; details: { stage?: string; owner?: string } }[] | null
   >(null);
+  const [confirming, setConfirming] = useState(false);
   async function save(e: React.FormEvent) {
     e.preventDefault();
+    if (!confirming) { setConfirming(true); return; }
     onBusy(true);
     onError("");
     try {
@@ -308,13 +309,14 @@ function LeadCard({
         Source: {lead.source} · Reference: {lead.source_record_id} ·{" "}
         {new Date(lead.created_at).toLocaleString()}
       </p>
+      {confirming && <p className="mt-4 rounded-lg border border-line p-3" role="status">Authorize this change for {lead.name}: stage {lead.stage} → {stage}; owner {lead.owner} → {owner}. This updates the inbox record and audit history only. No customer message will be sent.</p>}
       <form onSubmit={save} className="mt-5 flex flex-wrap items-end gap-4">
         <label>
           Stage
           <select
             disabled={disabled}
             value={stage}
-            onChange={(e) => setStage(e.target.value)}
+            onChange={(e) => { setStage(e.target.value); setConfirming(false); }}
             className={inputClass}
           >
             {["new", "qualified", "contacted", "won", "lost"].map((s) => (
@@ -329,7 +331,7 @@ function LeadCard({
           <select
             disabled={disabled}
             value={owner}
-            onChange={(e) => setOwner(e.target.value)}
+            onChange={(e) => { setOwner(e.target.value); setConfirming(false); }}
             className={inputClass}
           >
             <option value="unassigned">Unassigned</option>
@@ -337,7 +339,7 @@ function LeadCard({
           </select>
         </label>
         <button disabled={disabled} className="min-h-11 rounded-lg border border-line px-4">
-          Save routing
+          {confirming ? "Confirm and authorize routing" : "Review routing change"}
         </button>
         <button
           disabled={disabled}
@@ -364,6 +366,8 @@ function LeadCard({
 
 function SyncHealth() {
   const [health, setHealth] = useState<{ report: { enabled: boolean; lastRunAt: string | null; runFailed: boolean; pending: number; retry: number; failed: number }; received_at: string } | null>(null);
+  const [alerts, setAlerts] = useState<{latest: {status:string;accepted_at:string|null;last_error:string|null}|null} | null>(null);
+  const [emailConfigured,setEmailConfigured] = useState(false);
   const [status, setStatus] = useState("Loading sync status…");
   const [now, setNow] = useState(Date.now());
   useEffect(() => {
@@ -371,8 +375,8 @@ function SyncHealth() {
     const refresh = async () => {
       try {
         const data = await api("/api/admin/inbox-health");
-        if (active) { setHealth(data.health); setStatus(data.health ? "" : "Waiting for the first sync report."); setNow(Date.now()); }
-      } catch { if (active) { setHealth(null); setStatus("Sync status unavailable. Sign in again or refresh this page."); } }
+        if (active) { setHealth(data.health); setAlerts(data.alerts); setEmailConfigured(data.emailConfigured); setStatus(data.health ? "" : "Waiting for the first sync report."); setNow(Date.now()); }
+      } catch { if (active) { setHealth(null); setAlerts(null); setStatus("Sync status unavailable. Sign in again or refresh this page."); } }
     };
     void refresh();
     const timer = setInterval(refresh, 60000);
@@ -382,6 +386,7 @@ function SyncHealth() {
   const count = (n: number) => n === 100 ? "100+" : String(n);
   return <section className="mt-6 rounded-xl border border-line bg-surface p-5" aria-label="Exterior lead sync health">
     <h2 className="text-lg font-semibold">Exterior lead sync</h2>
+    {alerts && <div className="mb-4 border-b border-line pb-4"><h3 className="font-semibold">Email action alerts</h3><p className="mt-2 text-sm">Sent to ryan@demoretechnologysolutions.com and ryan@demoreexteriorsolutions.com. Use the email link to sign in, review and authorize inbox routing changes. Email replies do not authorize actions.</p><p className="mt-2 text-sm text-muted">{!emailConfigured ? "Email service needs configuration." : !alerts.latest ? "Ready — no action alert queued yet." : alerts.latest.status === "accepted" ? `Last alert accepted by email provider: ${new Date(alerts.latest.accepted_at!).toLocaleString()}.` : `Last alert: ${alerts.latest.status}. ${alerts.latest.last_error || "Waiting for delivery attempt."}`}</p><p className="mt-2 text-xs text-muted">Alerts are checked with the five-minute Exterior sync. If that scheduler stops, email checks also stop. Provider acceptance does not confirm inbox delivery.</p></div>}
     {status && <p className="mt-2 text-muted">{status}</p>}
     {health && <>
       <p className="mt-2">{!health.report.enabled ? "Paused" : stale ? "Needs attention — no recent completed sync" : health.report.runFailed || health.report.failed > 0 ? "Needs attention — inspect the delivery queue" : "Sync is current"}</p>
