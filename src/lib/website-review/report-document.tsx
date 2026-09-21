@@ -70,7 +70,7 @@ export function WebsiteReviewDocument({ report, logoSrc }: { report: WebsiteRevi
         <Text style={s.disc}>The latest revision below supersedes earlier recommendations where they conflict. These are customer-provided updates and proposed improvements, not a new website scan. Original detected findings follow for reference.</Text>
         {report.revisions.slice(-1).map(revision => <View key={revision.number}>
           <Text style={s.h2}>Your requested changes</Text><Text style={s.p}>{revision.request}</Text>
-          <Text style={s.h2}>Revised recommendations</Text><Text style={s.p}>{revision.response}</Text>
+          <Text style={s.h2}>Revised recommendations</Text><Text style={s.p}>{revision.response.replace(/\*\*/g, "").replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1 ($2)")}</Text>
         </View>)}
       </Page> : null}
       <Page size="LETTER" style={s.page}>
