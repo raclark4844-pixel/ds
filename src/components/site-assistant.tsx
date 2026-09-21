@@ -4,7 +4,6 @@ import {
   registerReview,
   type ReviewDownload,
 } from "@/lib/review-download";
-import { isPdfRevisionRequest } from "@/lib/website-review/revision";
 import { IndustryMultiselect } from "@/components/industry-multiselect";
 import { selectedIndustries } from "@/lib/industry-selection";
 import { useEffect, useState } from "react";
@@ -30,6 +29,10 @@ const INTRO =
   "Ask about websites, bots, growth, or custom AI platforms. Optionally enter your website above to get a PDF of practical improvements Demore could help with.";
 
 export function SiteAssistant() {
+  const [pendingRevision, setPendingRevision] = useState<{
+    message: string;
+    recordId: string;
+  } | null>(null);
   const [industries, setIndustries] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
   const [reportId, setReportId] = useState("");
@@ -58,6 +61,7 @@ export function SiteAssistant() {
       const id = detail.reportId?.trim();
       const brief = detail.brief?.trim() || "";
       if (id) {
+        setPendingRevision(null);
         setReportId(id);
         storeReportId(id);
       }
@@ -136,17 +140,77 @@ export function SiteAssistant() {
     await downloadReview(updated);
   }
 
-  async function send(updatePdf = false) {
+  async function confirmRevision(yes: boolean) {
+    if (!pendingRevision || busy) return;
+    const pending = pendingRevision;
+    setPendingRevision(null);
+    if (!yes) {
+      setMessages((current) => [
+        ...current,
+        { role: "assistant", content: "I’ll keep the current PDF unchanged." },
+      ]);
+      return;
+    }
+    if (activeReview()?.recordId !== pending.recordId) return;
+    setBusy(true);
+    try {
+      await revisePdf(pending.message);
+    } catch (error) {
+      setMessages((current) => [
+        ...current,
+        {
+          role: "assistant",
+          content:
+            error instanceof Error
+              ? error.message
+              : "The PDF could not be updated. Your previous copy remains available.",
+        },
+      ]);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function send() {
     const message = draft.trim();
     if (!message || busy) return;
     setDraft("");
+    if (
+      pendingRevision &&
+      /^(yes|yes please|please do|go ahead|sure|no|no thanks|not now)[.!]?$/i.test(message)
+    ) {
+      await confirmRevision(!/^(no|not now)/i.test(message));
+      return;
+    }
+    setPendingRevision(null);
     const next = [...messages, { role: "user" as const, content: message }];
     setMessages(next);
     setBusy(true);
     try {
-      if (updatePdf || isPdfRevisionRequest(message)) {
-        await revisePdf(message);
-        return;
+      const review = activeReview();
+      let suggestRevision = false;
+      if (review && review.recordId === reportId) {
+        const decision = await fetch("/api/website-review-intent", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...review, message }),
+          signal: AbortSignal.timeout(55000),
+        })
+          .then((response) => response.json())
+          .catch(() => ({ action: "none" }));
+        if (decision.action === "revise") {
+          setMessages((current) => [
+            ...current,
+            {
+              role: "assistant",
+              content:
+                "That changes the improvement plan. I’m updating your PDF and download links now.",
+            },
+          ]);
+          await revisePdf(message);
+          return;
+        }
+        suggestRevision = decision.action === "ask";
       }
       const token = sessionStorage.getItem("demore-report-token") || "";
       const res = await fetch("/api/assistant", {
@@ -169,11 +233,14 @@ export function SiteAssistant() {
       const reply = data.ok
         ? data.text
         : data.error || "Live web information is temporarily unavailable.";
+      if (suggestRevision && review) setPendingRevision({ message, recordId: review.recordId });
       setMessages([
         ...next,
         {
           role: "assistant",
-          content: reply,
+          content: suggestRevision
+            ? `${reply}\n\nWould you like me to revise your PDF to include this?`
+            : reply,
           citations: data.citations,
           searchedAt: data.searchedAt,
         },
@@ -275,9 +342,31 @@ export function SiteAssistant() {
             </div>
           </div>
           <div className="border-t border-line px-3 py-2 text-xs text-muted">
-            Type your changes, then choose Update PDF. Requests such as “Update my report to include
-            catering” also update it automatically.
+            Share relevant details naturally. I’ll update your report for clear changes and ask
+            before adding tentative ideas.
           </div>
+          {pendingRevision ? (
+            <div className="flex shrink-0 gap-2 px-3 py-2">
+              <Button
+                type="button"
+                size="sm"
+                variant="volt"
+                disabled={busy}
+                onClick={() => void confirmRevision(true)}
+              >
+                Yes, revise PDF
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                disabled={busy}
+                onClick={() => void confirmRevision(false)}
+              >
+                Keep current PDF
+              </Button>
+            </div>
+          ) : null}
           <form
             className="flex flex-wrap shrink-0 gap-2 border-t border-line p-2"
             onSubmit={(e) => {
@@ -294,15 +383,6 @@ export function SiteAssistant() {
             />
             <Button type="submit" size="sm" disabled={busy}>
               {busy ? "…" : "Send"}
-            </Button>
-            <Button
-              type="button"
-              size="sm"
-              variant="volt"
-              disabled={busy || !draft.trim()}
-              onClick={() => void send(true)}
-            >
-              Update PDF
             </Button>
           </form>
         </div>
