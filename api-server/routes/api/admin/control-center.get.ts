@@ -30,9 +30,9 @@ export default async function controlCenter(event: { req: Request }) {
         capabilities,
         providers: ["OpenAI", "xAI Grok", "Anthropic Claude", "Base44"],
         gates: [
-          "Low: analyze or draft within approved scope",
-          "Medium: independent review and approval before customer communication",
-          "High: exact-change owner approval, preview verification and rollback before production",
+          "Low: automatic within configured permissions, with independent review and verification",
+          "Medium: automatic after independent review and verification; no human approval required",
+          "High/RED: human approval required; protected resources, customer messaging and production deployment retain high-risk gates",
         ],
         nextSteps: [
           "Connect a hosted executor with durable shared budget enforcement; preserve the existing $2/day and $40/month authorization rather than duplicating it per site.",
