@@ -25,6 +25,7 @@ import { Route as PlatformRouteImport } from './routes/platform'
 import { Route as ProcessRouteImport } from './routes/process'
 import { Route as WebsitesRouteImport } from './routes/websites'
 import { Route as WorkRouteImport } from './routes/work'
+import { Route as WorkspaceRouteImport } from './routes/workspace'
 import { Route as IndustriesIndexRouteImport } from './routes/industries.index'
 import { Route as IndustriesContractorsRouteImport } from './routes/industries.contractors'
 import { Route as IndustriesHospitalityRouteImport } from './routes/industries.hospitality'
@@ -116,6 +117,11 @@ const WorkRoute = WorkRouteImport.update({
   path: '/work',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WorkspaceRoute = WorkspaceRouteImport.update({
+  id: '/workspace',
+  path: '/workspace',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndustriesIndexRoute = IndustriesIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -187,6 +193,7 @@ export interface FileRoutesByFullPath {
   '/process': typeof ProcessRoute
   '/websites': typeof WebsitesRoute
   '/work': typeof WorkRoute
+  '/workspace': typeof WorkspaceRoute
   '/industries/contractors': typeof IndustriesContractorsRoute
   '/industries/hospitality': typeof IndustriesHospitalityRoute
   '/industries/landscaping': typeof IndustriesLandscapingRoute
@@ -214,6 +221,7 @@ export interface FileRoutesByTo {
   '/process': typeof ProcessRoute
   '/websites': typeof WebsitesRoute
   '/work': typeof WorkRoute
+  '/workspace': typeof WorkspaceRoute
   '/industries/contractors': typeof IndustriesContractorsRoute
   '/industries/hospitality': typeof IndustriesHospitalityRoute
   '/industries/landscaping': typeof IndustriesLandscapingRoute
@@ -243,6 +251,7 @@ export interface FileRoutesById {
   '/process': typeof ProcessRoute
   '/websites': typeof WebsitesRoute
   '/work': typeof WorkRoute
+  '/workspace': typeof WorkspaceRoute
   '/industries/contractors': typeof IndustriesContractorsRoute
   '/industries/hospitality': typeof IndustriesHospitalityRoute
   '/industries/landscaping': typeof IndustriesLandscapingRoute
@@ -273,6 +282,7 @@ export interface FileRouteTypes {
     | '/process'
     | '/websites'
     | '/work'
+    | '/workspace'
     | '/industries/contractors'
     | '/industries/hospitality'
     | '/industries/landscaping'
@@ -300,6 +310,7 @@ export interface FileRouteTypes {
     | '/process'
     | '/websites'
     | '/work'
+    | '/workspace'
     | '/industries/contractors'
     | '/industries/hospitality'
     | '/industries/landscaping'
@@ -328,6 +339,7 @@ export interface FileRouteTypes {
     | '/process'
     | '/websites'
     | '/work'
+    | '/workspace'
     | '/industries/contractors'
     | '/industries/hospitality'
     | '/industries/landscaping'
@@ -357,6 +369,7 @@ export interface RootRouteChildren {
   ProcessRoute: typeof ProcessRoute
   WebsitesRoute: typeof WebsitesRoute
   WorkRoute: typeof WorkRoute
+  WorkspaceRoute: typeof WorkspaceRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -471,6 +484,13 @@ declare module '@tanstack/react-router' {
       path: '/work'
       fullPath: '/work'
       preLoaderRoute: typeof WorkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/workspace': {
+      id: '/workspace'
+      path: '/workspace'
+      fullPath: '/workspace'
+      preLoaderRoute: typeof WorkspaceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/industries/': {
@@ -593,6 +613,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProcessRoute: ProcessRoute,
   WebsitesRoute: WebsitesRoute,
   WorkRoute: WorkRoute,
+  WorkspaceRoute: WorkspaceRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

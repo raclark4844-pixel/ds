@@ -76,8 +76,17 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-line/80 bg-bg/75 backdrop-blur-xl">
       {signedIn ? (
-        <nav aria-label="Lead Engine shortcuts" className="border-b border-line bg-surface">
+        <nav
+          aria-label="Workspace and Lead Engine shortcuts"
+          className="border-b border-line bg-surface"
+        >
           <div className="mx-auto flex max-w-6xl flex-wrap gap-2 px-4 py-2 sm:px-6">
+            <a
+              href="/workspace"
+              className="inline-flex min-h-11 items-center rounded-lg border border-volt bg-volt px-4 py-2 text-sm font-medium text-bg"
+            >
+              Workspace · all pages
+            </a>
             {[
               ["/operations", "Lead Engine"],
               ["/campaigns/new", "New campaign"],

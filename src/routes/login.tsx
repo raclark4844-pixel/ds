@@ -17,7 +17,7 @@ export const Route = createFileRoute("/login")({
 const control = "mt-1 min-h-11 w-full rounded-md border border-line bg-bg px-3 py-2";
 function LoginPage() {
   const [mode, setMode] = useState<"login" | "request" | "reset">("login");
-  const [destination, setDestination] = useState("/admin");
+  const [destination, setDestination] = useState("/workspace");
   const [existingSession, setExistingSession] = useState(false);
   const [token, setToken] = useState("");
   const [error, setError] = useState("");

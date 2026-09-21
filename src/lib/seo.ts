@@ -39,7 +39,9 @@ export function pageHead({
 }) {
   const url = `${SITE_URL}${path}`;
   const og = `${SITE_URL}/og.png`;
-  const privatePage = /^\/(?:login|admin|control-center-admin|lead-inbox)(?:\/|$)/.test(path);
+  const privatePage = /^\/(?:login|workspace|admin|control-center-admin|lead-inbox)(?:\/|$)/.test(
+    path,
+  );
   return {
     scripts: privatePage
       ? []

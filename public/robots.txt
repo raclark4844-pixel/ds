@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /api/
+Disallow: /workspace
 Disallow: /login
 Disallow: /admin
 Disallow: /control-center-admin
