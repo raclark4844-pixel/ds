@@ -71,6 +71,10 @@ describe("Ask Demore formatting", () => {
     assert.doesNotMatch(prompt, /ChatGPT|Claude|Gemini|OpenAI/i);
     assert.match(prompt, /DTS-41F6B18F/);
     assert.match(prompt, /lead-generation/);
+    assert.match(prompt, /Website design and ecommerce/);
+    assert.match(prompt, /Bots and business automation/);
+    assert.match(prompt, /Custom AI platforms/);
+    assert.match(prompt, /Do not require a review before describing services/);
     assert.match(prompt, /industries\/restaurants/);
     assert.match(prompt, /industries\/pubs/);
     assert.match(prompt, /industries\/pizza-shops/);
