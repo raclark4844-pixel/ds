@@ -6,9 +6,10 @@ export default async function controlCenter(event: { req: Request }) {
     const { capabilities } = await import("../../../../src/lib/control-capabilities");
     return Response.json(
       {
-        mode: "Automatic lead routing plus capability readiness registry",
+        mode: "Hosted specialist analysis and review; automatic lead routing",
         updatedAt: "2026-09-21",
         executionConnected: false,
+        hostedAnalysisConnected: true,
         leadRoutingConnected: process.env.INBOX_AUTO_ROUTING_DISABLED !== "1",
         sites: [
           {
@@ -17,7 +18,7 @@ export default async function controlCenter(event: { req: Request }) {
             url: "https://demoreexteriorsolutions.com/",
             email: "ryan@demoreexteriorsolutions.com",
             platform: "Base44",
-            status: "Existing Grok roles preserved; automatic inbox first-assignment connected; general bot execution inactive",
+            status: "Existing Grok roles preserved; automatic inbox first-assignment connected; hosted specialist analysis/review available; external bot actions inactive",
           },
           {
             id: "demore-technology",
@@ -25,7 +26,7 @@ export default async function controlCenter(event: { req: Request }) {
             url: "https://www.demoretechnologysolutions.com/",
             email: "ryan@demoretechnologysolutions.com",
             platform: "Vercel",
-            status: "Automatic inbox first-assignment connected; broader website-editing executor not connected",
+            status: "Hosted specialist analysis/review and automatic inbox assignment; website-writing connectors not connected",
           },
         ],
         capabilities,
@@ -36,7 +37,7 @@ export default async function controlCenter(event: { req: Request }) {
           "High/RED: human approval required; protected resources, customer messaging and production deployment retain high-risk gates",
         ],
         nextSteps: [
-          "Connect a hosted executor with durable shared budget enforcement; preserve the existing $2/day and $40/month authorization rather than duplicating it per site.",
+          "Configure hosted provider credentials. The shared ledger enforces $2/day and $40/month across both sites, including local carryover.",
           "Verify isolated lead capture, deduplication and CRM routing for both sites.",
           "Connect analytics and check real events before experiments or reporting claims.",
           "Validate consent and approved templates before email/SMS or social publishing.",

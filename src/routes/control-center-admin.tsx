@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { HostedBots } from "@/components/control/HostedBots";
 import { pageHead } from "@/lib/seo";
 type Registry = {
   mode: string;
@@ -85,8 +86,9 @@ function Admin() {
         <>
           <p className="mt-6 text-muted">
             {data.mode} · Configuration snapshot {data.updatedAt}. These are readiness records, not
-            live telemetry. Automatic inbox first-assignment is connected; general website-editing execution is not connected.
+            live telemetry. Hosted analysis and independent review are available below; automatic lead assignment is active. General website-writing connectors remain separate.
           </p>
+          <HostedBots key={selected} site={selected} />
           <label className="mt-8 block">
             Site profile
             <select
