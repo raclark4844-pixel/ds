@@ -1,13 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowDown, ArrowUpRight, Check, LockKeyhole } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { PageHero } from "@/components/page-hero";
 import { Section } from "@/components/section";
 import { CtaBand } from "@/components/cta-band";
 import { JsonLd } from "@/components/json-ld";
-import { pageHead, serviceJsonLd } from "@/lib/seo";
+import { FaqList } from "@/components/faq-list";
+import { LeadIndustryExamples } from "@/components/lead-industry-examples";
+import { leadLayers, workspaceModules, leadFaqs } from "@/lib/lead-generation-content";
+import { pageHead, serviceJsonLd, faqJsonLd } from "@/lib/seo";
 
 const description =
-  "Demore Technology Solutions connects customer records, campaign planning, lead review, conversations, qualified handoffs, and campaign costs in one workspace.";
+  "A Demore Technology Solutions lead-generation platform connecting websites, campaigns, customer records, lead review, conversations, handoffs, costs, and billing.";
 export const Route = createFileRoute("/lead-generation")({
   head: () =>
     pageHead({
@@ -17,30 +20,54 @@ export const Route = createFileRoute("/lead-generation")({
     }),
   component: LeadGeneration,
 });
-const capabilities = [
+const workflow = [
   [
-    "Customer and campaign workspace",
-    "Keep customer details, offers, territories, industry choices, lead goals, and campaign history together.",
+    "Plan the campaign",
+    "Choose the customer, industry, territory, offer, schedule, lead goal, and requested channels.",
   ],
   [
-    "Lead sourcing and review",
-    "Work with configured data providers and approved imports. Review lead quality and contact readiness before outreach.",
+    "Prepare and review",
+    "Configure the source or import, prepare messaging, and review lead and contact readiness.",
   ],
   [
-    "Conversations and qualification",
-    "Organize replies in a shared inbox. AI-assisted drafts support staff review using approved business information.",
+    "Manage conversations",
+    "Review replies, clarify the need, and keep the conversation connected to its campaign.",
   ],
   [
-    "Qualified handoffs",
-    "Record the prospect’s needs and agreement to be contacted, then route the opportunity to the responsible team.",
+    "Hand off and measure",
+    "Deliver qualified opportunities to the right person, then review history, costs, and invoice records.",
+  ],
+];
+const comparison = [
+  [
+    "Customer context",
+    "Contact details scattered across spreadsheets and inboxes",
+    "A customer profile connected to campaign records and contacts",
   ],
   [
-    "Costs and reporting",
-    "Follow campaign activity, costs, lead handoffs, and invoice records while keeping their connection to the original campaign.",
+    "Campaign setup",
+    "Offers, lists, dates, and territories maintained separately",
+    "A structured draft with industry, territories, goals, and preparation review",
   ],
   [
-    "Controlled follow-up",
-    "Prepare email, SMS, and calling workflows around approved messaging and configured services. Staff retain control of activation and sending.",
+    "Lead review",
+    "A list with unclear status and next steps",
+    "Contact records, review evidence, and channel-readiness checks",
+  ],
+  [
+    "Conversations",
+    "Replies separated from their original campaign",
+    "A shared campaign inbox with context and reviewed reply drafts",
+  ],
+  [
+    "Team handoff",
+    "A forwarded message with missing details",
+    "A qualified handoff with the request and agreed contact details",
+  ],
+  [
+    "Costs and delivery",
+    "Separate invoices and incomplete activity records",
+    "Campaign cost views, delivery history, and invoice records",
   ],
 ];
 function LeadGeneration() {
@@ -58,107 +85,274 @@ function LeadGeneration() {
           ],
         })}
       />
-      <PageHero
-        kicker="DEMORE TECHNOLOGY SOLUTIONS"
-        title="One workspace from first inquiry to qualified opportunity."
-        lede="Connect customer records, campaign planning, lead review, conversations, and handoffs around the way your business wins work."
-        primary={{
-          to: "/contact",
-          label: "Plan your lead-generation system",
-          search: { need: "leadgen" },
-        }}
-        secondary={{ to: "/platform", label: "Explore the complete platform" }}
-      />
-      <div className="mt-6 flex flex-wrap items-center gap-4">
-        <Button asChild variant="outline">
-          <a href="https://demore-lead-engine.vercel.app/login">Workspace sign in</a>
-        </Button>
-        <p className="text-sm text-muted">Private access for your authorized team.</p>
-      </div>
-      <Section kicker="FROM INTEREST TO ACTION" title="Keep the next step clear.">
+      <JsonLd data={faqJsonLd(leadFaqs)} />
+      <section className="relative grid gap-10 overflow-hidden pt-12 sm:pt-20 lg:grid-cols-[1.25fr_0.75fr] lg:items-center">
+        <div>
+          <p className="kicker">DEMORE TECHNOLOGY SOLUTIONS · LEAD GENERATION</p>
+          <h1 className="mt-5 font-display text-[2.8rem] font-semibold leading-[0.98] tracking-tight sm:text-6xl lg:text-7xl">
+            Find the opportunity.
+            <br />
+            <span className="text-volt">Connect every next step.</span>
+          </h1>
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
+            Bring your website, customer records, campaigns, conversations, and qualified handoffs
+            into one connected growth system.
+          </p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Button asChild size="lg">
+              <Link to="/contact" search={{ need: "leadgen" }}>
+                Plan my lead-generation system
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="outline">
+              <a href="#workspace">
+                Explore the workspace <ArrowDown className="ml-2 size-4" aria-hidden="true" />
+              </a>
+            </Button>
+          </div>
+          <a
+            href="https://demore-lead-engine.vercel.app/login"
+            className="mt-6 inline-flex min-h-11 items-center gap-2 text-sm text-muted underline underline-offset-4"
+          >
+            <LockKeyhole className="size-4" aria-hidden="true" />
+            Team workspace sign in
+            <ArrowUpRight className="size-4" aria-hidden="true" />
+          </a>
+        </div>
+        <div className="rounded-xl border border-line bg-surface p-5 sm:p-7">
+          <p className="kicker text-faint">ONE CONNECTED CUSTOMER JOURNEY</p>
+          <ol className="mt-6 space-y-3">
+            {leadLayers.map((layer) => (
+              <li
+                key={layer.number}
+                className={`flex items-center gap-5 rounded-lg border border-line border-t-2 ${layer.color} bg-bg p-4`}
+              >
+                <span className="font-display text-3xl text-faint">{layer.number}</span>
+                <div>
+                  <p className="font-display text-xl font-semibold">{layer.title}</p>
+                  <p className="mt-1 text-xs text-muted">
+                    {layer.number === "01"
+                      ? "Search · content · campaigns"
+                      : layer.number === "02"
+                        ? "Answers · intake · clear offers"
+                        : layer.number === "03"
+                          ? "Conversations · qualification · handoffs"
+                          : "History · costs · next decisions"}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
+          <p className="mt-5 text-xs leading-relaxed text-muted">
+            Website and marketing services connect to a private campaign workspace. Integrations are
+            scoped around your business.
+          </p>
+        </div>
+      </section>
+      <nav
+        aria-label="Lead generation page sections"
+        className="mt-10 flex flex-wrap gap-2 border-y border-line py-4"
+      >
+        {[
+          ["#system", "The system"],
+          ["#workspace", "Workspace features"],
+          ["#workflow", "How it works"],
+          ["#industries", "Industry examples"],
+          ["#comparison", "Compare workflows"],
+          ["#questions", "Questions"],
+        ].map(([href, label]) => (
+          <a
+            className="inline-flex min-h-11 items-center rounded-pill border border-line px-4 text-sm text-muted hover:border-volt/60 hover:text-fg"
+            href={href}
+            key={href}
+          >
+            {label}
+          </a>
+        ))}
+      </nav>
+      <Section
+        id="system"
+        className="scroll-mt-24"
+        kicker="THE COMPLETE SYSTEM"
+        title="Attract. Convert. Follow up. Improve."
+      >
         <p className="max-w-3xl text-muted">
-          A lead list is only the beginning. Demore Technology Solutions helps your team organize
-          who to serve, what to offer, how to review opportunities, and when an inquiry is ready for
-          a person to take over.
+          Your website introduces the offer. The lead workspace gives your team somewhere to
+          organize the response. Connect those steps with the content, tools, and handoffs your
+          business needs.
         </p>
-        <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {capabilities.map(([title, text]) => (
-            <article className="rounded-xl border border-line bg-surface p-6" key={title}>
-              <h3 className="font-display text-2xl font-semibold">{title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted">{text}</p>
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {leadLayers.map((layer) => (
+            <article
+              key={layer.number}
+              className={`rounded-xl border border-line border-t-4 ${layer.color} bg-surface p-6`}
+            >
+              <p className="kicker text-faint">{layer.number}</p>
+              <h3 className="mt-3 font-display text-2xl font-semibold">{layer.title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted">{layer.body}</p>
+            </article>
+          ))}
+        </div>
+        <p className="mt-6 text-sm text-muted">
+          <Link to="/platform" className="text-volt underline underline-offset-4">
+            Explore the complete AI-assisted platform
+          </Link>{" "}
+          for website, SEO, GEO, AEO, CRO, social content, and automation services.
+        </p>
+      </Section>
+      <Section
+        id="workspace"
+        className="scroll-mt-24"
+        kicker="INSIDE YOUR PRIVATE WORKSPACE"
+        title="More of the workflow, in one place."
+        lede="The customer database, campaign builder, inbox, lead handoffs, cost views, and administration work together around the same customer and campaign."
+      >
+        <div className="grid gap-4 md:grid-cols-2">
+          {workspaceModules.map((module, index) => (
+            <article
+              key={module.title}
+              className="rounded-xl border border-line bg-surface p-6 sm:p-7"
+            >
+              <div className="flex items-center justify-between gap-4">
+                <p className="kicker text-volt">{module.category}</p>
+                <span className="text-sm text-faint">{String(index + 1).padStart(2, "0")}</span>
+              </div>
+              <h3 className="mt-4 font-display text-2xl font-semibold tracking-tight">
+                {module.title}
+              </h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted">{module.body}</p>
+              <ul className="mt-5 space-y-3 border-t border-line pt-5">
+                {module.details.map((detail) => (
+                  <li key={detail} className="flex gap-3 text-sm text-muted">
+                    <Check className="mt-0.5 size-4 shrink-0 text-volt" aria-hidden="true" />
+                    {detail}
+                  </li>
+                ))}
+              </ul>
             </article>
           ))}
         </div>
       </Section>
-      <Section kicker="HOW IT WORKS" title="Plan → review → engage → hand off → measure">
-        <div className="rounded-xl border border-line bg-elevated p-6 sm:p-8">
-          <p className="leading-relaxed text-muted">
-            Define the customer, industry, territory, and offer. Prepare an approved source or
-            import, review records, and activate the appropriate communication channels when ready.
-            Keep conversations, qualified opportunities, and costs tied to the same campaign.
-          </p>
-          <p className="mt-4 text-sm text-muted">
-            Provider connections, customer-list imports, and communication services are configured
-            for each implementation. Adding an industry category does not automatically supply
-            contacts or activate messaging. Lead volumes and sales are not guaranteed.
+      <Section
+        id="workflow"
+        className="scroll-mt-24"
+        kicker="FROM CAMPAIGN DRAFT TO HANDOFF"
+        title="A clear next step at every stage."
+      >
+        <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {workflow.map(([title, body], i) => (
+            <li key={title} className="rounded-xl border border-line bg-elevated p-6">
+              <span className="grid size-10 place-items-center rounded-full bg-volt text-black font-semibold">
+                {i + 1}
+              </span>
+              <h3 className="mt-5 font-display text-xl font-semibold">{title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted">{body}</p>
+            </li>
+          ))}
+        </ol>
+        <div className="mt-6 rounded-xl border border-line p-6">
+          <h3 className="font-medium">Your team stays in control.</h3>
+          <p className="mt-2 text-sm leading-relaxed text-muted">
+            Campaign preparation, contact review, and staff approval remain part of the workflow.
+            AI-assisted replies are drafts. Data providers, email, SMS, calling, verification, and
+            AI services require configuration before their corresponding live features can run.
           </p>
         </div>
       </Section>
-      <Section kicker="INDUSTRY CATEGORIES" title="A workflow shaped around your business.">
+      <Section
+        id="industries"
+        className="scroll-mt-24"
+        kicker="BUILT AROUND YOUR BUYER"
+        title="See how the workflow fits your industry."
+        lede="Choose an example to see the offer, the details worth capturing, and the handoff that helps your team respond."
+      >
+        <LeadIndustryExamples />
+      </Section>
+      <Section
+        id="comparison"
+        className="scroll-mt-24"
+        kicker="WHY THE CONNECTION MATTERS"
+        title="From scattered activity to a traceable workflow."
+      >
+        <div className="overflow-x-auto rounded-xl border border-line">
+          <table className="w-full min-w-[660px] text-left text-sm">
+            <caption className="sr-only">
+              Typical disconnected workflow compared with a configured Demore Technology Solutions
+              workspace
+            </caption>
+            <thead className="bg-elevated">
+              <tr>
+                <th scope="col" className="p-5">
+                  Workflow
+                </th>
+                <th scope="col" className="p-5 font-medium text-muted">
+                  When tools are disconnected
+                </th>
+                <th scope="col" className="p-5 font-medium text-volt">
+                  With a configured Demore workspace
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {comparison.map(([name, before, after]) => (
+                <tr key={name} className="border-t border-line bg-surface">
+                  <th scope="row" className="p-5 font-medium">
+                    {name}
+                  </th>
+                  <td className="p-5 leading-relaxed text-muted">{before}</td>
+                  <td className="p-5 leading-relaxed">{after}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-4 text-xs text-faint">
+          Illustrative workflow comparison. Features and integrations depend on the agreed scope and
+          configuration.
+        </p>
+        <Button asChild variant="outline" className="mt-5">
+          <Link to="/compare">Compare your current website</Link>
+        </Button>
+      </Section>
+      <Section kicker="A PRACTICAL ROLLOUT" title="Build the useful pieces in the right order.">
         <div className="grid gap-4 md:grid-cols-3">
           {[
             [
-              "restaurants",
-              "Restaurants",
-              "Catering inquiries, group dining, reservation requests, and permission-based guest follow-up.",
+              "Foundation",
+              "Website and offer review, customer records, industry choices, campaign structure, and measurement goals.",
             ],
             [
-              "pubs",
-              "Pubs",
-              "Private events, group bookings, community events, and organized inquiry follow-up.",
+              "Lead workflow",
+              "Source or import setup, lead review, qualification questions, inbox, staff roles, and handoff process.",
             ],
             [
-              "pizza-shops",
-              "Pizza Shops",
-              "Group orders, catering, delivery-area inquiries, and permission-based repeat-customer campaigns.",
+              "Connected growth",
+              "Approved sending, AI assistance, reporting, and wider website or marketing integrations as the workflow is ready.",
             ],
-          ].map(([slug, title, text]) => (
-            <a
-              href={`/industries/${slug}`}
-              key={slug}
-              className="rounded-xl border border-line bg-surface p-6 no-underline hover:border-volt/60"
-            >
+          ].map(([title, body]) => (
+            <article key={title} className="rounded-xl border border-line bg-surface p-6">
               <h3 className="font-display text-2xl font-semibold">{title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted">{text}</p>
-              <span className="mt-5 inline-flex text-sm text-volt">Explore this industry →</span>
-            </a>
+              <p className="mt-3 text-sm leading-relaxed text-muted">{body}</p>
+            </article>
           ))}
         </div>
-        <p className="mt-6 text-muted">
-          Also supports contractors, home services, landscaping, and other businesses.{" "}
-          <Link to="/industries" className="text-volt underline">
-            View all industries.
-          </Link>
-        </p>
       </Section>
       <Section
-        kicker="CONNECTED TO YOUR WEBSITE"
-        title="Give every inquiry somewhere useful to go."
+        id="questions"
+        className="scroll-mt-24"
+        kicker="BEFORE YOU START"
+        title="Your lead-generation questions, answered."
       >
-        <p className="max-w-3xl leading-relaxed text-muted">
-          Plan your website’s inquiry forms, customer records, follow-up process, and staff handoff
-          together. We scope integrations around your existing tools and the details your team needs
-          to respond. Restaurant, pub, and pizza shop campaigns each have their own industry profile
-          and relevant qualification questions.
-        </p>
+        <FaqList items={leadFaqs} />
       </Section>
       <div className="mt-16">
         <CtaBand
-          kicker="START WITH YOUR WORKFLOW"
-          title="Build a clearer path from interest to opportunity."
-          body="Tell us about your business, current lead process, and the next step you want to improve."
-          primaryLabel="Plan your lead-generation system"
+          kicker="DEMORE TECHNOLOGY SOLUTIONS"
+          title="Connect the next opportunity to the people who can act on it."
+          body="Tell us about your business, current lead process, and the steps you want to bring together."
+          primaryLabel="Plan my lead-generation system"
           primaryNeed="leadgen"
+          secondary={{ to: "/platform", label: "Explore the complete platform" }}
         />
       </div>
     </main>
