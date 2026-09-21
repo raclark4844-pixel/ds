@@ -6,7 +6,7 @@ export default async function controlCenter(event: { req: Request }) {
     const { capabilities } = await import("../../../../src/lib/control-capabilities");
     return Response.json(
       {
-        mode: "Hosted specialist analysis and review; automatic lead routing",
+        mode: "Scheduled specialist reviews, website monitoring, comparison triage and lead routing",
         updatedAt: "2026-09-21",
         executionConnected: false,
         hostedAnalysisConnected: true,
@@ -37,8 +37,8 @@ export default async function controlCenter(event: { req: Request }) {
           "High/RED: human approval required; protected resources, customer messaging and production deployment retain high-risk gates",
         ],
         nextSteps: [
-          "Configure hosted provider credentials. The shared ledger enforces $2/day and $40/month across both sites, including local carryover.",
-          "Verify isolated lead capture, deduplication and CRM routing for both sites.",
+          "Scheduled reviews use the shared $2/day and $40/month ledger, including local carryover. Provider or pricing issues automatically stop paid work.",
+          "Review automatically prioritized comparisons, prepared drafts and website-check findings. High-risk actions remain human-gated.",
           "Connect analytics and check real events before experiments or reporting claims.",
           "Validate consent and approved templates before email/SMS or social publishing.",
           "Verify phone handoffs, knowledge synchronization and uptime/error alert delivery.",

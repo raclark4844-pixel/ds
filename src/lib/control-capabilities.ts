@@ -198,4 +198,6 @@ export const capabilities = [
     purpose: "Monitor public local storm events without promising damage or coverage",
     output: "Source-backed storm advisory",
   },
+  {id:"comparison-queue",name:"Comparison Queue Specialist",purpose:"Check comparison completeness, prioritize follow-up and prepare internal drafts",output:"Triage findings and unsent follow-up draft"},
+  {id:"automation-coordinator",name:"Automation Coordinator",purpose:"Review scheduled work, missing evidence, worker health and next safe actions",output:"Execution readiness and blocked-work recommendations"},
 ] as const;

@@ -1,3 +1,4 @@
+import {AutomationPanel} from "@/components/control/AutomationPanel";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { RefreshCw, Save, ShieldCheck } from "lucide-react";
@@ -97,6 +98,7 @@ function AdminDashboard() {
       {error && <div role="alert" className="mt-6 rounded-lg border border-hot/50 bg-hot-dim p-4 text-sm">{error} {/sign in|administrator/i.test(error) && <a href="/login" className="ml-2 text-volt underline">Open admin sign in</a>}</div>}
       {notice && <div role="status" className="mt-6 rounded-lg border border-volt/40 bg-volt-dim p-4 text-sm text-volt">{notice}</div>}
 
+      <AutomationPanel queue />
       <section className="mt-10 rounded-xl border border-line bg-surface p-5 sm:p-7">
         <div className="flex flex-wrap items-center justify-between gap-4"><div><p className="kicker">Scoring CMS</p><h2 className="mt-2 text-2xl font-semibold">Category weights</h2><p className="mt-2 text-sm text-muted">Applies to future reports only. Every revision is retained.</p></div><div className={`rounded-pill border px-4 py-2 text-sm ${totalWeight === 100 ? "border-volt/50 text-volt" : "border-hot/50 text-hot"}`}>Total: {totalWeight}/100</div></div>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

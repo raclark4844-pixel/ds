@@ -1,3 +1,4 @@
+import {AutomationPanel} from "@/components/control/AutomationPanel";
 import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { HostedBots } from "@/components/control/HostedBots";
@@ -85,9 +86,9 @@ function Admin() {
       ) : (
         <>
           <p className="mt-6 text-muted">
-            {data.mode} · Configuration snapshot {data.updatedAt}. These are readiness records, not
-            live telemetry. Hosted analysis and independent review are available below; automatic lead assignment is active. General website-writing connectors remain separate.
+            {data.mode} · Configuration snapshot {data.updatedAt}. The automation panel below shows live worker status and recent scheduled work. Site profiles describe readiness; general website-writing connectors remain separate.
           </p>
+          <AutomationPanel />
           <HostedBots key={selected} site={selected} />
           <label className="mt-8 block">
             Site profile

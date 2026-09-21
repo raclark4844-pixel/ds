@@ -1,4 +1,4 @@
-export default async function handler(event: { req: Request }) {
+export default async function handler(event: { req: Request; waitUntil?: (promise:Promise<unknown>)=>void }) {
   const { requireExteriorBridge } = await import("../../../src/lib/exterior-lead-bridge");
   const { readLeadBody, leadErrorResponse } = await import("../../../src/lib/control-leads");
   try {
@@ -8,18 +8,16 @@ export default async function handler(event: { req: Request }) {
     const { saveHealth } = await import("../../../src/lib/inbox-health");
     const sql = await getSql();
     const result = await saveHealth(sql, body);
-    if (process.env.INBOX_AUTO_ROUTING_DISABLED !== "1") {
-      try {
-        const { routeNewLeads } = await import("../../../src/lib/automatic-lead-routing");
-        await routeNewLeads(sql);
-      } catch { console.error("[inbox-routing] Assignment run incomplete"); }
-    }
     // Mail failure must not fail the sync heartbeat or lead delivery.
     try {
       const { queueInboxAlert, deliverInboxAlert } = await import("../../../src/lib/inbox-alerts");
       await queueInboxAlert(sql, "Demore Control Center <projects@demorehomesolutions.com>");
       await deliverInboxAlert(sql, process.env.RESEND_API_KEY || "");
     } catch { console.error("[inbox-alert] Alert processing incomplete"); }
+    const {runAutomation}=await import("../../../src/lib/workspace-automation");
+    const background=runAutomation(sql).catch(()=>console.error("[automation] Scheduled worker failed"));
+    const {retainBackgroundWork}=await import("../../../src/lib/background-work");
+    await retainBackgroundWork(background);
     return Response.json(result, { headers: { "Cache-Control": "private, no-store" } });
   } catch (error) { return leadErrorResponse(error); }
 }
