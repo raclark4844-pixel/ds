@@ -4,7 +4,7 @@ import { ComparisonApp } from "@/components/comparison-app";
 import { FaqList } from "@/components/faq-list";
 import { JsonLd } from "@/components/json-ld";
 import { DirectAnswer, GeoQuote, Section } from "@/components/section";
-import { WebsiteAudit } from "@/components/website-audit";
+import { WebsiteReview } from "@/components/website-review";
 import { SITE_URL } from "@/lib/site";
 import { pageHead, faqJsonLd } from "@/lib/seo";
 
@@ -61,7 +61,7 @@ function ComparePage() {
           Website Review inspects public HTML for a title, search description, a single heading, mobile viewport, HTTPS, image text, a contact route, a form, a call to action, structured data, FAQ copy, and service or product navigation. Marks are Detected, Not detected, or Not applicable. Bars show detected HTML signals, not speed, rankings, or revenue. The comparison table then scores DIY, a template pack, a brochure agency site, and the Demore platform against the jobs you mark. Marks are qualitative: Weak, Partial, and Built in. Rankings, AI citations, and conversion lifts are not guaranteed.
         </p>
       </DirectAnswer>
-      <WebsiteAudit />
+      <WebsiteReview />
       <CompareTool />
       <Section kicker="How to read it" title="Weak, partial, and built-in are not scores you buy.">
         <div className="grid gap-4 sm:grid-cols-3">
@@ -86,9 +86,7 @@ function ComparePage() {
       </Section>
       <Section kicker="Public-page capability report" title="Need a scored competitor comparison?">
         <p className="max-w-2xl text-muted">The form below still scores public pages against competitors and generates a branded multi-page PDF. No invented revenue. No guaranteed rankings.</p>
-        <div id="comparison-intake">
-          <ComparisonApp />
-        </div>
+        <ComparisonApp />
       </Section>
       <Section kicker="Questions" title="Comparison questions">
         <FaqList items={faqs} />

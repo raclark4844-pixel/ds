@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { storeReportId } from "@/lib/site-assistant-ids";
+import { getRecordId } from "@/lib/website-review/record-id";
 
 const SETUPS = [
   { id: "none", label: "No site, or a dead one", line: "A Facebook page, a card, or a domain that does not convert." },
@@ -75,13 +76,9 @@ export function CompareTool() {
   const [recordId, setRecordId] = useState("");
 
   useEffect(() => {
-    try {
-      const id = localStorage.getItem("dts-record-id") || localStorage.getItem("demore-report-id") || "";
-      setRecordId(id);
-      if (id) storeReportId(id);
-    } catch {
-      /* ignore */
-    }
+    const id = getRecordId();
+    setRecordId(id);
+    storeReportId(id);
   }, []);
 
   function toggleNeed(id: string) {

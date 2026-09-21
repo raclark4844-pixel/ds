@@ -144,6 +144,93 @@
   .site-dock-scroll::-webkit-scrollbar {
     display: none;
   }
+
+  .review-shell {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    background: color-mix(in oklab, var(--color-volt) 5%, var(--color-surface));
+    border-radius: var(--radius-xl);
+    padding: 1.25rem;
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-volt) 14%, transparent);
+  }
+
+  .review-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 3px;
+    background: var(--color-volt);
+  }
+
+  .review-result {
+    border: 1px solid var(--color-line);
+    background: var(--color-elevated);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+  }
+
+  .review-chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.75rem;
+    border: 1px solid color-mix(in oklab, var(--color-volt) 40%, transparent);
+    border-radius: var(--radius-pill);
+    padding: 0 0.75rem;
+    font-size: 0.75rem;
+    color: var(--color-volt);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .review-status {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.5rem;
+    border-radius: var(--radius-pill);
+    padding: 0 0.55rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  .review-status-detected {
+    color: var(--color-volt);
+    background: var(--color-volt-dim);
+    border: 1px solid color-mix(in oklab, var(--color-volt) 35%, transparent);
+  }
+
+  .review-status-missing {
+    color: var(--color-hot);
+    background: var(--color-hot-dim);
+    border: 1px solid color-mix(in oklab, var(--color-hot) 35%, transparent);
+  }
+
+  .review-status-na {
+    color: var(--color-muted);
+    background: var(--color-bg);
+    border: 1px solid var(--color-line);
+  }
+
+  .review-bar-track {
+    height: 0.625rem;
+    flex: 1;
+    overflow: hidden;
+    border-radius: var(--radius-pill);
+    background: var(--color-bg);
+  }
+
+  .review-bar-fill {
+    height: 100%;
+    border-radius: var(--radius-pill);
+  }
+
+  @media (min-width: 640px) {
+    .review-shell,
+    .review-result {
+      padding: 1.75rem;
+    }
+  }
 }
 
 @keyframes orb-drift {

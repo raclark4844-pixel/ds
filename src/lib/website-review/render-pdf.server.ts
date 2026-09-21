@@ -2,11 +2,11 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { renderToBuffer, type DocumentProps } from "@react-pdf/renderer";
 import { createElement, type ReactElement } from "react";
-import type { AuditReport } from "./analyze";
-import { ReviewDocument } from "./review-document";
+import { WebsiteReviewDocument } from "./report-document";
+import type { WebsiteReviewReport } from "./types";
 
-export function reviewFilename(report: AuditReport) {
-  return `Demore-Website-Report-${report.recordId || "Review"}.pdf`;
+export function websiteReviewFilename(recordId: string) {
+  return `Demore-Website-Report-${recordId || "Review"}.pdf`;
 }
 
 async function logoSrc() {
@@ -18,9 +18,9 @@ async function logoSrc() {
   }
 }
 
-export async function renderReviewPdf(report: AuditReport): Promise<Buffer> {
-  const providerLogoSrc = await logoSrc();
-  const document = createElement(ReviewDocument, { report, logoSrc: providerLogoSrc }) as unknown as ReactElement<DocumentProps>;
+export async function renderWebsiteReviewPdf(report: WebsiteReviewReport): Promise<Buffer> {
+  const logo = await logoSrc();
+  const document = createElement(WebsiteReviewDocument, { report, logoSrc: logo }) as unknown as ReactElement<DocumentProps>;
   const buffer = await renderToBuffer(document);
   return Buffer.from(buffer);
 }
