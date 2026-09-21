@@ -5,6 +5,7 @@ import type { Sql } from "./db";
 
 // Dedicated machine credential, never accepted as an administrator session.
 export function requireExteriorBridge(req: Request, secret: string | undefined) {
+  secret = secret?.trim();
   if (!secret || !/^[a-f0-9]{64}$/.test(secret))
     throw new LeadError(503, "Exterior inbox connection is not configured.");
   const supplied = req.headers.get("authorization") || "";

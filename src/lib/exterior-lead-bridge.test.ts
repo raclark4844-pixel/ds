@@ -18,6 +18,8 @@ test("bridge rejects absent, invalid and malformed credentials", () => {
   assert.throws(() => requireExteriorBridge(request(`Bearer ${"é".repeat(64)}`), secret), status(401));
   assert.throws(() => requireExteriorBridge(request(`Bearer ${secret}`, "text/plain"), secret), status(415));
   requireExteriorBridge(request(`Bearer ${secret}`), secret);
+  requireExteriorBridge(request(`Bearer ${secret}`), ` ${secret}\n`);
+  assert.throws(() => requireExteriorBridge(request(), "invalid"), status(503));
 });
 
 test("bridge binds site/source, deduplicates retries and records a single capture", async () => {
