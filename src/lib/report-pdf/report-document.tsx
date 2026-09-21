@@ -1,3 +1,4 @@
+import {consoleOverview,leadGenerationOffering,offeringReadiness,tailoredAutomation,specialistKnowledge,customerPdfData} from "../console-offering";
 import { Document, Image, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 import type { ComparisonReport } from "./report-types";
 
@@ -67,6 +68,7 @@ function Bar({ label, value, color = "#00FF9C" }: { label: string; value: number
 }
 
 export function ReportDocument({ report, providerLogoSrc, customerLogoSrc }: { report: ComparisonReport; providerLogoSrc?: string; customerLogoSrc?: string }) {
+  report = customerPdfData(report);
   return (
     <Document title={`Demore comparison — ${report.companyName}`} author="Demore Technology Solutions">
       <Page size="LETTER" style={s.page}>
@@ -273,6 +275,14 @@ export function ReportDocument({ report, providerLogoSrc, customerLogoSrc }: { r
         <Text style={s.p}>{report.methodology.confidenceNote}</Text>
         <Text style={s.p}>{`Scoring version ${report.scoringVersion}. Measurement date ${report.measurementDate}.`}</Text>
         <Text style={s.disc}>Potential improvements are estimates based on publicly available information, customer-provided details, industry benchmarks and stated assumptions. Results are not guaranteed. Actual performance depends on competition, budget, implementation, market conditions, content, advertising and ongoing management.</Text>
+      </Page>
+      <Page size="LETTER" style={s.page}>
+        <Chrome report={report} providerLogoSrc={providerLogoSrc} customerLogoSrc={customerLogoSrc} />
+        <Text style={s.h1}>Control center, specialists and lead generation</Text>
+        <Text style={s.p}>{consoleOverview}</Text><Text style={s.p}>{leadGenerationOffering}</Text>
+        {tailoredAutomation(report.industry, "the primary conversion on your current website", report.recommendations.map(item=>item.finding)).map(([name,detail])=><View key={name} wrap={false}><Text style={s.h2}>{name}</Text><Text style={s.p}>{detail}</Text></View>)}
+        <Text style={s.h2}>Specialist coverage</Text><Text style={s.p}>{specialistKnowledge}</Text>
+        <Text style={s.p}>{offeringReadiness}</Text>
       </Page>
     </Document>
   );

@@ -1,3 +1,5 @@
+import {capabilities} from "../control-capabilities";
+import {consoleOverview,offeringReadiness,leadGenerationOffering,customerPdfData} from "../console-offering";
 import { Document, Image, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 import type { WebsiteReviewReport } from "./types";
 
@@ -56,6 +58,7 @@ function StatusColor(status: string) {
 }
 
 export function WebsiteReviewDocument({ report, logoSrc }: { report: WebsiteReviewReport; logoSrc?: string }) {
+  report = customerPdfData(report);
   const detected = report.current.checks.filter((item) => item.status === "Detected").length;
   const applicable = report.current.checks.filter((item) => item.status !== "Not applicable").length;
   const recommendations = [...report.recommendations].sort((a, b) => Number(a.effort !== "Quick win") - Number(b.effort !== "Quick win"));
@@ -102,7 +105,7 @@ export function WebsiteReviewDocument({ report, logoSrc }: { report: WebsiteRevi
                 <View style={[s.barFill, { width: `${category.total ? Math.max(4, (category.detected / category.total) * 100) : 0}%` }]} />
               </View>
               <Text style={s.meta}>{category.total ? `${category.detected} / ${category.total}` : "Not applicable"}</Text>
-              <Text style={s.meta}>Demore Exterior Solutions</Text>
+              <Text style={s.meta}>Internal capability reference</Text>
               <View style={s.barTrack}>
                 <View style={[s.barFill, { width: `${refTotal ? Math.max(4, (refDetected / refTotal) * 100) : 0}%`, backgroundColor: "#8B8B86" }]} />
               </View>
@@ -116,16 +119,16 @@ export function WebsiteReviewDocument({ report, logoSrc }: { report: WebsiteRevi
       <Page size="LETTER" style={s.page}>
         <Chrome report={report} logoSrc={logoSrc} />
         <Text style={s.kicker}>Side-by-side comparison</Text>
-        <Text style={s.h1}>Your page. A live working reference.</Text>
-        <Text style={s.p}>Demore Exterior Solutions is a reference for visible website features, not a claim that every business needs a contractor website.</Text>
-        <Text style={s.meta}>{report.benchmark.url}</Text>
+        <Text style={s.h1}>Your page. Relevant capability signals.</Text>
+        <Text style={s.p}>The reference combines publicly observed signals from two internal implementations. A signal means it was found on at least one reference, not that every feature is relevant to your business or active in your system.</Text>
+        <Text style={s.meta}>Internal reference sources are used for capability research only.</Text>
         {report.benchmark.unavailable ? (
           <Text style={s.p}>The reference site could not be fetched. Its findings are unavailable. No benchmark scores were invented.</Text>
         ) : null}
         <View style={[s.tr, { marginTop: 10 }]}>
           <Text style={[s.th, { width: "40%" }]}>Website signal</Text>
           <Text style={[s.th, { width: "30%" }]}>Your page</Text>
-          <Text style={[s.th, { width: "30%" }]}>Demore Exterior</Text>
+          <Text style={[s.th, { width: "30%" }]}>Reference capabilities</Text>
         </View>
         {report.current.checks.map((item) => {
           const reference = report.benchmark.checks.find((row) => row.id === item.id)?.status || "Unavailable";
@@ -201,6 +204,16 @@ export function WebsiteReviewDocument({ report, logoSrc }: { report: WebsiteRevi
         ))}
       </Page>
 
+      <Page size="LETTER" style={s.page}>
+        <Chrome report={report} logoSrc={logoSrc} />
+        <Text style={s.kicker}>Control center and specialist teams</Text>
+        <Text style={s.h1}>Coordinate the work behind growth.</Text>
+        <Text style={s.p}>{consoleOverview}</Text>
+        <Text style={s.h2}>Automated lead generation</Text><Text style={s.p}>{leadGenerationOffering}</Text>
+        <Text style={s.h2}>What is available and what needs setup</Text><Text style={s.p}>{offeringReadiness}</Text>
+        <Text style={s.h2}>Specialists matched to the work</Text>
+        {capabilities.map(bot=><View key={bot.id} wrap={false} style={{marginBottom:7}}><Text style={s.h2}>{bot.name}</Text><Text style={s.p}>{bot.purpose}. Output: {bot.output}.</Text></View>)}
+      </Page>
       <Page size="LETTER" style={s.page}>
         <Chrome report={report} logoSrc={logoSrc} />
         <Text style={s.kicker}>Beyond the public page</Text>

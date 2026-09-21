@@ -98,9 +98,10 @@ export async function handleWebsiteReview(req: Request) {
   const recordId =
     normalizeRecordId(parsed.data.record_id || parsed.data.recordId) || mintRecordId();
   const signal = AbortSignal.timeout(22000);
-  const [site, reference] = await Promise.allSettled([
+  const [site, reference, technology] = await Promise.allSettled([
     fetchPublicPage(url, signal),
     fetchPublicPage(REFERENCE_URL, signal),
+    fetchPublicPage("https://www.demoretechnologysolutions.com/", signal),
   ]);
   if (site.status !== "fulfilled") {
     return Response.json(
@@ -138,7 +139,14 @@ export async function handleWebsiteReview(req: Request) {
     reference.status === "fulfilled"
       ? analyzePage({ ...reference.value, extras: referenceFiles })
       : unavailableBenchmark(REFERENCE_URL);
-  const report = makeReport(current, benchmark, recordId, industry);
+  const technologyPage = technology.status === "fulfilled" ? analyzePage(technology.value) : null;
+  // Internal composite: a signal is detected when either reference has it.
+  const composite = technologyPage ? {...benchmark, url:"internal-capability-reference", title:"Internal capability reference", unavailable:false,
+    checks:benchmark.checks.map(check=>{
+      const other=technologyPage.checks.find(row=>row.id===check.id);
+      return check.status==='Detected'?check:other?.status==='Detected'?other:benchmark.unavailable&&other?other:check;
+    })} : benchmark;
+  const report = makeReport(current, composite, recordId, industry);
   report.contact = ownerReview ? undefined : parsed.data.contact;
   report.ownerReview = ownerReview;
   report.publicContacts = publicContacts(pages);

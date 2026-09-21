@@ -1,3 +1,4 @@
+import {tailoredAutomation} from "../console-offering.ts";
 import { additionalOfferings, resolveIndustry } from "./industry.ts";
 import type { PublicFiles, ReviewCheck, ReviewPage, ReviewStatus, WebsiteReviewReport } from "./types.ts";
 
@@ -191,6 +192,8 @@ export function makeAssistantBrief(report: Omit<WebsiteReviewReport, "assistantB
     `Industry: ${report.industry.name} (${report.industry.source})`,
     `Detected HTML and public-file signals: ${total ? `${detected}/${total}` : "Unavailable"}`,
     missing.length ? `Not detected:\n${missing.map((item) => `- ${item.label}: ${item.improve}`).join("\n")}` : "No applicable signals were missing in this scan.",
+    "Control center and automated lead-generation opportunities:",
+    ...report.offerings.map(([name,detail])=>`- ${name}: ${detail}`),
     "Industry capabilities to evaluate:",
     ...report.industry.capabilities.slice(0, 6).map((item) => `- ${item.label}: ${item.improve}`),
     `Discuss: https://www.demoretechnologysolutions.com/contact?need=platform&source=website-review&rid=${report.recordId}`,
@@ -220,7 +223,7 @@ export function makeReport(
     benchmark,
     industry,
     categories: categoryScores(current.checks),
-    offerings: additionalOfferings(),
+    offerings: [...additionalOfferings(), ...tailoredAutomation(industry.name, industry.journey, recommendations.map(x=>x.label))],
     methodology:
       "Quick review of returned HTML plus public robots.txt, sitemap.xml, and llms.txt when available. Detected means a matching public signal was found, not that it works or is high quality. Google Analytics, Search Console, and conversion findings are public-tag checks only. Private account data was not read. Not detected does not prove absence; JavaScript-rendered features and other pages may be missed. No form submissions to the live business, speed tests, ranking checks, or accessibility certification were performed. Rankings, AI citations, and conversion lifts are not guaranteed.",
     recommendations,
@@ -231,7 +234,7 @@ export function makeReport(
 export function unavailableBenchmark(url: string): ReviewPage {
   return {
     url,
-    title: "Demore Exterior Solutions",
+    title: "Internal capability reference",
     checks: CHECKS.map((spec) => ({ ...spec, status: "Unavailable", evidence: "Reference page could not be fetched." })),
     unavailable: true,
   };
