@@ -149,3 +149,13 @@ export async function sendReportEmails(report: ComparisonReport, pdf: Buffer) {
   const internal = await sendInternalComparisonCopy(report, pdf);
   return { customer, internal };
 }
+
+export async function sendAdminPasswordReset(url: string): Promise<MailResult> {
+  const cfg = mailConfig();
+  return sendResend({
+    from: `Demore Technology Solutions <${cfg.from}>`,
+    to: ["ryan@demoretechnologysolutions.com"],
+    subject: "Reset your Demore website administrator password",
+    text: `Use this one-time link to choose a new password:\n\n${url}\n\nThe link expires in 15 minutes. Your current password stays valid until you finish the reset. If you did not request this, ignore this email. This resets the Demore website administrator login, not the separate Lead Engine account.`,
+  });
+}

@@ -1,19 +1,25 @@
+import { adminSessionSecret } from "./admin-credentials.server";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { auth, authConfigured } from "@/lib/auth/server";
 
 export class AdminAuthError extends Error {
-  constructor(message: string, readonly status: number) {
+  constructor(
+    message: string,
+    readonly status: number,
+  ) {
     super(message);
   }
 }
 
 function allowedEmails() {
-  const configured = process.env.ADMIN_EMAILS?.split(",").map((email) => email.trim().toLowerCase()).filter(Boolean);
+  const configured = process.env.ADMIN_EMAILS?.split(",")
+    .map((email) => email.trim().toLowerCase())
+    .filter(Boolean);
   return new Set(configured?.length ? configured : ["ryan@demoretechnologysolutions.com"]);
 }
 
 const ADMIN_COOKIE = "__Host-dts-admin";
-const sessionKey = () => process.env.ADMIN_ACCESS_KEY?.trim() || "";
+const sessionKey = adminSessionSecret;
 
 function cookieValue(req: Request) {
   const raw = req.headers.get("cookie") || "";
@@ -28,8 +34,8 @@ function signature(payload: string, key: string) {
   return createHmac("sha256", key).update(payload).digest("base64url");
 }
 
-function accessCookieValid(req: Request) {
-  const key = sessionKey();
+async function accessCookieValid(req: Request) {
+  const key = await sessionKey();
   const token = cookieValue(req);
   const dot = token.lastIndexOf(".");
   if (!key || dot < 1) return false;
@@ -40,24 +46,17 @@ function accessCookieValid(req: Request) {
   try {
     const data = JSON.parse(Buffer.from(payload, "base64url").toString("utf8")) as { exp?: number };
     return typeof data.exp === "number" && data.exp > Date.now();
-  } catch { return false; }
+  } catch {
+    return false;
+  }
 }
 
-export function adminAccessConfigured() {
-  return Boolean(sessionKey());
-}
-
-export function verifyAdminAccessKey(candidate: string) {
-  const key = sessionKey();
-  const actual = Buffer.from(candidate);
-  const expected = Buffer.from(key);
-  return Boolean(key) && actual.length === expected.length && timingSafeEqual(actual, expected);
-}
-
-export function createAdminAccessCookie() {
-  const key = sessionKey();
+export function createAdminAccessCookie(key: string) {
   if (!key) throw new AdminAuthError("Administrator access is not configured.", 503);
-  const payload = Buffer.from(JSON.stringify({ v: 1, exp: Date.now() + 12 * 60 * 60 * 1000 }), "utf8").toString("base64url");
+  const payload = Buffer.from(
+    JSON.stringify({ v: 1, exp: Date.now() + 12 * 60 * 60 * 1000 }),
+    "utf8",
+  ).toString("base64url");
   return `${ADMIN_COOKIE}=${payload}.${signature(payload, key)}; Path=/; Max-Age=43200; HttpOnly; Secure; SameSite=Strict`;
 }
 
@@ -66,21 +65,24 @@ export function clearAdminAccessCookie() {
 }
 
 export async function requireAdmin(req: Request) {
-  if (accessCookieValid(req)) return { id: "admin-access-key", email: "admin access key" };
+  if (await accessCookieValid(req)) return { id: "admin-access-key", email: "admin access key" };
   const production = process.env.VERCEL === "1" || process.env.NODE_ENV === "production";
   if (!authConfigured) {
-    if (!production && !process.env.DATABASE_URL?.trim()) return { id: "dev-user", email: "dev@example.com" };
+    if (!production && !process.env.DATABASE_URL?.trim())
+      return { id: "dev-user", email: "dev@example.com" };
     throw new AdminAuthError("Administrator sign-in is not configured.", 503);
   }
   const session = await auth.api.getSession({ headers: req.headers });
   if (!session?.user) throw new AdminAuthError("Sign in is required.", 401);
   const email = session.user.email?.toLowerCase();
-  if (!email || !allowedEmails().has(email)) throw new AdminAuthError("This account is not an administrator.", 403);
+  if (!email || !allowedEmails().has(email))
+    throw new AdminAuthError("This account is not an administrator.", 403);
   return { id: session.user.id, email };
 }
 
 export function adminErrorResponse(error: unknown) {
-  if (error instanceof AdminAuthError) return Response.json({ error: error.message }, { status: error.status });
+  if (error instanceof AdminAuthError)
+    return Response.json({ error: error.message }, { status: error.status });
   console.error("[admin] request failed", error);
   return Response.json({ error: "The admin request could not be completed." }, { status: 500 });
 }

@@ -56,6 +56,13 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <Link
+            to="/login"
+            onClick={() => setOpen(false)}
+            className="shrink-0 px-2 py-2 text-sm font-medium text-volt"
+          >
+            Log in
+          </Link>
           <Button asChild size="sm" className="hidden sm:inline-flex">
             <Link to="/contact">Start a Project</Link>
           </Button>
@@ -78,10 +85,7 @@ export function SiteHeader() {
       <div
         id="mobile-nav"
         hidden={!open}
-        className={cn(
-          "xl:hidden",
-          open ? "block border-t border-line bg-bg" : "hidden",
-        )}
+        className={cn("xl:hidden", open ? "block border-t border-line bg-bg" : "hidden")}
       >
         <nav
           aria-label="Mobile"

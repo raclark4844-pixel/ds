@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { authEnabled } from "@/lib/auth/client";
@@ -6,30 +6,172 @@ import { SignInButtons } from "@/lib/auth/gates";
 import { pageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/login")({
-  head: () => pageHead({ title: "Admin Sign In | Demore Technology Solutions", description: "Authorized administrator sign in.", path: "/login" }),
+  head: () =>
+    pageHead({
+      title: "Log in | Demore Technology Solutions",
+      description: "Administrator login and password recovery.",
+      path: "/login",
+    }),
   component: LoginPage,
 });
-
+const control = "mt-1 min-h-11 w-full rounded-md border border-line bg-bg px-3 py-2";
 function LoginPage() {
+  const [mode, setMode] = useState<"login" | "request" | "reset">("login");
+  const [token, setToken] = useState("");
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
+  useEffect(() => {
+    const reset = new URLSearchParams(window.location.hash.slice(1)).get("reset");
+    if (reset) {
+      setToken(reset);
+      setMode("reset");
+      window.history.replaceState(null, "", "/login");
+    }
+  }, []);
   async function submit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault(); setBusy(true); setError("");
+    event.preventDefault();
+    setBusy(true);
+    setError("");
+    setNotice("");
     const form = new FormData(event.currentTarget);
     try {
-      const response = await fetch("/api/admin/session", { method: "POST", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ accessKey: form.get("accessKey") }) });
-      const body = await response.json() as { error?: string };
-      if (!response.ok) throw new Error(body.error || "Sign in failed.");
-      window.location.href = "/admin";
-    } catch (cause) { setError(cause instanceof Error ? cause.message : "Sign in failed."); setBusy(false); }
+      if (mode === "reset" && form.get("password") !== form.get("confirm"))
+        throw new Error("The passwords do not match.");
+      const body =
+        mode === "login"
+          ? { accessKey: form.get("password") }
+          : mode === "request"
+            ? { action: "request", email: form.get("email") }
+            : { action: "complete", token, password: form.get("password") };
+      const response = await fetch(
+        mode === "login" ? "/api/admin/session" : "/api/admin/password-reset",
+        {
+          method: "POST",
+          credentials: "same-origin",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        },
+      );
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Please try again.");
+      if (mode === "login") {
+        window.location.href = "/admin";
+        return;
+      }
+      if (mode === "request") setNotice(data.message);
+      else {
+        setToken("");
+        setMode("login");
+        setNotice("Your password has been reset. Sign in with your new password.");
+      }
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Please try again.");
+    } finally {
+      setBusy(false);
+    }
   }
   return (
     <main id="main" className="mx-auto min-h-[65vh] max-w-lg px-4 py-16 sm:px-6">
-      <p className="kicker">Private administration</p>
-      <h1 className="mt-4 font-display text-4xl font-semibold">Sign in to the comparison queue.</h1>
-      <p className="mt-4 text-muted">Use the private access key stored in Vercel. It is never included in client code or the database.</p>
-      <form onSubmit={submit} className="mt-8 space-y-4 rounded-xl border border-line bg-surface p-5"><label className="block text-sm">Administrator access key<input required minLength={12} type="password" name="accessKey" autoComplete="current-password" className="mt-1 w-full rounded-md border border-line bg-bg px-3 py-2" /></label>{error && <p role="alert" className="text-sm text-hot">{error}</p>}<Button type="submit" disabled={busy}>{busy ? "Signing in…" : "Open admin queue"}</Button></form>
-      {authEnabled && <div className="mt-8 border-t border-line pt-8"><p className="mb-4 text-sm text-muted">Or use an allowlisted Grok identity:</p><SignInButtons callbackURL="/admin" /></div>}
+      <p className="kicker">Demore website administration</p>
+      <h1 className="mt-4 font-display text-4xl font-semibold">
+        {mode === "login"
+          ? "Log in."
+          : mode === "request"
+            ? "Reset your password."
+            : "Choose a new password."}
+      </h1>
+      <p className="mt-4 text-muted">
+        {mode === "login"
+          ? "Sign in to manage reports and use your administrator features."
+          : mode === "request"
+            ? "Enter your administrator email. We’ll email a one-time reset link valid for 15 minutes."
+            : "Use at least 12 characters. Resetting your password signs out existing administrator sessions."}
+      </p>
+      <form
+        key={mode}
+        onSubmit={submit}
+        className="mt-8 space-y-4 rounded-xl border border-line bg-surface p-5"
+      >
+        {mode === "request" ? (
+          <label className="block text-sm">
+            Administrator email
+            <input required type="email" name="email" autoComplete="email" className={control} />
+          </label>
+        ) : (
+          <>
+            <label className="block text-sm">
+              {mode === "reset" ? "New password" : "Password"}
+              <input
+                required
+                minLength={12}
+                maxLength={mode === "reset" ? 128 : 500}
+                type="password"
+                name="password"
+                autoComplete={mode === "reset" ? "new-password" : "current-password"}
+                className={control}
+              />
+            </label>
+            {mode === "reset" ? (
+              <label className="block text-sm">
+                Confirm new password
+                <input
+                  required
+                  minLength={12}
+                  maxLength={128}
+                  type="password"
+                  name="confirm"
+                  autoComplete="new-password"
+                  className={control}
+                />
+              </label>
+            ) : null}
+          </>
+        )}
+        {error ? (
+          <p role="alert" className="text-sm text-hot">
+            {error}
+          </p>
+        ) : null}
+        {notice ? (
+          <p role="status" className="text-sm text-volt">
+            {notice}
+          </p>
+        ) : null}
+        <Button type="submit" disabled={busy}>
+          {busy
+            ? "Please wait…"
+            : mode === "login"
+              ? "Log in"
+              : mode === "request"
+                ? "Email reset link"
+                : "Save new password"}
+        </Button>
+      </form>
+      <button
+        type="button"
+        className="mt-5 text-sm text-volt underline"
+        disabled={busy}
+        onClick={() => {
+          setMode(mode === "login" ? "request" : "login");
+          setError("");
+          setNotice("");
+        }}
+      >
+        {mode === "login" ? "Forgot your password?" : "Back to login"}
+      </button>
+      <p className="mt-6 text-sm text-muted">
+        Looking for the separate Lead Engine?{" "}
+        <a className="text-volt underline" href="https://demore-lead-engine.vercel.app/login">
+          Open Lead Engine login
+        </a>
+        .
+      </p>
+      {authEnabled && mode === "login" ? (
+        <div className="mt-8 border-t border-line pt-8">
+          <SignInButtons callbackURL="/admin" />
+        </div>
+      ) : null}
     </main>
   );
 }
