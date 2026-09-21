@@ -85,5 +85,5 @@ Site: https://www.demoretechnologysolutions.com
 ## Lead Engine preview and campaign access
 Public detailed guide: https://www.demoretechnologysolutions.com/lead-generation
 Interactive preview: https://www.demoretechnologysolutions.com/lead-generation#preview
-The preview uses fictional restaurant, pub, and pizza-shop examples. It shows all, current and past campaigns and a sample new-campaign planner. It creates no records and sends no messages.
+The preview is for viewing purposes only and uses fictional restaurant, pub, and pizza-shop examples. Visitors cannot create or save draft campaigns. A follow-up form sends contact details and goals to ryan@demoretechnologysolutions.com. It shows all, current and past campaigns for viewing purposes only. The examples create no campaigns and send no outreach. The separate follow-up form emails the visitor’s details to Ryan.
 Signed-in users can choose Lead Engine, New campaign, or All campaigns — current & past from shared navigation. All campaigns displays current, past and draft campaigns across customers with a customer filter. Website sign-in matches an existing active workspace account and preserves its permissions. Customer campaign records are private and must not be represented as public examples.

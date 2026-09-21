@@ -180,7 +180,7 @@ export const industryExamples = [
 export const leadFaqs = [
   {
     q: "Can I preview Lead Engine without logging in?",
-    a: "Yes. The interactive preview on this page shows fictional current, past, and draft campaign examples and a sample campaign planner. It does not access customer data, create a live campaign, or send messages.",
+    a: "Yes. The interactive preview on this page shows fictional current, past, and draft campaign examples for viewing purposes only. Visitors cannot create or save campaign drafts. The follow-up form sends your contact details and goals to Ryan so he can contact you; it does not create a campaign.",
   },
   {
     q: "Can I see current and past campaigns at the same time?",

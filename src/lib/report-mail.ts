@@ -159,3 +159,22 @@ export async function sendAdminPasswordReset(url: string): Promise<MailResult> {
     text: `Use this one-time link to choose a new password:\n\n${url}\n\nThe link expires in 15 minutes. Your current password stays valid until you finish the reset. If you did not request this, ignore this email. This resets the Demore website administrator login, not the separate Lead Engine account.`,
   });
 }
+
+export async function sendLeadFollowup(
+  input: import("./lead-followup").LeadFollowup,
+): Promise<MailResult> {
+  const { leadFollowupText } = await import("./lead-followup");
+  const cfg = mailConfig();
+  return sendResend(
+    {
+      from: `Demore Technology Solutions <${cfg.from}>`,
+      to: ["ryan@demoretechnologysolutions.com"],
+      reply_to: input.email,
+      subject: input.name.startsWith("TEST")
+        ? "[TEST] Demore Lead Generation — follow-up request"
+        : "Demore Lead Generation — follow-up request",
+      text: leadFollowupText(input),
+    },
+    `lead-followup/${input.requestId}`,
+  );
+}

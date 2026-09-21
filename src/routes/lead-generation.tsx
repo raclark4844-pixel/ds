@@ -183,8 +183,8 @@ function LeadGeneration() {
         id="preview"
         className="scroll-mt-48"
         kicker="TRY THE WORKFLOW"
-        title="See your next campaign take shape."
-        lede="Browse current and past example campaigns together, or preview the first steps in a new campaign."
+        title="Explore the campaign workspace."
+        lede="View fictional current and past campaign examples. Request a follow-up from Ryan to discuss your business."
       >
         <LeadEnginePreview />
       </Section>
