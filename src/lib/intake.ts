@@ -157,7 +157,7 @@ export function formatBrief(brief: Brief): string {
     brief.submittedAt ? `Submitted: ${brief.submittedAt}` : "",
     "",
     "STEP 1 — BUSINESS",
-    `Industry: ${brief.industry}`,
+    `Industries: ${brief.industry}`,
     `Full name: ${brief.name}`,
     `Role: ${brief.role}`,
     `Business name: ${brief.businessName}`,

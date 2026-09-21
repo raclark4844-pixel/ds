@@ -1,7 +1,9 @@
+import { selectedIndustries } from "../../../src/lib/industry-selection";
 type ProjectBrief = {
   reportId?: string;
   handoffToken?: string;
   industry?: string;
+  industries?: string[];
   name?: string;
   role?: string;
   businessName?: string;
@@ -46,7 +48,10 @@ function clean(value: unknown, max = 4000): string {
 
 function list(value: unknown): string[] {
   return Array.isArray(value)
-    ? value.filter((item): item is string => typeof item === "string").map((item) => item.trim().slice(0, 200)).slice(0, 30)
+    ? value
+        .filter((item): item is string => typeof item === "string")
+        .map((item) => item.trim().slice(0, 200))
+        .slice(0, 30)
     : [];
 }
 
@@ -66,7 +71,8 @@ export default async function projectBrief(event: { req: Request }) {
     return Response.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const industry = clean(raw.industry, 120);
+  const industries = selectedIndustries(raw.industries ?? raw.industry);
+  const industry = industries.join(" | ");
   const name = clean(raw.name, 120);
   const email = clean(raw.email, 254);
   const budget = Number(raw.budget);
@@ -75,26 +81,40 @@ export default async function projectBrief(event: { req: Request }) {
   const handoffToken = clean(raw.handoffToken, 200);
 
   if (!industry || !name || !email || !email.includes("@")) {
-    return Response.json({ error: "Industry, name, and a valid email are required." }, { status: 400 });
+    return Response.json(
+      { error: "Industry, name, and a valid email are required." },
+      { status: 400 },
+    );
   }
   if (wants.length === 0) {
     return Response.json({ error: "Select at least one project need." }, { status: 400 });
   }
   if (!Number.isFinite(budget) || budget < MIN_BUDGET) {
-    return Response.json({ error: `Project budget must be at least $${MIN_BUDGET}.` }, { status: 400 });
+    return Response.json(
+      { error: `Project budget must be at least $${MIN_BUDGET}.` },
+      { status: 400 },
+    );
   }
   if (raw.consent !== true) {
     return Response.json({ error: "Consent is required." }, { status: 400 });
   }
 
   if (reportId) {
-    const { recordProjectHandoff, verifyHandoffToken } = await import("../../../src/lib/comparison-store");
+    const { recordProjectHandoff, verifyHandoffToken } =
+      await import("../../../src/lib/comparison-store");
     if (!handoffToken || !verifyHandoffToken(reportId, handoffToken)) {
-      return Response.json({ error: "The Demore Report ID handoff is invalid. Return to your comparison and use Start a project." }, { status: 403 });
+      return Response.json(
+        {
+          error:
+            "The Demore Report ID handoff is invalid. Return to your comparison and use Start a project.",
+        },
+        { status: 403 },
+      );
     }
     const saved = await recordProjectHandoff(reportId, {
       submittedAt: clean(raw.submittedAt, 80) || new Date().toISOString(),
       industry,
+      industries,
       name,
       email,
       phone: clean(raw.phone, 80),
@@ -107,13 +127,17 @@ export default async function projectBrief(event: { req: Request }) {
       crmTools: clean(raw.crmTools),
       followUpStatus: "new",
     });
-    if (!saved) return Response.json({ error: "That comparison report was not found." }, { status: 404 });
+    if (!saved)
+      return Response.json({ error: "That comparison report was not found." }, { status: 404 });
   }
 
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     console.error("[project-brief] RESEND_API_KEY is not configured");
-    return Response.json({ error: "Email delivery is not configured yet. Please try again later." }, { status: 503 });
+    return Response.json(
+      { error: "Email delivery is not configured yet. Please try again later." },
+      { status: 503 },
+    );
   }
 
   const fields = [
@@ -122,7 +146,7 @@ export default async function projectBrief(event: { req: Request }) {
     textLine("Demore Report ID", reportId),
     textLine("Submitted", clean(raw.submittedAt, 80) || new Date().toISOString()),
     "",
-    textLine("Industry", industry),
+    textLine("Industries", industry),
     textLine("Name", name),
     textLine("Role", clean(raw.role, 120)),
     textLine("Business", clean(raw.businessName, 160)),
@@ -158,7 +182,9 @@ export default async function projectBrief(event: { req: Request }) {
     textLine("Anything else", clean(raw.anythingElse)),
   ];
 
-  const isTest = /TEST\s*[\u2014-]\s*discard|TEST ONLY/i.test(clean(raw.anythingElse) + " " + name + " " + clean(raw.businessName, 160));
+  const isTest = /TEST\s*[\u2014-]\s*discard|TEST ONLY/i.test(
+    clean(raw.anythingElse) + " " + name + " " + clean(raw.businessName, 160),
+  );
   if (!isTest) {
     fields.shift();
   }
@@ -182,7 +208,10 @@ export default async function projectBrief(event: { req: Request }) {
   if (!response.ok) {
     const detail = await response.text();
     console.error("[project-brief] Resend error", response.status, detail.slice(0, 1000));
-    return Response.json({ error: "We could not send the project brief. Please try again." }, { status: 502 });
+    return Response.json(
+      { error: "We could not send the project brief. Please try again." },
+      { status: 502 },
+    );
   }
 
   const crmWebhook = process.env.CRM_HANDOFF_WEBHOOK_URL?.trim();
@@ -203,6 +232,7 @@ export default async function projectBrief(event: { req: Request }) {
           phone: clean(raw.phone, 80),
           website: clean(raw.website, 500),
           industry,
+          industries,
           wants,
           budget,
           timeline: clean(raw.timeline, 300),
@@ -214,18 +244,26 @@ export default async function projectBrief(event: { req: Request }) {
       crmStatus = "crm_failed";
     }
     const { recordProjectHandoff } = await import("../../../src/lib/comparison-store");
-    await recordProjectHandoff(reportId, {
-      submittedAt: clean(raw.submittedAt, 80) || new Date().toISOString(),
-      industry, name, email,
-      phone: clean(raw.phone, 80),
-      businessName: clean(raw.businessName, 160),
-      website: clean(raw.website, 500),
-      wants, budget,
-      goal: clean(raw.goal),
-      timeline: clean(raw.timeline, 300),
-      crmTools: clean(raw.crmTools),
-      followUpStatus: "new",
-    }, crmStatus);
+    await recordProjectHandoff(
+      reportId,
+      {
+        submittedAt: clean(raw.submittedAt, 80) || new Date().toISOString(),
+        industry,
+        industries,
+        name,
+        email,
+        phone: clean(raw.phone, 80),
+        businessName: clean(raw.businessName, 160),
+        website: clean(raw.website, 500),
+        wants,
+        budget,
+        goal: clean(raw.goal),
+        timeline: clean(raw.timeline, 300),
+        crmTools: clean(raw.crmTools),
+        followUpStatus: "new",
+      },
+      crmStatus,
+    );
   }
 
   return Response.json({ ok: true, reportId: reportId || null });

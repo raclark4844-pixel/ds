@@ -7,9 +7,13 @@ export default async function assistant(event: { req: Request }) {
   }
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
   if (!assistantRateLimit(ip)) {
-    return Response.json({ error: "Too many assistant requests. Try again shortly." }, { status: 429 });
+    return Response.json(
+      { error: "Too many assistant requests. Try again shortly." },
+      { status: 429 },
+    );
   }
   let raw: {
+    industries?: string[];
     message?: string;
     history?: Array<{ role: "user" | "assistant"; content: string }>;
     reportId?: string;
@@ -25,6 +29,7 @@ export default async function assistant(event: { req: Request }) {
   if (!message) return Response.json({ error: "Message is required." }, { status: 400 });
   const result = await runAssistant({
     message,
+    industries: raw.industries,
     history: Array.isArray(raw.history) ? raw.history : [],
     reportId: typeof raw.reportId === "string" ? raw.reportId : "",
     token: typeof raw.token === "string" ? raw.token : "",

@@ -1,3 +1,5 @@
+import { IndustryMultiselect } from "@/components/industry-multiselect";
+import { selectedIndustries } from "@/lib/industry-selection";
 import { useEffect, useState } from "react";
 import { AssistantWebsiteReview } from "@/components/assistant-website-review";
 import { Button } from "@/components/ui/button";
@@ -20,6 +22,7 @@ const INTRO =
   "Ask about websites, bots, growth, or custom AI platforms. Optionally enter your website above to get a PDF of practical improvements Demore could help with.";
 
 export function SiteAssistant() {
+  const [industries, setIndustries] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
   const [reportId, setReportId] = useState("");
   const [reviewBrief, setReviewBrief] = useState("");
@@ -28,6 +31,13 @@ export function SiteAssistant() {
   const [messages, setMessages] = useState<Msg[]>([{ role: "assistant", content: INTRO }]);
 
   useEffect(() => {
+    try {
+      setIndustries(
+        selectedIndustries(JSON.parse(sessionStorage.getItem("demore-chat-industries") || "[]")),
+      );
+    } catch {
+      /* use no selections */
+    }
     setReportId(readStoredReportId());
     setReviewBrief(readStoredReviewBrief());
     const onComparisonReady = (event: Event) => {
@@ -77,6 +87,7 @@ export function SiteAssistant() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message,
+          industries,
           history: next.slice(-8).map(({ role, content }) => ({ role, content })),
           reportId: reportId || undefined,
           token: token || undefined,
@@ -130,6 +141,25 @@ export function SiteAssistant() {
             </button>
           </div>
           <div className="min-h-0 flex-1 overflow-y-auto">
+            <details className="border-b border-line p-3">
+              <summary className="cursor-pointer text-sm font-medium">
+                Industries{industries.length ? ` (${industries.length} selected)` : " (optional)"}
+              </summary>
+              <div className="mt-3">
+                <IndustryMultiselect
+                  optional
+                  value={industries}
+                  onChange={(items) => {
+                    setIndustries(items);
+                    try {
+                      sessionStorage.setItem("demore-chat-industries", JSON.stringify(items));
+                    } catch {
+                      /* selections still work */
+                    }
+                  }}
+                />
+              </div>
+            </details>
             <AssistantWebsiteReview />
             <label className="block border-b border-line px-3 py-2 text-xs">
               Demore Report ID
