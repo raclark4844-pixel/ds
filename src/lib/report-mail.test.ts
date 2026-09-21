@@ -11,15 +11,17 @@ import type { WebsiteReviewReport } from "./website-review/types.ts";
 
 function sampleReport(): WebsiteReviewReport {
   return {
-    version: 2,
+    version: 3,
     recordId: "DTS-41F6B18F",
     createdAt: "2026-09-20T00:00:00.000Z",
     current: {
       url: "https://example.com/",
       title: "Example Landscaping",
       checks: [
-        { id: "title", category: "Search foundations", label: "Page title", offer: "SEO", action: "Write a title.", effort: "Quick win", status: "Detected", evidence: "Example Landscaping" },
-        { id: "form", category: "Lead capture", label: "On-page inquiry form", offer: "Intake", action: "Add a short form.", effort: "Build next", status: "Not detected", evidence: "" },
+        { id: "title", category: "Search foundations", label: "Page title", offer: "SEO", action: "Write a title.", effort: "Quick win", status: "Detected", evidence: "Example Landscaping", verify: "View source.", improve: "Include the service." },
+        { id: "form", category: "Lead capture", label: "On-page inquiry form", offer: "Intake", action: "Add a short form.", effort: "Build next", status: "Not detected", evidence: "", verify: "Submit a test inquiry.", improve: "Add a short form." },
+        { id: "ga", category: "Measurement", label: "Google Analytics or Google tag", offer: "Measurement", action: "Install a Google tag.", effort: "Quick win", status: "Not detected", evidence: "", verify: "View page source.", improve: "Add a Google tag." },
+        { id: "schema", category: "AI and search visibility", label: "Structured business information", offer: "Schema, GEO and AEO", action: "Publish structured data.", effort: "Build next", status: "Not detected", evidence: "", verify: "Search page source.", improve: "Add structured data." },
       ],
     },
     benchmark: { url: "https://demoreexteriorsolutions.com/", title: "Demore Exterior Solutions", checks: [] },
@@ -32,13 +34,15 @@ function sampleReport(): WebsiteReviewReport {
       conversion: "",
       measure: "",
       sources: [],
+      capabilities: [],
     },
     categories: [{ name: "Search foundations", detected: 1, total: 1 }, { name: "Lead capture", detected: 0, total: 1 }],
     recommendations: [
-      { id: "form", category: "Lead capture", label: "On-page inquiry form", offer: "Intake", action: "Add a short form.", effort: "Build next", status: "Not detected", evidence: "" },
+      { id: "form", category: "Lead capture", label: "On-page inquiry form", offer: "Intake", action: "Add a short form.", effort: "Build next", status: "Not detected", evidence: "", verify: "Submit a test inquiry.", improve: "Add a short form." },
     ],
     offerings: [["AI qualification", "Route qualified inquiries"]],
     methodology: "Public HTML signals only.",
+    assistantBrief: "Demore website review DTS-41F6B18F",
   };
 }
 
@@ -57,6 +61,8 @@ describe("internal PDF copy", () => {
     assert.match(text, /https:\/\/example\.com\//);
     assert.match(text, /Rankings, AI citations, and conversion lifts are not guaranteed/);
     assert.match(text, /source=website-review&rid=DTS-41F6B18F/);
+    assert.match(text, /Measurement: Google Analytics or Google tag Not detected/);
+    assert.match(text, /AI visibility: Structured business information Not detected/);
     assert.doesNotMatch(text, /ryan@demoreexteriorsolutions\.com/);
     assert.doesNotMatch(text, /password/i);
     assert.doesNotMatch(text, /\$\d/);

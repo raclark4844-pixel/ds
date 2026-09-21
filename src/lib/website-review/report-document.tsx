@@ -138,17 +138,56 @@ export function WebsiteReviewDocument({ report, logoSrc }: { report: WebsiteRevi
         <Text style={s.p}>{report.industry.evidence}</Text>
         <Text style={s.p}>{`Priority journey: ${report.industry.journey}`}</Text>
         <Text style={s.p}>{`Measure: ${report.industry.measure}`}</Text>
+        <Text style={s.h2}>Industry-specific capabilities</Text>
+        <Text style={s.p}>These are scoped opportunities for this industry. They do not name third-party model vendors and they are not confirmed installations.</Text>
+        {(report.industry.capabilities || []).map((item) => (
+          <View key={item.id} wrap={false} style={{ marginBottom: 8 }}>
+            <Text style={s.chip}>{item.effort}</Text>
+            <Text style={s.h2}>{item.label}</Text>
+            <Text style={s.p}>{item.why}</Text>
+            <Text style={s.meta}>{`Verify: ${item.verify}`}</Text>
+            <Text style={s.p}>{`Proposed improvement: ${item.improve}`}</Text>
+          </View>
+        ))}
         <Text style={s.h2}>Prioritized action plan</Text>
         {recommendations.length ? recommendations.map((item, index) => (
           <View key={item.id} wrap={false} style={{ marginBottom: 10 }}>
             <Text style={s.chip}>{`${String(index + 1).padStart(2, "0")} / ${item.effort}`}</Text>
             <Text style={s.h2}>{item.label}</Text>
             <Text style={s.p}>{item.action}</Text>
+            <Text style={s.meta}>{`Verify: ${item.verify}`}</Text>
+            <Text style={s.p}>{`Proposed improvement: ${item.improve}`}</Text>
             <Text style={s.meta}>{`Demore offering: ${item.offer}`}</Text>
           </View>
         )) : (
           <Text style={s.p}>All applicable quick-review signals were detected. Next, validate the customer journey, lead routing, accessibility, and measurement with a manual review.</Text>
         )}
+      </Page>
+
+      <Page size="LETTER" style={s.page}>
+        <Chrome report={report} logoSrc={logoSrc} />
+        <Text style={s.kicker}>Measurement</Text>
+        <Text style={s.h1}>Analytics, Search Console, and conversions.</Text>
+        <Text style={s.p}>Public tags and files only. Private Google Analytics and Search Console accounts were not opened. Rankings, AI citations, and conversion lifts are not guaranteed.</Text>
+        {report.current.checks.filter((item) => item.category === "Measurement").map((item) => (
+          <View key={item.id} wrap={false} style={{ marginBottom: 10 }}>
+            <Text style={s.chip}>{`${item.status} / ${item.effort}`}</Text>
+            <Text style={s.h2}>{item.label}</Text>
+            <Text style={s.p}>{item.evidence}</Text>
+            <Text style={s.meta}>{`Verify: ${item.verify}`}</Text>
+            <Text style={s.p}>{`Proposed improvement: ${item.improve}`}</Text>
+          </View>
+        ))}
+        <Text style={s.h2}>AI and search visibility</Text>
+        {report.current.checks.filter((item) => item.category === "AI and search visibility").map((item) => (
+          <View key={item.id} wrap={false} style={{ marginBottom: 10 }}>
+            <Text style={s.chip}>{`${item.status} / ${item.effort}`}</Text>
+            <Text style={s.h2}>{item.label}</Text>
+            <Text style={s.p}>{item.evidence}</Text>
+            <Text style={s.meta}>{`Verify: ${item.verify}`}</Text>
+            <Text style={s.p}>{`Proposed improvement: ${item.improve}`}</Text>
+          </View>
+        ))}
       </Page>
 
       <Page size="LETTER" style={s.page}>

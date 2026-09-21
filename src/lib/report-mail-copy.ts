@@ -46,6 +46,8 @@ export function websiteReviewCopyText(report: WebsiteReviewReport) {
     `Industry: ${report.industry.name}`,
     `Detected HTML signals: ${total ? `${detected}/${total}` : "Unavailable"}`,
     `Not detected: ${missing.length ? missing.join(", ") : "None"}`,
+    `Measurement: ${report.current.checks.filter((row) => row.category === "Measurement").map((row) => `${row.label} ${row.status}`).join("; ") || "—"}`,
+    `AI visibility: ${report.current.checks.filter((row) => row.category === "AI and search visibility").map((row) => `${row.label} ${row.status}`).join("; ") || "—"}`,
     "",
     "Recommendations",
     ...(recs.length ? recs : ["- None from this scan"]),

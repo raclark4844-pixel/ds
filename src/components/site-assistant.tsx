@@ -1,27 +1,50 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { readStoredReportId, storeReportId } from "@/lib/site-assistant-ids";
+import { ChatCopy } from "@/lib/chat-copy";
+import { readStoredReportId, readStoredReviewBrief, storeReportId, storeReviewBrief } from "@/lib/site-assistant-ids";
 
 type Msg = { role: "user" | "assistant"; content: string; citations?: Array<{ url: string; title?: string }>; searchedAt?: string | null };
+
+const INTRO = "We can review your current website, compare it with relevant competitors, and explain the report. If you already have a Demore Report ID, enter it below. Otherwise start at /compare.";
 
 export function SiteAssistant() {
   const [open, setOpen] = useState(false);
   const [reportId, setReportId] = useState("");
+  const [reviewBrief, setReviewBrief] = useState("");
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
-  const [messages, setMessages] = useState<Msg[]>([{
-    role: "assistant",
-    content: "We can review your current website, compare it with relevant competitors, and explain the report. If you already have a Demore Report ID, enter it below. Otherwise start at /compare.",
-  }]);
+  const [messages, setMessages] = useState<Msg[]>([{ role: "assistant", content: INTRO }]);
 
   useEffect(() => {
     setReportId(readStoredReportId());
+    setReviewBrief(readStoredReviewBrief());
     const onComparisonReady = (event: Event) => {
       const id = (event as CustomEvent<{ reportId?: string }>).detail?.reportId?.trim();
       if (id) setReportId(id);
     };
+    const onReviewReady = (event: Event) => {
+      const detail = (event as CustomEvent<{ reportId?: string; brief?: string; open?: boolean }>).detail || {};
+      const id = detail.reportId?.trim();
+      const brief = detail.brief?.trim() || "";
+      if (id) {
+        setReportId(id);
+        storeReportId(id);
+      }
+      if (brief) {
+        setReviewBrief(brief);
+        storeReviewBrief(brief);
+        setMessages([
+          { role: "assistant", content: `I have website review **${id || "ready"}**.\n\n${brief}\n\nAsk what to fix first, or use **Discuss these improvements** on the report.` },
+        ]);
+      }
+      if (detail.open) setOpen(true);
+    };
     window.addEventListener("demore:comparison-ready", onComparisonReady);
-    return () => window.removeEventListener("demore:comparison-ready", onComparisonReady);
+    window.addEventListener("demore:review-ready", onReviewReady);
+    return () => {
+      window.removeEventListener("demore:comparison-ready", onComparisonReady);
+      window.removeEventListener("demore:review-ready", onReviewReady);
+    };
   }, []);
 
   async function send() {
@@ -41,6 +64,7 @@ export function SiteAssistant() {
           history: next.slice(-8).map(({ role, content }) => ({ role, content })),
           reportId: reportId || undefined,
           token: token || undefined,
+          reviewBrief: reviewBrief || undefined,
         }),
       });
       const data = await res.json();
@@ -87,12 +111,12 @@ export function SiteAssistant() {
               placeholder="Paste after /compare submits"
             />
           </label>
-          <div className="flex-1 space-y-2 overflow-y-auto p-3 text-sm">
+          <div className="flex-1 space-y-3 overflow-y-auto p-3 text-sm">
             {messages.map((item, index) => (
               <div key={index} className={item.role === "user" ? "text-fg" : "text-muted"}>
-                <p>{item.content}</p>
+                <ChatCopy text={item.content} />
                 {item.citations?.length ? (
-                  <ul className="mt-1 text-xs">
+                  <ul className="mt-1 list-disc pl-4 text-xs">
                     {item.citations.map((cite) => (
                       <li key={cite.url}><a className="underline" href={cite.url} target="_blank" rel="noreferrer">{cite.title || cite.url}</a>{item.searchedAt ? ` · searched ${item.searchedAt}` : ""}</li>
                     ))}

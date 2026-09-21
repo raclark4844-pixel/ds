@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { storeReportId } from "@/lib/site-assistant-ids";
+import { storeReportId, storeReviewBrief } from "@/lib/site-assistant-ids";
 import { getRecordId } from "@/lib/website-review/record-id";
-import type { ReviewStatus, WebsiteReviewReport } from "@/lib/website-review/types";
+import type { IndustryCapability, ReviewCheck, ReviewStatus, WebsiteReviewReport } from "@/lib/website-review/types";
 
 function statusClass(status: ReviewStatus | string) {
   if (status === "Detected") return "review-status review-status-detected";
@@ -39,9 +39,38 @@ function Bar({
   );
 }
 
+function CheckDetail({ item }: { item: ReviewCheck }) {
+  return (
+    <div className="py-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <span className={statusClass(item.status)}>{item.status}</span>
+        <p className={`kicker ${item.effort === "Quick win" ? "text-volt" : "text-sun"}`}>{item.effort}</p>
+      </div>
+      <h4 className="mt-2 font-display text-lg">{item.label}</h4>
+      <p className="mt-1 text-sm text-muted">{item.evidence}</p>
+      <p className="mt-2 text-sm"><strong>Verify.</strong> {item.verify}</p>
+      <p className="mt-1 text-sm"><strong>Proposed improvement.</strong> {item.improve}</p>
+    </div>
+  );
+}
+
+function CapabilityDetail({ item }: { item: IndustryCapability }) {
+  return (
+    <div className="py-4">
+      <p className={`kicker ${item.effort === "Quick win" ? "text-volt" : "text-sun"}`}>{item.effort}</p>
+      <h4 className="mt-1 font-display text-lg">{item.label}</h4>
+      <p className="mt-1 text-sm text-muted">{item.why}</p>
+      <p className="mt-2 text-sm"><strong>Verify.</strong> {item.verify}</p>
+      <p className="mt-1 text-sm"><strong>Proposed improvement.</strong> {item.improve}</p>
+    </div>
+  );
+}
+
 function ReviewResult({ report, token }: { report: WebsiteReviewReport; token: string }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const measurement = report.current.checks.filter((item) => item.category === "Measurement");
+  const visibility = report.current.checks.filter((item) => item.category === "AI and search visibility");
 
   async function download() {
     if (busy) return;
@@ -89,6 +118,12 @@ function ReviewResult({ report, token }: { report: WebsiteReviewReport; token: s
     search: { need: "platform", source: "website-review", rid: report.recordId, reportId: report.recordId },
   };
 
+  function askDemore() {
+    window.dispatchEvent(new CustomEvent("demore:review-ready", {
+      detail: { reportId: report.recordId, brief: report.assistantBrief, open: true },
+    }));
+  }
+
   return (
     <section className="review-result mt-8 space-y-6" aria-label="Website review results">
       <div>
@@ -125,7 +160,7 @@ function ReviewResult({ report, token }: { report: WebsiteReviewReport; token: s
           );
         })}
       </div>
-      <p className="text-xs text-muted">Bars show detected HTML signals, not speed, rankings, or revenue. Missing signals need verification.</p>
+      <p className="text-xs text-muted">Bars show detected HTML and public-file signals, not speed, rankings, or revenue. Missing signals need verification. Private Analytics and Search Console data were not opened.</p>
       {report.benchmark.unavailable ? (
         <p role="status" className="rounded-md border border-sun/40 bg-bg px-3 py-2 text-sm text-sun">
           The reference website was unavailable. Its results are not scored.
@@ -160,6 +195,36 @@ function ReviewResult({ report, token }: { report: WebsiteReviewReport; token: s
       </div>
 
       <div>
+        <h3 className="font-display text-xl font-semibold">Measurement</h3>
+        <p className="mt-2 text-sm text-muted">
+          Google Analytics, Search Console, and conversion tracking are checked from public tags and files only. This does not log into those accounts.
+        </p>
+        <div className="mt-3 divide-y divide-line">
+          {measurement.map((item) => <CheckDetail key={item.id} item={item} />)}
+        </div>
+      </div>
+
+      <div>
+        <h3 className="font-display text-xl font-semibold">AI and search visibility</h3>
+        <p className="mt-2 text-sm text-muted">
+          These signals help people and answer engines understand the business. AI citations are not guaranteed.
+        </p>
+        <div className="mt-3 divide-y divide-line">
+          {visibility.map((item) => <CheckDetail key={item.id} item={item} />)}
+        </div>
+      </div>
+
+      <div>
+        <h3 className="font-display text-xl font-semibold">Industry-specific capabilities</h3>
+        <p className="mt-2 text-sm text-muted">
+          These are scoped opportunities for {report.industry.name.toLowerCase()}, not confirmed installations. They do not name third-party model vendors.
+        </p>
+        <div className="mt-3 divide-y divide-line">
+          {(report.industry.capabilities || []).map((item) => <CapabilityDetail key={item.id} item={item} />)}
+        </div>
+      </div>
+
+      <div>
         <h3 className="font-display text-xl font-semibold">Recommended next steps</h3>
         {report.recommendations.length ? (
           <div className="mt-3 divide-y divide-line">
@@ -168,6 +233,8 @@ function ReviewResult({ report, token }: { report: WebsiteReviewReport; token: s
                 <p className={`kicker ${item.effort === "Quick win" ? "text-volt" : "text-sun"}`}>{item.effort}</p>
                 <h4 className="mt-1 font-display text-lg">{item.label}</h4>
                 <p className="mt-1 text-sm text-muted">{item.action}</p>
+                <p className="mt-2 text-sm"><strong>Verify.</strong> {item.verify}</p>
+                <p className="mt-1 text-sm"><strong>Proposed improvement.</strong> {item.improve}</p>
                 <p className="mt-1 text-xs text-faint">{item.offer}</p>
               </div>
             ))}
@@ -196,6 +263,7 @@ function ReviewResult({ report, token }: { report: WebsiteReviewReport; token: s
         <Button type="button" variant="volt" onClick={download} disabled={busy}>
           {busy ? "Preparing PDF…" : "Download branded PDF"}
         </Button>
+        <Button type="button" variant="outline" onClick={askDemore}>Ask Demore about this review</Button>
         <Button asChild variant="primary">
           <Link to={contactHref.to} search={contactHref.search}>Discuss these improvements</Link>
         </Button>
@@ -241,9 +309,12 @@ export function WebsiteReview() {
       const data = await res.json();
       if (!res.ok || !data.ok) throw new Error(data.error || "Unable to complete the review.");
       const nextId = data.recordId || recordId;
+      const brief = data.report?.assistantBrief || data.assistantBrief || "";
       setRecordId(nextId);
       storeReportId(nextId);
+      storeReviewBrief(brief);
       window.dispatchEvent(new CustomEvent("demore:comparison-ready", { detail: { reportId: nextId } }));
+      window.dispatchEvent(new CustomEvent("demore:review-ready", { detail: { reportId: nextId, brief, open: true } }));
       setToken(data.token);
       setReport(data.report);
     } catch (err) {
@@ -293,7 +364,7 @@ export function WebsiteReview() {
           </div>
         </label>
       </form>
-      {busy ? <p role="status" className="mt-4 text-sm text-muted">Inspecting your page and the Demore Exterior Solutions reference. This may take up to 25 seconds.</p> : null}
+      {busy ? <p role="status" className="mt-4 text-sm text-muted">Inspecting your page, public measurement files, and the Demore Exterior Solutions reference. This may take up to 25 seconds.</p> : null}
       {error ? <p role="alert" className="mt-4 rounded-md border border-hot/40 bg-hot-dim px-3 py-2 text-sm">{error}</p> : null}
       {report && token ? <ReviewResult report={report} token={token} /> : null}
     </section>

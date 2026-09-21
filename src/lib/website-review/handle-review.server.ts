@@ -1,9 +1,10 @@
 import { z } from "zod";
 import { analyzePage, makeReport, unavailableBenchmark } from "./analyze.ts";
-import { fetchPublicPage, REFERENCE_URL } from "./fetch-public.ts";
+import { fetchPublicFile, fetchPublicPage, REFERENCE_URL } from "./fetch-public.ts";
 import { industryLinks, normalizeIndustry, resolveIndustry } from "./industry.ts";
 import { mintRecordId, normalizeRecordId } from "./record-id.ts";
 import { issueReviewTicket } from "./ticket.ts";
+import type { PublicFiles } from "./types.ts";
 import { normalizeWebsite } from "./url.ts";
 
 const schema = z.object({
@@ -12,6 +13,19 @@ const schema = z.object({
   record_id: z.string().trim().max(20).optional(),
   recordId: z.string().trim().max(20).optional(),
 });
+
+async function publicFiles(origin: string, signal: AbortSignal): Promise<PublicFiles> {
+  const extras: PublicFiles = {};
+  const [robots, sitemap, llms] = await Promise.allSettled([
+    fetchPublicFile(`${origin}/robots.txt`, signal),
+    fetchPublicFile(`${origin}/sitemap.xml`, signal),
+    fetchPublicFile(`${origin}/llms.txt`, signal),
+  ]);
+  if (robots.status === "fulfilled") extras.robots = robots.value.html;
+  if (sitemap.status === "fulfilled") extras.sitemap = sitemap.value.html;
+  if (llms.status === "fulfilled") extras.llms = llms.value.html;
+  return extras;
+}
 
 export async function handleWebsiteReview(req: Request) {
   if (req.method.toUpperCase() !== "POST") return Response.json({ error: "Method not allowed." }, { status: 405 });
@@ -58,12 +72,17 @@ export async function handleWebsiteReview(req: Request) {
       }
     }
   }
+  const origin = new URL(site.value.url).origin;
+  const [currentFiles, referenceFiles] = await Promise.all([
+    publicFiles(origin, signal),
+    reference.status === "fulfilled" ? publicFiles(new URL(reference.value.url).origin, signal) : Promise.resolve({} as PublicFiles),
+  ]);
   const industry = resolveIndustry(manualIndustry, pages);
-  const current = analyzePage(site.value);
+  const current = analyzePage({ ...site.value, extras: currentFiles });
   const benchmark = reference.status === "fulfilled"
-    ? analyzePage(reference.value)
+    ? analyzePage({ ...reference.value, extras: referenceFiles })
     : unavailableBenchmark(REFERENCE_URL);
   const report = makeReport(current, benchmark, recordId, industry);
   const token = issueReviewTicket(report);
-  return Response.json({ ok: true, recordId, token, report }, { headers: { "Cache-Control": "no-store" } });
+  return Response.json({ ok: true, recordId, token, report, assistantBrief: report.assistantBrief }, { headers: { "Cache-Control": "no-store" } });
 }

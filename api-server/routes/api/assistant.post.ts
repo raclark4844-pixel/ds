@@ -14,6 +14,7 @@ export default async function assistant(event: { req: Request }) {
     history?: Array<{ role: "user" | "assistant"; content: string }>;
     reportId?: string;
     token?: string;
+    reviewBrief?: string;
   };
   try {
     raw = (await req.json()) as typeof raw;
@@ -27,6 +28,7 @@ export default async function assistant(event: { req: Request }) {
     history: Array.isArray(raw.history) ? raw.history : [],
     reportId: typeof raw.reportId === "string" ? raw.reportId : "",
     token: typeof raw.token === "string" ? raw.token : "",
+    reviewBrief: typeof raw.reviewBrief === "string" ? raw.reviewBrief : "",
   });
   return Response.json(result, { status: result.ok ? 200 : 503 });
 }

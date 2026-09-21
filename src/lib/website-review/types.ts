@@ -10,6 +10,8 @@ export type ReviewCheck = {
   effort: ReviewEffort;
   status: ReviewStatus;
   evidence: string;
+  verify: string;
+  improve: string;
 };
 
 export type ReviewPage = {
@@ -25,6 +27,15 @@ export type ReviewCategory = {
   total: number;
 };
 
+export type IndustryCapability = {
+  id: string;
+  label: string;
+  why: string;
+  verify: string;
+  improve: string;
+  effort: ReviewEffort;
+};
+
 export type ReviewIndustry = {
   id: string;
   name: string;
@@ -34,10 +45,17 @@ export type ReviewIndustry = {
   conversion: string;
   measure: string;
   sources: string[];
+  capabilities: IndustryCapability[];
+};
+
+export type PublicFiles = {
+  robots?: string;
+  sitemap?: string;
+  llms?: string;
 };
 
 export type WebsiteReviewReport = {
-  version: 2;
+  version: 3;
   recordId: string;
   createdAt: string;
   current: ReviewPage;
@@ -47,4 +65,5 @@ export type WebsiteReviewReport = {
   recommendations: ReviewCheck[];
   offerings: Array<[string, string]>;
   methodology: string;
+  assistantBrief: string;
 };

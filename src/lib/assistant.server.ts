@@ -27,12 +27,14 @@ export function recentSearchUsage() {
   return searchLog.slice(-50);
 }
 
-function systemPrompt(reportSummary: string, reportId: string | null) {
+function systemPrompt(reportSummary: string, reportId: string | null, reviewBrief = "") {
   const ids = reportId ? unifiedIds(reportId) : null;
   return [
     "You are the Demore Technology Solutions website assistant.",
-    "Prefer Demore website knowledge and any saved comparison report before searching.",
+    "Prefer Demore website knowledge, any saved website review, and any saved comparison report before searching.",
+    "Format every reply with short paragraphs and markdown-style bullet lists. Use **bold** for record IDs and section names. Do not return one unbroken blob.",
     "Never invent competitors, rankings, ratings, reviews, website technology, or business facts.",
+    "Do not name third-party AI model vendors unless the visitor names them first.",
     "DataForSEO (Google organic and Maps) is authoritative for rankings, local-pack positions, ratings, review counts, and initial competitor discovery.",
     "Web Search is supplemental for current public pages, industry context, software facts, and information not in the saved report.",
     "If live information is unavailable, say so and use a clearly labeled industry benchmark. Do not invent named businesses.",
@@ -40,11 +42,12 @@ function systemPrompt(reportSummary: string, reportId: string | null) {
     "Show clickable source URLs and the date searched for Web Search facts.",
     "Use Web Search at most twice for one customer message unless accuracy requires one more check.",
     "Never request or store passwords, API keys, or the private report authorization token.",
-    "Never guarantee rankings, traffic, leads, sales, or revenue.",
+    "Never guarantee rankings, traffic, leads, sales, or revenue. Always state that rankings, AI citations, and conversion lifts are not guaranteed.",
     ids
       ? `Demore Report ID (canonical, also customerId/leadId/comparisonId): ${ids.reportId}. Refer to it as the Demore Report ID. Keep using this exact ID.`
       : "No Demore Report ID is available. Ask if the visitor has one. If not, send them to https://www.demoretechnologysolutions.com/compare and capture the exact reportId after submission. Do not invent an ID.",
     reportSummary ? `Saved comparison report (do not expose the auth token):\n${reportSummary}` : "No saved comparison report is attached.",
+    reviewBrief ? `Saved website review (public HTML scan only; do not invent Analytics or Search Console numbers):\n${reviewBrief}` : "No website review brief is attached.",
   ].join("\n");
 }
 
@@ -70,6 +73,7 @@ export async function runAssistant(input: {
   history?: Array<{ role: "user" | "assistant"; content: string }>;
   reportId?: string;
   token?: string;
+  reviewBrief?: string;
 }) {
   const apiKey = process.env.XAI_API_KEY?.trim();
   if (!apiKey) {
@@ -86,6 +90,7 @@ export async function runAssistant(input: {
 
   let reportSummary = "";
   let reportId = input.reportId?.trim() || "";
+  const reviewBrief = (input.reviewBrief || "").trim().slice(0, 8000);
   if (reportId && input.token) {
     try {
       const stored = await getAuthorizedComparison(reportId, input.token);
@@ -110,7 +115,7 @@ export async function runAssistant(input: {
   const body = {
     model: ASSISTANT_MODEL,
     input: [
-      { role: "system", content: systemPrompt(reportSummary, reportId || null) },
+      { role: "system", content: systemPrompt(reportSummary, reportId || null, reviewBrief) },
       ...history,
       { role: "user", content: input.message.slice(0, 4000) },
     ],

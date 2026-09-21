@@ -9,6 +9,8 @@ const MAX_BYTES = 2_000_000;
 const MAX_HOPS = 4;
 const DNS_MS = 4000;
 const FETCH_MS = 8000;
+const PAGE_TYPE = /text\/html|application\/xhtml\+xml/i;
+const FILE_TYPE = /text\/|application\/(xml|json|xhtml\+xml|rss\+xml)|[/+]xml/i;
 
 async function resolvePublic(hostname: string) {
   if (isIP(hostname)) {
@@ -28,7 +30,7 @@ async function resolvePublic(hostname: string) {
   return addresses[0];
 }
 
-function requestPage(url: URL, pinned: { address: string; family: number }, signal?: AbortSignal) {
+function requestPage(url: URL, pinned: { address: string; family: number }, signal: AbortSignal | undefined, mode: "page" | "file") {
   return new Promise<{ html?: string; url?: string; redirect?: string }>((resolve, reject) => {
     const lib = url.protocol === "https:" ? https : http;
     const req = lib.get(
@@ -45,7 +47,7 @@ function requestPage(url: URL, pinned: { address: string; family: number }, sign
         }) as http.RequestOptions["lookup"],
         headers: {
           "User-Agent": "DemoreWebsiteReview/1.0",
-          Accept: "text/html",
+          Accept: mode === "page" ? "text/html" : "text/plain, text/html, application/xml, text/xml, */*",
           "Accept-Encoding": "identity",
         },
       },
@@ -60,9 +62,11 @@ function requestPage(url: URL, pinned: { address: string; family: number }, sign
           reject(new Error("The website blocked the review or returned an error."));
           return;
         }
-        if (!/text\/html|application\/xhtml\+xml/i.test(res.headers["content-type"] || "")) {
+        const type = res.headers["content-type"] || "";
+        const allowed = mode === "page" ? PAGE_TYPE.test(type) : !type || FILE_TYPE.test(type);
+        if (!allowed) {
           res.resume();
-          reject(new Error("This address is not a web page."));
+          reject(new Error(mode === "page" ? "This address is not a web page." : "This address is not a public text file."));
           return;
         }
         const chunks: Buffer[] = [];
@@ -85,7 +89,7 @@ function requestPage(url: URL, pinned: { address: string; family: number }, sign
   });
 }
 
-export async function fetchPublicPage(input: string, signal?: AbortSignal) {
+async function fetchPublic(input: string, signal: AbortSignal | undefined, mode: "page" | "file") {
   let current = normalizeWebsite(input);
   for (let hop = 0; hop < MAX_HOPS; hop += 1) {
     signal?.throwIfAborted();
@@ -93,7 +97,7 @@ export async function fetchPublicPage(input: string, signal?: AbortSignal) {
     if (url.port) throw new Error("Use a public HTTP or HTTPS website without a login or custom port.");
     if (url.username || url.password) throw new Error("Use a public HTTP or HTTPS website without a login or custom port.");
     const pinned = await resolvePublic(url.hostname);
-    const result = await requestPage(url, pinned, signal);
+    const result = await requestPage(url, pinned, signal, mode);
     if (!result.redirect) {
       if (!result.html || !result.url) throw new Error("The website blocked the review or returned an error.");
       return { html: result.html, url: result.url };
@@ -101,6 +105,14 @@ export async function fetchPublicPage(input: string, signal?: AbortSignal) {
     current = normalizeWebsite(new URL(result.redirect, current).href);
   }
   throw new Error("The website redirects too many times. Try its final address.");
+}
+
+export async function fetchPublicPage(input: string, signal?: AbortSignal) {
+  return fetchPublic(input, signal, "page");
+}
+
+export async function fetchPublicFile(input: string, signal?: AbortSignal) {
+  return fetchPublic(input, signal, "file");
 }
 
 export const REFERENCE_URL = "https://demoreexteriorsolutions.com/";
