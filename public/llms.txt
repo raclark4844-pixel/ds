@@ -72,3 +72,11 @@ The Demore Report ID is the only identifier for one comparison interaction. The 
 Email: ryan@demoretechnologysolutions.com
 Phone unpublished: [PHONE]
 Site: https://www.demoretechnologysolutions.com
+
+## Lead generation workspace
+/lead-generation explains the Demore Technology Solutions workspace for customer records, campaign planning, lead review, conversations, qualified handoffs, and costs. Sign in at https://demore-lead-engine.vercel.app/login. Provider and communication services require configuration.
+
+## Dedicated hospitality categories
+- /industries/restaurants: menus, reservations, catering and group inquiries.
+- /industries/pubs: events, private parties and group bookings.
+- /industries/pizza-shops: ordering paths, delivery coverage and catering inquiries.

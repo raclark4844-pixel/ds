@@ -162,6 +162,19 @@ export function IndustryPage({ industry }: { industry: IndustryProfile }) {
         </div>
       </Section>
 
+      <Section kicker="Campaign workspace" title="Keep inquiries and follow-up together.">
+        <p className="text-muted">
+          Organize customers, campaigns, lead review, conversations, qualified handoffs, and
+          campaign costs in the Demore Technology Solutions workspace.
+        </p>
+        <Link
+          to="/lead-generation"
+          className="mt-4 inline-flex text-volt underline underline-offset-4"
+        >
+          Explore lead generation and campaign management
+        </Link>
+      </Section>
+
       <Section kicker="Other industries" title="Explore another industry.">
         <div className="flex flex-wrap gap-2">
           {industries

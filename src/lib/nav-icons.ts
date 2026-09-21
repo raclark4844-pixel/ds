@@ -18,6 +18,7 @@ export const navIcons: Record<AppPath, LucideIcon> = {
   "/platform": Sparkles,
   "/websites": Globe,
   "/growth": TrendingUp,
+  "/lead-generation": TrendingUp,
   "/automation": Bot,
   "/industries": Building2,
   "/contact": ClipboardList,

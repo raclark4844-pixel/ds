@@ -16,6 +16,7 @@ import { Route as CompareRouteImport } from './routes/compare'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as GrowthRouteImport } from './routes/growth'
 import { Route as IndustriesRouteImport } from './routes/industries'
+import { Route as LeadGenerationRouteImport } from './routes/lead-generation'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PlatformRouteImport } from './routes/platform'
 import { Route as ProcessRouteImport } from './routes/process'
@@ -25,7 +26,10 @@ import { Route as IndustriesIndexRouteImport } from './routes/industries.index'
 import { Route as IndustriesContractorsRouteImport } from './routes/industries.contractors'
 import { Route as IndustriesHospitalityRouteImport } from './routes/industries.hospitality'
 import { Route as IndustriesLandscapingRouteImport } from './routes/industries.landscaping'
+import { Route as IndustriesPizzaShopsRouteImport } from './routes/industries.pizza-shops'
 import { Route as IndustriesProfessionalServicesRouteImport } from './routes/industries.professional-services'
+import { Route as IndustriesPubsRouteImport } from './routes/industries.pubs'
+import { Route as IndustriesRestaurantsRouteImport } from './routes/industries.restaurants'
 import { Route as IndustriesServiceCompaniesRouteImport } from './routes/industries.service-companies'
 import { Route as IndustriesStoresEcommerceRouteImport } from './routes/industries.stores-ecommerce'
 
@@ -62,6 +66,11 @@ const GrowthRoute = GrowthRouteImport.update({
 const IndustriesRoute = IndustriesRouteImport.update({
   id: '/industries',
   path: '/industries',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LeadGenerationRoute = LeadGenerationRouteImport.update({
+  id: '/lead-generation',
+  path: '/lead-generation',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -109,12 +118,27 @@ const IndustriesLandscapingRoute = IndustriesLandscapingRouteImport.update({
   path: '/landscaping',
   getParentRoute: () => IndustriesRoute,
 } as any)
+const IndustriesPizzaShopsRoute = IndustriesPizzaShopsRouteImport.update({
+  id: '/pizza-shops',
+  path: '/pizza-shops',
+  getParentRoute: () => IndustriesRoute,
+} as any)
 const IndustriesProfessionalServicesRoute =
   IndustriesProfessionalServicesRouteImport.update({
     id: '/professional-services',
     path: '/professional-services',
     getParentRoute: () => IndustriesRoute,
   } as any)
+const IndustriesPubsRoute = IndustriesPubsRouteImport.update({
+  id: '/pubs',
+  path: '/pubs',
+  getParentRoute: () => IndustriesRoute,
+} as any)
+const IndustriesRestaurantsRoute = IndustriesRestaurantsRouteImport.update({
+  id: '/restaurants',
+  path: '/restaurants',
+  getParentRoute: () => IndustriesRoute,
+} as any)
 const IndustriesServiceCompaniesRoute =
   IndustriesServiceCompaniesRouteImport.update({
     id: '/service-companies',
@@ -136,6 +160,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/growth': typeof GrowthRoute
   '/industries': typeof IndustriesRouteWithChildren
+  '/lead-generation': typeof LeadGenerationRoute
   '/login': typeof LoginRoute
   '/platform': typeof PlatformRoute
   '/process': typeof ProcessRoute
@@ -144,7 +169,10 @@ export interface FileRoutesByFullPath {
   '/industries/contractors': typeof IndustriesContractorsRoute
   '/industries/hospitality': typeof IndustriesHospitalityRoute
   '/industries/landscaping': typeof IndustriesLandscapingRoute
+  '/industries/pizza-shops': typeof IndustriesPizzaShopsRoute
   '/industries/professional-services': typeof IndustriesProfessionalServicesRoute
+  '/industries/pubs': typeof IndustriesPubsRoute
+  '/industries/restaurants': typeof IndustriesRestaurantsRoute
   '/industries/service-companies': typeof IndustriesServiceCompaniesRoute
   '/industries/stores-ecommerce': typeof IndustriesStoresEcommerceRoute
   '/industries/': typeof IndustriesIndexRoute
@@ -156,6 +184,7 @@ export interface FileRoutesByTo {
   '/compare': typeof CompareRoute
   '/contact': typeof ContactRoute
   '/growth': typeof GrowthRoute
+  '/lead-generation': typeof LeadGenerationRoute
   '/login': typeof LoginRoute
   '/platform': typeof PlatformRoute
   '/process': typeof ProcessRoute
@@ -164,7 +193,10 @@ export interface FileRoutesByTo {
   '/industries/contractors': typeof IndustriesContractorsRoute
   '/industries/hospitality': typeof IndustriesHospitalityRoute
   '/industries/landscaping': typeof IndustriesLandscapingRoute
+  '/industries/pizza-shops': typeof IndustriesPizzaShopsRoute
   '/industries/professional-services': typeof IndustriesProfessionalServicesRoute
+  '/industries/pubs': typeof IndustriesPubsRoute
+  '/industries/restaurants': typeof IndustriesRestaurantsRoute
   '/industries/service-companies': typeof IndustriesServiceCompaniesRoute
   '/industries/stores-ecommerce': typeof IndustriesStoresEcommerceRoute
   '/industries': typeof IndustriesIndexRoute
@@ -178,6 +210,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/growth': typeof GrowthRoute
   '/industries': typeof IndustriesRouteWithChildren
+  '/lead-generation': typeof LeadGenerationRoute
   '/login': typeof LoginRoute
   '/platform': typeof PlatformRoute
   '/process': typeof ProcessRoute
@@ -186,7 +219,10 @@ export interface FileRoutesById {
   '/industries/contractors': typeof IndustriesContractorsRoute
   '/industries/hospitality': typeof IndustriesHospitalityRoute
   '/industries/landscaping': typeof IndustriesLandscapingRoute
+  '/industries/pizza-shops': typeof IndustriesPizzaShopsRoute
   '/industries/professional-services': typeof IndustriesProfessionalServicesRoute
+  '/industries/pubs': typeof IndustriesPubsRoute
+  '/industries/restaurants': typeof IndustriesRestaurantsRoute
   '/industries/service-companies': typeof IndustriesServiceCompaniesRoute
   '/industries/stores-ecommerce': typeof IndustriesStoresEcommerceRoute
   '/industries/': typeof IndustriesIndexRoute
@@ -201,6 +237,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/growth'
     | '/industries'
+    | '/lead-generation'
     | '/login'
     | '/platform'
     | '/process'
@@ -209,7 +246,10 @@ export interface FileRouteTypes {
     | '/industries/contractors'
     | '/industries/hospitality'
     | '/industries/landscaping'
+    | '/industries/pizza-shops'
     | '/industries/professional-services'
+    | '/industries/pubs'
+    | '/industries/restaurants'
     | '/industries/service-companies'
     | '/industries/stores-ecommerce'
     | '/industries/'
@@ -221,6 +261,7 @@ export interface FileRouteTypes {
     | '/compare'
     | '/contact'
     | '/growth'
+    | '/lead-generation'
     | '/login'
     | '/platform'
     | '/process'
@@ -229,7 +270,10 @@ export interface FileRouteTypes {
     | '/industries/contractors'
     | '/industries/hospitality'
     | '/industries/landscaping'
+    | '/industries/pizza-shops'
     | '/industries/professional-services'
+    | '/industries/pubs'
+    | '/industries/restaurants'
     | '/industries/service-companies'
     | '/industries/stores-ecommerce'
     | '/industries'
@@ -242,6 +286,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/growth'
     | '/industries'
+    | '/lead-generation'
     | '/login'
     | '/platform'
     | '/process'
@@ -250,7 +295,10 @@ export interface FileRouteTypes {
     | '/industries/contractors'
     | '/industries/hospitality'
     | '/industries/landscaping'
+    | '/industries/pizza-shops'
     | '/industries/professional-services'
+    | '/industries/pubs'
+    | '/industries/restaurants'
     | '/industries/service-companies'
     | '/industries/stores-ecommerce'
     | '/industries/'
@@ -264,6 +312,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   GrowthRoute: typeof GrowthRoute
   IndustriesRoute: typeof IndustriesRouteWithChildren
+  LeadGenerationRoute: typeof LeadGenerationRoute
   LoginRoute: typeof LoginRoute
   PlatformRoute: typeof PlatformRoute
   ProcessRoute: typeof ProcessRoute
@@ -320,6 +369,13 @@ declare module '@tanstack/react-router' {
       path: '/industries'
       fullPath: '/industries'
       preLoaderRoute: typeof IndustriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lead-generation': {
+      id: '/lead-generation'
+      path: '/lead-generation'
+      fullPath: '/lead-generation'
+      preLoaderRoute: typeof LeadGenerationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -385,11 +441,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndustriesLandscapingRouteImport
       parentRoute: typeof IndustriesRoute
     }
+    '/industries/pizza-shops': {
+      id: '/industries/pizza-shops'
+      path: '/pizza-shops'
+      fullPath: '/industries/pizza-shops'
+      preLoaderRoute: typeof IndustriesPizzaShopsRouteImport
+      parentRoute: typeof IndustriesRoute
+    }
     '/industries/professional-services': {
       id: '/industries/professional-services'
       path: '/professional-services'
       fullPath: '/industries/professional-services'
       preLoaderRoute: typeof IndustriesProfessionalServicesRouteImport
+      parentRoute: typeof IndustriesRoute
+    }
+    '/industries/pubs': {
+      id: '/industries/pubs'
+      path: '/pubs'
+      fullPath: '/industries/pubs'
+      preLoaderRoute: typeof IndustriesPubsRouteImport
+      parentRoute: typeof IndustriesRoute
+    }
+    '/industries/restaurants': {
+      id: '/industries/restaurants'
+      path: '/restaurants'
+      fullPath: '/industries/restaurants'
+      preLoaderRoute: typeof IndustriesRestaurantsRouteImport
       parentRoute: typeof IndustriesRoute
     }
     '/industries/service-companies': {
@@ -413,7 +490,10 @@ interface IndustriesRouteChildren {
   IndustriesContractorsRoute: typeof IndustriesContractorsRoute
   IndustriesHospitalityRoute: typeof IndustriesHospitalityRoute
   IndustriesLandscapingRoute: typeof IndustriesLandscapingRoute
+  IndustriesPizzaShopsRoute: typeof IndustriesPizzaShopsRoute
   IndustriesProfessionalServicesRoute: typeof IndustriesProfessionalServicesRoute
+  IndustriesPubsRoute: typeof IndustriesPubsRoute
+  IndustriesRestaurantsRoute: typeof IndustriesRestaurantsRoute
   IndustriesServiceCompaniesRoute: typeof IndustriesServiceCompaniesRoute
   IndustriesStoresEcommerceRoute: typeof IndustriesStoresEcommerceRoute
   IndustriesIndexRoute: typeof IndustriesIndexRoute
@@ -423,7 +503,10 @@ const IndustriesRouteChildren: IndustriesRouteChildren = {
   IndustriesContractorsRoute: IndustriesContractorsRoute,
   IndustriesHospitalityRoute: IndustriesHospitalityRoute,
   IndustriesLandscapingRoute: IndustriesLandscapingRoute,
+  IndustriesPizzaShopsRoute: IndustriesPizzaShopsRoute,
   IndustriesProfessionalServicesRoute: IndustriesProfessionalServicesRoute,
+  IndustriesPubsRoute: IndustriesPubsRoute,
+  IndustriesRestaurantsRoute: IndustriesRestaurantsRoute,
   IndustriesServiceCompaniesRoute: IndustriesServiceCompaniesRoute,
   IndustriesStoresEcommerceRoute: IndustriesStoresEcommerceRoute,
   IndustriesIndexRoute: IndustriesIndexRoute,
@@ -441,6 +524,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   GrowthRoute: GrowthRoute,
   IndustriesRoute: IndustriesRouteWithChildren,
+  LeadGenerationRoute: LeadGenerationRoute,
   LoginRoute: LoginRoute,
   PlatformRoute: PlatformRoute,
   ProcessRoute: ProcessRoute,
