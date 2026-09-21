@@ -199,7 +199,7 @@ export function WebsiteAudit() {
             {report.recommendations.length ? (
               report.recommendations.map((c) => (
                 <div key={c.id} className="border-t border-line py-4">
-                  <p className="text-[11px] font-bold uppercase tracking-wide" style={{ color: "#FFE14A" }}>{c.effort}</p>
+                  <p className="text-[11px] font-bold uppercase tracking-wide text-sun">{c.effort}</p>
                   <h4 className="mt-1 font-display text-lg">{c.label}</h4>
                   <p className="text-sm text-muted">{c.action}</p>
                   <p className="text-xs text-faint">{c.offer}</p>
