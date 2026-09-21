@@ -21,13 +21,21 @@ export default async function comparisonReport(event: { req: Request }) {
     const pdf = await renderComparisonPdf(record.report);
     if (!pdf.subarray(0, 5).toString().startsWith("%PDF-")) throw new Error("renderer-did-not-return-pdf");
     await patchStatus(record.id, { pdfStatus: "ok" });
-    if (parsed.data.email) {
-      const { sendReportEmails } = await import("../../../src/lib/report-mail");
-      const mailed = await sendReportEmails(record.report, pdf);
-      await patchStatus(record.id, {
-        customerEmailStatus: mailed.customer.ok ? "ok" : "failed",
-        internalEmailStatus: mailed.internal.ok ? "ok" : "failed",
-      });
+    try {
+      if (parsed.data.email) {
+        const { sendReportEmails } = await import("../../../src/lib/report-mail");
+        const mailed = await sendReportEmails(record.report, pdf);
+        await patchStatus(record.id, {
+          customerEmailStatus: mailed.customer.ok ? "ok" : "failed",
+          internalEmailStatus: mailed.internal.ok ? "ok" : "failed",
+        });
+      } else if (record.internalEmailStatus !== "ok") {
+        const { sendInternalComparisonCopy } = await import("../../../src/lib/report-mail");
+        const mailed = await sendInternalComparisonCopy(record.report, pdf);
+        await patchStatus(record.id, { internalEmailStatus: mailed.ok ? "ok" : "failed" });
+      }
+    } catch (err) {
+      console.error("[comparison-report] internal copy failed", err instanceof Error ? err.message : "unknown");
     }
     const filename = reportFilename(record.report);
     return new Response(pdf, {

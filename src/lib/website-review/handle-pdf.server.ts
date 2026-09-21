@@ -28,6 +28,15 @@ export async function handleWebsiteReviewPdf(req: Request) {
     const pdf = await renderWebsiteReviewPdf(report);
     if (!pdf.subarray(0, 5).toString().startsWith("%PDF-")) throw new Error("renderer-did-not-return-pdf");
     const filename = websiteReviewFilename(report.recordId);
+    try {
+      const { claimInternalCopy, releaseInternalCopy, sendWebsiteReviewCopy } = await import("@/lib/report-mail");
+      if (claimInternalCopy(report.recordId)) {
+        const mailed = await sendWebsiteReviewCopy(report, pdf);
+        if (!mailed.ok) releaseInternalCopy(report.recordId);
+      }
+    } catch (err) {
+      console.error("[website-review-report] internal copy failed", err instanceof Error ? err.message : "unknown");
+    }
     return new Response(new Uint8Array(pdf), {
       status: 200,
       headers: {

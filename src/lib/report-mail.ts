@@ -2,18 +2,101 @@ import type { ComparisonReport } from "@/lib/report-pdf/report-types";
 import { issueHandoffToken } from "@/lib/comparison-store";
 import { reportFilename } from "@/lib/report-pdf/render-report.server";
 import { unifiedIds } from "@/lib/unified-ids";
+import { websiteReviewFilename } from "@/lib/website-review/render-pdf.server";
+import type { WebsiteReviewReport } from "@/lib/website-review/types";
+import {
+  DISCLAIMER,
+  mailConfig,
+  websiteReviewCopySubject,
+  websiteReviewCopyText,
+} from "./report-mail-copy.ts";
 
-const INTERNAL_TO = ["ryan@demoretechnologysolutions.com"];
-const INTERNAL_CC = ["ryan@demoreexteriorsolutions.com"];
+export type MailResult = { ok: true } | { ok: false; error: string };
+export {
+  claimInternalCopy,
+  mailConfig,
+  releaseInternalCopy,
+  websiteReviewCopySubject,
+  websiteReviewCopyText,
+} from "./report-mail-copy.ts";
 
-export function mailConfig() {
-  return {
-    apiKey: process.env.RESEND_API_KEY || "",
-    from: process.env.REPORT_FROM_EMAIL || "projects@demorehomesolutions.com",
-    internal: INTERNAL_TO,
-    internalCc: INTERNAL_CC,
-    site: process.env.NEXT_PUBLIC_SITE_URL || "https://www.demoretechnologysolutions.com",
-  };
+function attachment(filename: string, pdf: Buffer) {
+  return { filename, content: pdf.toString("base64"), content_type: "application/pdf" };
+}
+
+async function sendResend(payload: Record<string, unknown>): Promise<MailResult> {
+  const cfg = mailConfig();
+  if (!cfg.apiKey) return { ok: false, error: "Email delivery is not configured." };
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${cfg.apiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!res.ok) {
+      const detail = await res.text();
+      console.error("[report-mail] Resend error", res.status, detail.slice(0, 400));
+      return { ok: false, error: "Email provider rejected the message." };
+    }
+    return { ok: true };
+  } catch (err) {
+    console.error("[report-mail] send failed", err instanceof Error ? err.message : "unknown");
+    return { ok: false, error: "Email delivery timed out." };
+  }
+}
+
+export async function sendInternalPdfCopy(opts: {
+  subject: string;
+  text: string;
+  filename: string;
+  pdf: Buffer;
+  replyTo?: string;
+}): Promise<MailResult> {
+  const cfg = mailConfig();
+  return sendResend({
+    from: `Demore Technology Solutions <${cfg.from}>`,
+    to: cfg.internal,
+    cc: cfg.internalCc,
+    reply_to: opts.replyTo,
+    subject: opts.subject,
+    text: opts.text,
+    attachments: [attachment(opts.filename, opts.pdf)],
+  });
+}
+
+export async function sendWebsiteReviewCopy(report: WebsiteReviewReport, pdf: Buffer): Promise<MailResult> {
+  return sendInternalPdfCopy({
+    subject: websiteReviewCopySubject(report),
+    text: websiteReviewCopyText(report),
+    filename: websiteReviewFilename(report.recordId),
+    pdf,
+  });
+}
+
+export async function sendInternalComparisonCopy(report: ComparisonReport, pdf: Buffer): Promise<MailResult> {
+  const ids = unifiedIds(report.reportNumber);
+  return sendInternalPdfCopy({
+    subject: `New Website Comparison — ${report.companyName} — ${ids.reportId}`,
+    text: [
+      `New website comparison — ${report.companyName}`,
+      `Demore Report ID: ${ids.reportId}`,
+      `customerId: ${ids.customerId}`,
+      `leadId: ${ids.leadId}`,
+      `comparisonId: ${ids.comparisonId}`,
+      `Contact: ${report.contactName} <${report.contactEmail}>`,
+      `Industry: ${report.industry}`,
+      `Market: ${report.market}`,
+      `Website: ${report.website}`,
+      `Scores: current ${report.currentTotal}, competitor avg ${report.competitorAverage}, leader ${report.marketLeader}, potential ${report.potential}`,
+      `Path: ${report.path}`,
+      "",
+      DISCLAIMER,
+    ].join("\n"),
+    filename: reportFilename(report),
+    pdf,
+    replyTo: report.contactEmail,
+  });
 }
 
 export async function sendReportEmails(report: ComparisonReport, pdf: Buffer) {
@@ -27,35 +110,14 @@ export async function sendReportEmails(report: ComparisonReport, pdf: Buffer) {
   }
   const filename = reportFilename(report);
   const handoffUrl = `${cfg.site}/contact?need=platform&source=compare&reportId=${encodeURIComponent(report.reportNumber)}&handoffToken=${encodeURIComponent(issueHandoffToken(report.reportNumber))}`;
-  const attachment = { filename, content: pdf.toString("base64"), content_type: "application/pdf" };
-  async function send(payload: Record<string, unknown>) {
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${cfg.apiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) {
-      const detail = await res.text();
-      console.error("[comparison-email] Resend error", res.status, detail.slice(0, 400));
-      return { ok: false as const, error: "Email provider rejected the message." };
-    }
-    return { ok: true as const };
-  }
-  const customer = await send({
+  const file = attachment(filename, pdf);
+  const customer = await sendResend({
     from: `Demore Technology Solutions <${cfg.from}>`,
     to: [report.contactEmail],
     subject: "Your Demore Website Comparison Report",
-    text: [`Your Demore website comparison report is attached.`, `Demore Report ID: ${ids.reportId}`, `Customer ID / Lead ID / Comparison ID: ${ids.reportId}`, `Company: ${report.companyName}`, `Path: ${report.path}`, `Start a project using this same report ID: ${handoffUrl}`, ``, `Rankings, AI citations, and conversion lifts are not guaranteed.`].join("\n"),
-    attachments: [attachment],
+    text: [`Your Demore website comparison report is attached.`, `Demore Report ID: ${ids.reportId}`, `Customer ID / Lead ID / Comparison ID: ${ids.reportId}`, `Company: ${report.companyName}`, `Path: ${report.path}`, `Start a project using this same report ID: ${handoffUrl}`, ``, DISCLAIMER].join("\n"),
+    attachments: [file],
   });
-  const internal = await send({
-    from: `Demore Technology Solutions <${cfg.from}>`,
-    to: cfg.internal,
-    cc: cfg.internalCc,
-    reply_to: report.contactEmail,
-    subject: `New Website Comparison — ${report.companyName} — ${ids.reportId}`,
-    text: [`New website comparison — ${report.companyName}`, `Demore Report ID: ${ids.reportId}`, `customerId: ${ids.customerId}`, `leadId: ${ids.leadId}`, `comparisonId: ${ids.comparisonId}`, `Contact: ${report.contactName} <${report.contactEmail}>`, `Industry: ${report.industry}`, `Market: ${report.market}`, `Website: ${report.website}`, `Scores: current ${report.currentTotal}, competitor avg ${report.competitorAverage}, leader ${report.marketLeader}, potential ${report.potential}`, `Path: ${report.path}`].join("\n"),
-    attachments: [attachment],
-  });
+  const internal = await sendInternalComparisonCopy(report, pdf);
   return { customer, internal };
 }
