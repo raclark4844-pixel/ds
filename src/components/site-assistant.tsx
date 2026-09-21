@@ -1,7 +1,4 @@
 import {
-  activeReview,
-  downloadReview,
-  registerReview,
   type ReviewDownload,
 } from "@/lib/review-download";
 import { IndustryMultiselect } from "@/components/industry-multiselect";
@@ -29,10 +26,7 @@ const INTRO =
   "Ask about websites, bots, growth, or custom AI platforms. Optionally enter your website above to get a PDF of practical improvements Demore could help with.";
 
 export function SiteAssistant() {
-  const [pendingRevision, setPendingRevision] = useState<{
-    message: string;
-    recordId: string;
-  } | null>(null);
+  const [conversation, setConversation] = useState<Array<{role: "user" | "assistant"; content: string}>>([]);
   const [industries, setIndustries] = useState<string[]>([]);
   const [chatWebsite, setChatWebsite] = useState("");
   const [open, setOpen] = useState(false);
@@ -62,14 +56,13 @@ export function SiteAssistant() {
       const id = detail.reportId?.trim();
       const brief = detail.brief?.trim() || "";
       if (id) {
-        setPendingRevision(null);
         setReportId(id);
         storeReportId(id);
       }
       if (brief) {
         setReviewBrief(brief);
         storeReviewBrief(brief);
-        setMessages([
+        setMessages((current) => [...current,
           {
             role: "assistant",
             content: `I have website review **${id || "ready"}**.\n\n${brief}\n\nAsk what to fix first, or use **Discuss these improvements** on the report.`,
@@ -115,104 +108,15 @@ export function SiteAssistant() {
     };
   }, []);
 
-  async function revisePdf(message: string) {
-    const review = activeReview();
-    if (!review || review.recordId !== reportId) {
-      setMessages((current) => [
-        ...current,
-        {
-          role: "assistant",
-          content:
-            "Generate a website review in this page first, then I can update its PDF. Your existing downloads remain available.",
-        },
-      ]);
-      return;
-    }
-    const response = await fetch("/api/website-review-revise", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...review, message, industries }),
-      signal: AbortSignal.timeout(60000),
-    });
-    const updated = await response.json();
-    if (!response.ok) throw new Error(updated.error || "Unable to revise the PDF. Please retry.");
-    registerReview(updated);
-    setMessages((current) => [...current, { role: "assistant", content: updated.text }]);
-    await downloadReview(updated);
-  }
-
-  async function confirmRevision(yes: boolean) {
-    if (!pendingRevision || busy) return;
-    const pending = pendingRevision;
-    setPendingRevision(null);
-    if (!yes) {
-      setMessages((current) => [
-        ...current,
-        { role: "assistant", content: "I’ll keep the current PDF unchanged." },
-      ]);
-      return;
-    }
-    if (activeReview()?.recordId !== pending.recordId) return;
-    setBusy(true);
-    try {
-      await revisePdf(pending.message);
-    } catch (error) {
-      setMessages((current) => [
-        ...current,
-        {
-          role: "assistant",
-          content:
-            error instanceof Error
-              ? error.message
-              : "The PDF could not be updated. Your previous copy remains available.",
-        },
-      ]);
-    } finally {
-      setBusy(false);
-    }
-  }
-
   async function send() {
     const message = draft.trim();
     if (!message || busy) return;
     setDraft("");
-    if (
-      pendingRevision &&
-      /^(yes|yes please|please do|go ahead|sure|no|no thanks|not now)[.!]?$/i.test(message)
-    ) {
-      await confirmRevision(!/^(no|not now)/i.test(message));
-      return;
-    }
-    setPendingRevision(null);
+    setConversation(current => [...current, {role: "user", content: message}]);
     const next = [...messages, { role: "user" as const, content: message }];
     setMessages(next);
     setBusy(true);
     try {
-      const review = activeReview();
-      let suggestRevision = false;
-      if (review && review.recordId === reportId) {
-        const decision = await fetch("/api/website-review-intent", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...review, message }),
-          signal: AbortSignal.timeout(55000),
-        })
-          .then((response) => response.json())
-          .catch(() => ({ action: "none" }));
-        if (decision.action === "revise") {
-          setMessages((current) => [
-            ...current,
-            {
-              role: "assistant",
-              content:
-                "That changes the improvement plan. I’m updating your PDF and download links now.",
-            },
-          ]);
-          await revisePdf(message);
-          return;
-        }
-        suggestRevision = decision.action === "ask";
-      }
       const token = sessionStorage.getItem("demore-report-token") || "";
       const res = await fetch("/api/assistant", {
         method: "POST",
@@ -235,14 +139,12 @@ export function SiteAssistant() {
       const reply = data.ok
         ? data.text
         : data.error || "Live web information is temporarily unavailable.";
-      if (suggestRevision && review) setPendingRevision({ message, recordId: review.recordId });
+      if (data.ok) setConversation(current => [...current, {role: "assistant", content: reply}]);
       setMessages([
         ...next,
         {
           role: "assistant",
-          content: suggestRevision
-            ? `${reply}\n\nWould you like me to revise your PDF to include this?`
-            : reply,
+          content: data.ok ? `${reply}\n\nClick **Create my improvement PDF** to include your information and these recommendations in your PDF.` : reply,
           citations: data.citations,
           searchedAt: data.searchedAt,
         },
@@ -301,7 +203,7 @@ export function SiteAssistant() {
                 />
               </div>
             </details>
-            <AssistantWebsiteReview industries={industries} onWebsiteChange={setChatWebsite} />
+            <AssistantWebsiteReview industries={industries} onWebsiteChange={setChatWebsite} conversation={conversation} chatBusy={busy} />
             <label className="block border-b border-line px-3 py-2 text-xs">
               Demore Report ID
               <input
@@ -344,31 +246,8 @@ export function SiteAssistant() {
             </div>
           </div>
           <div className="border-t border-line px-3 py-2 text-xs text-muted">
-            Share relevant details naturally. I’ll update your report for clear changes and ask
-            before adding tentative ideas.
+            Share your goals, then click Create my improvement PDF to include your latest conversation.
           </div>
-          {pendingRevision ? (
-            <div className="flex shrink-0 gap-2 px-3 py-2">
-              <Button
-                type="button"
-                size="sm"
-                variant="volt"
-                disabled={busy}
-                onClick={() => void confirmRevision(true)}
-              >
-                Yes, revise PDF
-              </Button>
-              <Button
-                type="button"
-                size="sm"
-                variant="outline"
-                disabled={busy}
-                onClick={() => void confirmRevision(false)}
-              >
-                Keep current PDF
-              </Button>
-            </div>
-          ) : null}
           <form
             className="flex flex-wrap shrink-0 gap-2 border-t border-line p-2"
             onSubmit={(e) => {

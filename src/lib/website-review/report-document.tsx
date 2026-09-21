@@ -65,6 +65,16 @@ export function WebsiteReviewDocument({ report, logoSrc }: { report: WebsiteRevi
 
   return (
     <Document creationDate={new Date(report.createdAt)} modificationDate={new Date(report.createdAt)} title={`Website opportunity report — ${report.recordId}`} author="Demore Technology Solutions">
+      {report.conversation?.length ? <Page size="LETTER" style={s.page}>
+        <Chrome report={report} logoSrc={logoSrc} />
+        <Text style={s.kicker}>Your personalized conversation</Text>
+        <Text style={s.h1}>Your goals and Demore’s recommendations</Text>
+        <Text style={s.disc}>Recent Ask Demore conversation captured when you requested this PDF. Your details are customer-provided; assistant suggestions are proposed improvements, not independently verified website findings. The website scan and comparison follow separately.</Text>
+        {report.conversation.map((item, index) => <View key={index}>
+          <Text style={s.h2}>{item.role === "user" ? "Your information and requests" : "Ask Demore recommendations"}</Text>
+          <Text style={s.p}>{item.content.replace(/\*\*/g, "").replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1 ($2)")}</Text>
+        </View>)}
+      </Page> : null}
       {report.revisions?.length ? <Page size="LETTER" style={s.page}>
         <Chrome report={report} logoSrc={logoSrc} />
         <Text style={s.kicker}>Updated improvement plan · Version {report.revisions.length + 1}</Text>

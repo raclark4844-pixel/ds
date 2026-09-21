@@ -10,6 +10,7 @@ import type { PublicFiles } from "./types.ts";
 import { normalizeWebsite } from "./url.ts";
 
 const schema = z.object({
+  conversation: z.array(z.object({role: z.enum(["user", "assistant"]), content: z.string().trim().min(1).max(6000)})).max(20).optional(),
   contact: reviewContactSchema.optional(),
   skipContact: z.boolean().optional(),
   url: z.string().trim().min(4).max(2048),
@@ -153,6 +154,7 @@ export async function handleWebsiteReview(req: Request) {
   report.competitors = competitive.pages;
   report.competitorNote = competitive.note;
   report.assistantBrief += "\nCompetitor evidence: " + competitive.note + "\n" + competitive.pages.map(p=>p.title+": "+p.url+(p.unavailable?" (public page unavailable)":" (public page reviewed)")).join("\n");
+  report.conversation = parsed.data.conversation;
   report.contact = ownerReview ? undefined : parsed.data.contact;
   report.ownerReview = ownerReview;
   report.publicContacts = publicContacts(pages);

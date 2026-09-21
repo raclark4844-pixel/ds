@@ -9,7 +9,7 @@ import { useReviewContact } from "@/lib/use-review-contact";
 import { useEffect, useId, useState } from "react";
 import { Button } from "@/components/ui/button";
 
-export function AssistantWebsiteReview({ industries = [], onWebsiteChange }: { industries?: string[]; onWebsiteChange?: (website: string) => void } = {}) {
+export function AssistantWebsiteReview({ industries = [], onWebsiteChange, conversation = [], chatBusy = false }: { conversation?: Array<{role: "user" | "assistant"; content: string}>; chatBusy?: boolean; industries?: string[]; onWebsiteChange?: (website: string) => void } = {}) {
   const contactState = useReviewContact();
   const fieldId = useId();
   const helpId = useId();
@@ -28,9 +28,8 @@ export function AssistantWebsiteReview({ industries = [], onWebsiteChange }: { i
 
   async function createReport(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!website.trim() || busy) return;
+    if (!website.trim() || busy || chatBusy) return;
     setError("");
-    setDownload(null);
     setPhase("review");
     try {
       const response = await fetch("/api/website-review", {
@@ -40,6 +39,7 @@ export function AssistantWebsiteReview({ industries = [], onWebsiteChange }: { i
           url: website.trim(),
           industry: industries.join(" | "),
           market,
+          conversation: conversation.slice(-20).map(item => ({...item, content: item.content.slice(0, 6000)})),
           contact: contactState.skipContact ? undefined : contactState.contact,
           skipContact: contactState.skipContact,
         }),
@@ -99,7 +99,7 @@ export function AssistantWebsiteReview({ industries = [], onWebsiteChange }: { i
       />
       <p id={helpId} className="text-xs leading-relaxed text-muted">
         Get a PDF showing how Demore could improve your website, search visibility, and customer
-        inquiries. Uses publicly available website information.
+        inquiries. Includes your latest 20 chat messages and replies (up to 6,000 characters each), alongside publicly available website information.
       </p>
       <label className="block text-xs font-medium">Target city or region (optional)<input value={market} onChange={e=>setMarket(e.target.value)} maxLength={150} disabled={busy} placeholder="City, State — for competitor comparison" className="mt-1 min-h-10 w-full rounded-md border border-line bg-elevated px-2 text-base" /></label>
       <ReviewContactFields state={contactState} disabled={busy} />
@@ -107,7 +107,7 @@ export function AssistantWebsiteReview({ industries = [], onWebsiteChange }: { i
         type="submit"
         size="sm"
         variant="volt"
-        disabled={busy || !website.trim()}
+        disabled={busy || chatBusy || !website.trim()}
         className="w-full"
       >
         {phase === "review"
@@ -118,7 +118,7 @@ export function AssistantWebsiteReview({ industries = [], onWebsiteChange }: { i
       </Button>
       {busy ? (
         <p role="status" className="text-xs text-muted">
-          This may take up to a minute. You can keep chatting.
+          This may take up to a minute. Includes the conversation available when you clicked; new messages can be included in your next PDF.
         </p>
       ) : null}
       {error ? (

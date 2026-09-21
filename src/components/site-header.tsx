@@ -5,10 +5,39 @@ import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { navIcons } from "@/lib/nav-icons";
 import { primaryNav } from "@/lib/site";
+import { authClient, authEnabled, signOut } from "@/lib/auth/client";
 import { cn } from "@/lib/utils";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+  const [authError, setAuthError] = useState("");
+  useEffect(() => {
+    let active = true;
+    async function refresh() {
+      try {
+        const response = await fetch("/api/admin/review-access", { cache: "no-store" });
+        const admin = await response.json();
+        if (active) setSignedIn(admin.canSkipContact === true);
+        const session = authEnabled ? await authClient.getSession() : null;
+        if (active) setSignedIn(admin.canSkipContact === true || Boolean(session?.data?.user));
+      } catch { /* Retain the last confirmed session state. */ }
+    }
+    void refresh();
+    window.addEventListener("focus", refresh);
+    const timer = window.setInterval(refresh, 60000);
+    return () => { active = false; window.removeEventListener("focus", refresh); window.clearInterval(timer); };
+  }, []);
+  async function logout() {
+    setLoggingOut(true); setAuthError("");
+    try {
+      const response = await fetch("/api/admin/session", { method: "DELETE" });
+      if (!response.ok) throw new Error("Could not log out. Please retry.");
+      if (authEnabled) await signOut("/");
+      else window.location.href = "/";
+    } catch { setAuthError("Could not log out. Please retry."); setLoggingOut(false); }
+  }
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -56,13 +85,14 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link
+          {signedIn ? <button type="button" disabled={loggingOut} onClick={() => void logout()} className="shrink-0 px-2 py-2 text-sm font-medium text-volt">{loggingOut ? "Logging out…" : "Log out"}</button> : <Link
             to="/login"
             onClick={() => setOpen(false)}
             className="shrink-0 px-2 py-2 text-sm font-medium text-volt"
           >
             Log in
-          </Link>
+          </Link>}
+          {authError ? <span role="alert" className="text-xs text-hot">{authError}</span> : null}
           <Button asChild size="sm" className="hidden sm:inline-flex">
             <Link to="/contact">Start a Project</Link>
           </Button>
