@@ -13,6 +13,8 @@ function allowed(ip: string) {
 }
 
 export default async function adminSession(event: { req: Request }) {
+  if (event.req.headers.get("origin") !== new URL(event.req.url).origin)
+    return Response.json({ error: "Please sign in from the Demore website." }, { status: 403 });
   const { createAdminAccessCookie } = await import("../../../../src/lib/admin-auth.server");
   const { authenticateAdminPassword } =
     await import("../../../../src/lib/admin-credentials.server");

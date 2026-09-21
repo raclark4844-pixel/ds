@@ -28,21 +28,31 @@ export function SiteHeader() {
         }
         const session = authEnabled ? await authClient.getSession() : null;
         if (active) setSignedIn(admin.canSkipContact === true || Boolean(session?.data?.user));
-      } catch { /* Retain the last confirmed session state. */ }
+      } catch {
+        /* Retain the last confirmed session state. */
+      }
     }
     void refresh();
     window.addEventListener("focus", refresh);
     const timer = window.setInterval(refresh, 60000);
-    return () => { active = false; window.removeEventListener("focus", refresh); window.clearInterval(timer); };
+    return () => {
+      active = false;
+      window.removeEventListener("focus", refresh);
+      window.clearInterval(timer);
+    };
   }, []);
   async function logout() {
-    setLoggingOut(true); setAuthError("");
+    setLoggingOut(true);
+    setAuthError("");
     try {
       const response = await fetch("/api/admin/session", { method: "DELETE" });
       if (!response.ok) throw new Error("Could not log out. Please retry.");
       if (authEnabled) await signOut("/");
       else window.location.href = "/";
-    } catch { setAuthError("Could not log out. Please retry."); setLoggingOut(false); }
+    } catch {
+      setAuthError("Could not log out. Please retry.");
+      setLoggingOut(false);
+    }
   }
 
   useEffect(() => {
@@ -54,7 +64,10 @@ export function SiteHeader() {
 
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
-      if (event.key === "Escape") { setOpen(false); setAdminOpen(false); }
+      if (event.key === "Escape") {
+        setOpen(false);
+        setAdminOpen(false);
+      }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -62,27 +75,60 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-line/80 bg-bg/75 backdrop-blur-xl">
-      {isAdmin ? <div className="border-b border-line bg-surface">
-        <div className="mx-auto max-w-6xl px-4 py-2 sm:px-6">
-          <button type="button" aria-expanded={adminOpen} aria-controls="admin-pages-nav"
-            onClick={() => { setAdminOpen(value => !value); setOpen(false); }}
-            className="min-h-11 rounded-lg border border-volt/30 px-4 py-2 text-sm font-medium text-volt">
-            {adminOpen ? "Close admin pages" : "Admin pages"}
-          </button>
-          {adminOpen ? <nav id="admin-pages-nav" aria-label="Administrator pages" className="mt-2 grid gap-2 sm:grid-cols-3">
-            {[
-              {to: "/control-center-admin", label: "Multi-site control center", description: "Bots, specialists, automation and spending controls"},
-              {to: "/admin", label: "Comparison queue", description: "Website reports, follow-up and comparison settings"},
-              {to: "/lead-inbox", label: "Shared lead inbox", description: "Leads and pipelines for both businesses"},
-            ].map(item => <Link key={item.to} to={item.to} onClick={() => setAdminOpen(false)}
-              className="rounded-lg border border-line px-3 py-3 text-sm hover:bg-elevated"
-              activeProps={{className: "border-volt/50 bg-elevated"}}>
-              <span className="block font-medium text-volt">{item.label}</span>
-              <span className="mt-1 block text-xs text-muted">{item.description}</span>
-            </Link>)}
-          </nav> : null}
+      {isAdmin ? (
+        <div className="border-b border-line bg-surface">
+          <div className="mx-auto max-w-6xl px-4 py-2 sm:px-6">
+            <button
+              type="button"
+              aria-expanded={adminOpen}
+              aria-controls="admin-pages-nav"
+              onClick={() => {
+                setAdminOpen((value) => !value);
+                setOpen(false);
+              }}
+              className="min-h-11 rounded-lg border border-volt/30 px-4 py-2 text-sm font-medium text-volt"
+            >
+              {adminOpen ? "Close admin pages" : "Admin pages"}
+            </button>
+            {adminOpen ? (
+              <nav
+                id="admin-pages-nav"
+                aria-label="Administrator pages"
+                className="mt-2 grid gap-2 sm:grid-cols-3"
+              >
+                {[
+                  {
+                    to: "/control-center-admin",
+                    label: "Multi-site control center",
+                    description: "Bots, specialists, automation and spending controls",
+                  },
+                  {
+                    to: "/admin",
+                    label: "Comparison queue",
+                    description: "Website reports, follow-up and comparison settings",
+                  },
+                  {
+                    to: "/lead-inbox",
+                    label: "Shared lead inbox",
+                    description: "Leads and pipelines for both businesses",
+                  },
+                ].map((item) => (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    onClick={() => setAdminOpen(false)}
+                    className="rounded-lg border border-line px-3 py-3 text-sm hover:bg-elevated"
+                    activeProps={{ className: "border-volt/50 bg-elevated" }}
+                  >
+                    <span className="block font-medium text-volt">{item.label}</span>
+                    <span className="mt-1 block text-xs text-muted">{item.description}</span>
+                  </Link>
+                ))}
+              </nav>
+            ) : null}
+          </div>
         </div>
-      </div> : null}
+      ) : null}
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:h-[4.25rem] sm:px-6">
         <Logo />
 
@@ -112,14 +158,37 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          {signedIn ? <button type="button" disabled={loggingOut} onClick={() => void logout()} className="shrink-0 px-2 py-2 text-sm font-medium text-volt">{loggingOut ? "Logging out…" : "Log out"}</button> : <Link
-            to="/login"
-            onClick={() => setOpen(false)}
-            className="shrink-0 px-2 py-2 text-sm font-medium text-volt"
-          >
-            Log in
-          </Link>}
-          {authError ? <span role="alert" className="text-xs text-hot">{authError}</span> : null}
+          {signedIn ? (
+            <a
+              href="https://demore-lead-engine.vercel.app/api/website-signin/start"
+              className="shrink-0 px-2 py-2 text-sm font-medium text-volt"
+            >
+              Workspace
+            </a>
+          ) : null}
+          {signedIn ? (
+            <button
+              type="button"
+              disabled={loggingOut}
+              onClick={() => void logout()}
+              className="shrink-0 px-2 py-2 text-sm font-medium text-volt"
+            >
+              {loggingOut ? "Logging out…" : "Log out"}
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              onClick={() => setOpen(false)}
+              className="shrink-0 px-2 py-2 text-sm font-medium text-volt"
+            >
+              Log in
+            </Link>
+          )}
+          {authError ? (
+            <span role="alert" className="text-xs text-hot">
+              {authError}
+            </span>
+          ) : null}
           <Button asChild size="sm" className="hidden sm:inline-flex">
             <Link to="/contact">Start a Project</Link>
           </Button>

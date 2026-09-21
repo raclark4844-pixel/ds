@@ -34,7 +34,7 @@ function signature(payload: string, key: string) {
   return createHmac("sha256", key).update(payload).digest("base64url");
 }
 
-async function accessCookieValid(req: Request) {
+export async function accessCookieValid(req: Request) {
   const key = await sessionKey();
   const token = cookieValue(req);
   const dot = token.lastIndexOf(".");
