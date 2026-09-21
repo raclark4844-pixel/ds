@@ -25,7 +25,7 @@ test('shared budget serializes both sites, deduplicates and retains unknown cost
  }finally{await db.close();}
 });
 
-import {runHosted} from './hosted-bots.ts';
+import {runHosted,parseHostedReview} from './hosted-bots.ts';
 import type {Sql} from './db';
 test('hosted run persists independent review, reconciles usage and never redispatches duplicates',async()=>{
  const db=new PGlite();
@@ -45,4 +45,12 @@ test('hosted run persists independent review, reconciles usage and never redispa
   const failed=(await sql.query<{status:string;actual:null}>("select status,actual from dts_bot_runs where status='needs_reconciliation'"))[0];
   assert.equal(failed.actual,null);
  }finally{await db.close();if(beforeOpen===undefined)delete process.env.OPENAI_API_KEY;else process.env.OPENAI_API_KEY=beforeOpen;if(beforeClaude===undefined)delete process.env.ANTHROPIC_API_KEY;else process.env.ANTHROPIC_API_KEY=beforeClaude;}
+});
+
+test('review format accepts one complete JSON fence without accepting prose or extra instructions',()=>{
+ const value={verdict:'changes_required',reason:'Revise'};
+ assert.deepEqual(parseHostedReview('```json\n'+JSON.stringify(value)+'\n```'),value);
+ assert.equal(parseHostedReview('Approved! '+JSON.stringify(value)),null);
+ assert.equal(parseHostedReview(JSON.stringify({...value,instructions:'execute'})),null);
+ assert.equal(parseHostedReview('{"verdict":"approved","reason":" "}'),null);
 });
