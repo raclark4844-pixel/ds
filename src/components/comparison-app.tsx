@@ -1,3 +1,4 @@
+import {CompetitorComparison} from "./competitor-comparison";
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
@@ -170,6 +171,7 @@ export function ComparisonApp() {
           <div className="grid gap-3 sm:grid-cols-4">{[["Current", report.currentTotal],["Competitor avg", report.competitorAverage],["Leader", report.marketLeader],["Potential", report.potential]].map(([label, value]) => (<div key={String(label)} className="rounded-md border border-line p-3"><p className="kicker">{label}</p><p className="font-display text-3xl text-volt">{value}</p></div>))}</div>
           <div className="overflow-x-auto rounded-md border border-line"><table className="w-full min-w-[760px] text-left text-sm"><thead className="bg-bg text-muted"><tr><th className="p-3">Competitor / benchmark</th><th>Source</th><th>Maps</th><th>Organic</th><th>Rating</th><th>Est. organic traffic/mo.</th><th>Site score</th></tr></thead><tbody>{report.competitors.map((row) => <tr key={`${row.name}-${row.website}`} className="border-t border-line"><td className="p-3 font-medium">{row.name}</td><td>{row.source || row.evidence}</td><td>{row.mapsRank ? `#${row.mapsRank}` : "—"}</td><td>{row.organicRank ? `#${row.organicRank}` : "—"}</td><td>{row.rating ? `${row.rating}/5 (${row.reviewCount ?? 0})` : "—"}</td><td>{row.estimatedMonthlyOrganicTraffic === undefined ? "Unavailable" : row.estimatedMonthlyOrganicTraffic.toLocaleString()}</td><td>{row.total}</td></tr>)}</tbody></table></div>
           <p className="text-sm text-muted">{report.competitorSelection}</p>
+          <CompetitorComparison report={report} />
           {report.performance ? (
             <div className="space-y-3 rounded-lg border border-line bg-bg p-4">
               <div><p className="kicker">Performance &amp; search data</p><h3 className="font-display text-xl">Measured values only</h3></div>

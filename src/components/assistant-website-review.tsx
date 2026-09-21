@@ -13,6 +13,7 @@ export function AssistantWebsiteReview({ industries = [], onWebsiteChange }: { i
   const contactState = useReviewContact();
   const fieldId = useId();
   const helpId = useId();
+  const [market, setMarket] = useState("");
   const [website, setWebsite] = useState("");
   const [phase, setPhase] = useState<"idle" | "review" | "pdf">("idle");
   const [error, setError] = useState("");
@@ -38,10 +39,11 @@ export function AssistantWebsiteReview({ industries = [], onWebsiteChange }: { i
         body: JSON.stringify({
           url: website.trim(),
           industry: industries.join(" | "),
+          market,
           contact: contactState.skipContact ? undefined : contactState.contact,
           skipContact: contactState.skipContact,
         }),
-        signal: AbortSignal.timeout(30000),
+        signal: AbortSignal.timeout(65000),
       });
       const review = await response.json();
       if (!response.ok || !review.ok)
@@ -99,6 +101,7 @@ export function AssistantWebsiteReview({ industries = [], onWebsiteChange }: { i
         Get a PDF showing how Demore could improve your website, search visibility, and customer
         inquiries. Uses publicly available website information.
       </p>
+      <label className="block text-xs font-medium">Target city or region (optional)<input value={market} onChange={e=>setMarket(e.target.value)} maxLength={150} disabled={busy} placeholder="City, State — for competitor comparison" className="mt-1 min-h-10 w-full rounded-md border border-line bg-elevated px-2 text-base" /></label>
       <ReviewContactFields state={contactState} disabled={busy} />
       <Button
         type="submit"

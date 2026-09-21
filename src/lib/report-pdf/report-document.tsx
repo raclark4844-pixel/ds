@@ -1,5 +1,6 @@
+import {comparisonMatrix} from "../competitor-comparison";
 import {consoleOverview,leadGenerationOffering,offeringReadiness,tailoredAutomation,specialistKnowledge,customerPdfData} from "../console-offering";
-import { Document, Image, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
+import { Document, Image, Link, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 import type { ComparisonReport } from "./report-types";
 
 const s = StyleSheet.create({
@@ -68,6 +69,7 @@ function Bar({ label, value, color = "#00FF9C" }: { label: string; value: number
 }
 
 export function ReportDocument({ report, providerLogoSrc, customerLogoSrc }: { report: ComparisonReport; providerLogoSrc?: string; customerLogoSrc?: string }) {
+  const matrix = customerPdfData(comparisonMatrix(report));
   report = customerPdfData(report);
   return (
     <Document title={`Demore comparison — ${report.companyName}`} author="Demore Technology Solutions">
@@ -141,6 +143,19 @@ export function ReportDocument({ report, providerLogoSrc, customerLogoSrc }: { r
         <Bar label={`GEO ${report.categories.geo}`} value={Math.round(report.categories.geo * (100 / (report.scoringWeights?.geo || 15)))} color="#FFE14A" />
         <Bar label={`Conversion ${report.categories.conversion}`} value={Math.round(report.categories.conversion * (100 / (report.scoringWeights?.conversion || 15)))} color="#FF2A3A" />
         <Bar label={`Technical ${report.categories.technical}`} value={Math.round(report.categories.technical * (100 / (report.scoringWeights?.technical || 15)))} />
+      </Page>
+      <Page size="LETTER" style={s.page}>
+        <Chrome report={report} providerLogoSrc={providerLogoSrc} customerLogoSrc={customerLogoSrc} />
+        <Text style={s.kicker}>Competitive opportunities</Text>
+        <Text style={s.h1}>Your website and top two competitors</Text>
+        <Text style={s.p}>Compare detected capabilities with Demore’s proposed improvements.</Text>
+        <Text style={s.p}>{`Market: ${report.market}. Measured: ${report.measurementDate}.`}</Text>
+        <Text style={s.p}>Current website: {report.website}</Text>
+        {[0,1].map(i=><View key={i} wrap={false} style={{marginBottom:6}}><Text style={s.p}>{`Competitor ${i+1}: ${matrix.competitors[i]?.name||"Unavailable"}`}</Text>{matrix.competitors[i]&&<Link style={s.p} src={matrix.competitors[i].website}>{matrix.competitors[i].website}</Link>}</View>)}
+        <View style={s.tr}><Text style={[s.th,{width:"20%"}]}>Capability</Text><Text style={[s.th,{width:"12%"}]}>Your site</Text><Text style={[s.th,{width:"12%"}]}>Competitor 1</Text><Text style={[s.th,{width:"12%"}]}>Competitor 2</Text><Text style={[s.th,{width:"44%"}]}>Demore proposed improvements</Text></View>
+        {matrix.rows.map(row=><View key={row.key} style={s.tr} wrap={false}><Text style={[s.td,{width:"20%",paddingRight:5}]}>{row.label}</Text><Text style={[s.td,{width:"12%"}]}>{row.current}</Text>{row.competitorValues.map((v,i)=><Text key={i} style={[s.td,{width:"12%",paddingRight:4}]}>{v}</Text>)}<Text style={[s.td,{width:"44%"}]}>{row.solution}</Text></View>)}
+        <Text style={s.disc}>{matrix.note}</Text>
+        <Text style={s.disc}>The site-specific action plan later in this report explains implementation priorities. Unavailable competitors are not replaced with invented businesses.</Text>
       </Page>
       <Page size="LETTER" style={s.page}>
         <Chrome report={report} providerLogoSrc={providerLogoSrc} customerLogoSrc={customerLogoSrc} />

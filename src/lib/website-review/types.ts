@@ -55,6 +55,8 @@ export type PublicFiles = {
 };
 
 export type WebsiteReviewReport = {
+  competitors?: ReviewPage[];
+  competitorNote?: string;
   contact?: import("./contact").ReviewContact;
   ownerReview?: boolean;
   publicContacts?: import("./contact").PublicContact[];

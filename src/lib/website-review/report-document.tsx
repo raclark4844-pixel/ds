@@ -1,6 +1,6 @@
 import {capabilities} from "../control-capabilities";
 import {consoleOverview,offeringReadiness,leadGenerationOffering,customerPdfData} from "../console-offering";
-import { Document, Image, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
+import { Document, Image, Link, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 import type { WebsiteReviewReport } from "./types";
 
 const s = StyleSheet.create({
@@ -76,6 +76,16 @@ export function WebsiteReviewDocument({ report, logoSrc }: { report: WebsiteRevi
           <Text style={s.h2}>Revised recommendations</Text><Text style={s.p}>{revision.response.replace(/\*\*/g, "").replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1 ($2)")}</Text>
         </View>)}
       </Page> : null}
+      <Page size="LETTER" style={s.page}>
+        <Chrome report={report} logoSrc={logoSrc} />
+        <Text style={s.h1}>Your website, competitors and improvements</Text>
+        <Text style={s.p}>{report.current.url}</Text>
+        {[0,1].map(i=><View key={i} wrap={false}><Text style={s.p}>{`Competitor ${i+1}: ${report.competitors?.[i]?.title || "Unavailable"}`}</Text>{report.competitors?.[i]&&<Link style={s.p} src={report.competitors[i].url}>{report.competitors[i].url}</Link>}</View>)}
+        <Text style={s.disc}>{report.competitorNote || "No verified competitor websites are attached to this saved report. Create a new report with a target market to request discovery."}</Text>
+        <View style={{flexDirection:"row",marginTop:12,marginBottom:8}}><Text style={[s.p,{width:"22%"}]}>Capability</Text><Text style={[s.p,{width:"14%"}]}>Your site</Text><Text style={[s.p,{width:"14%"}]}>Competitor 1</Text><Text style={[s.p,{width:"14%"}]}>Competitor 2</Text><Text style={[s.p,{width:"36%"}]}>Demore improvement</Text></View>
+        {report.current.checks.map(check=><View key={check.id} wrap={false} style={{flexDirection:"row",borderTopWidth:1,borderTopColor:"#2A2A28",paddingVertical:6}}><Text style={[s.p,{width:"22%",paddingRight:5}]}>{check.label}</Text><Text style={[s.p,{width:"14%",paddingRight:4}]}>{check.status}</Text>{[0,1].map(i=><Text key={i} style={[s.p,{width:"14%",paddingRight:4}]}>{report.competitors?.[i]?.checks.find(c=>c.id===check.id)?.status||"Unavailable"}</Text>)}<Text style={[s.p,{width:"36%"}]}>{check.improve}</Text></View>)}
+        <Text style={s.disc}>Not detected means absent from the public response, not proof the capability does not exist. Demore improvements are proposed work requiring validation, not guaranteed outcomes.</Text>
+      </Page>
       <Page size="LETTER" style={s.page}>
         <Chrome report={report} logoSrc={logoSrc} />
         <Text style={s.kicker}>Website opportunity report</Text>

@@ -1,3 +1,4 @@
+import {reviewCompetitors,websiteMarket} from "./competitors.server.ts";
 import { z } from "zod";
 import { publicContacts, reviewContactSchema } from "./contact";
 import { analyzePage, makeReport, unavailableBenchmark } from "./analyze.ts";
@@ -12,6 +13,7 @@ const schema = z.object({
   contact: reviewContactSchema.optional(),
   skipContact: z.boolean().optional(),
   url: z.string().trim().min(4).max(2048),
+  market: z.string().trim().max(150).optional(),
   industry: z.string().trim().max(500).optional(),
   record_id: z.string().trim().max(20).optional(),
   recordId: z.string().trim().max(20).optional(),
@@ -147,6 +149,10 @@ export async function handleWebsiteReview(req: Request) {
       return check.status==='Detected'?check:other?.status==='Detected'?other:benchmark.unavailable&&other?other:check;
     })} : benchmark;
   const report = makeReport(current, composite, recordId, industry);
+  const competitive = await reviewCompetitors(current,industry,parsed.data.market || websiteMarket(site.value.html));
+  report.competitors = competitive.pages;
+  report.competitorNote = competitive.note;
+  report.assistantBrief += "\nCompetitor evidence: " + competitive.note + "\n" + competitive.pages.map(p=>p.title+": "+p.url+(p.unavailable?" (public page unavailable)":" (public page reviewed)")).join("\n");
   report.contact = ownerReview ? undefined : parsed.data.contact;
   report.ownerReview = ownerReview;
   report.publicContacts = publicContacts(pages);
