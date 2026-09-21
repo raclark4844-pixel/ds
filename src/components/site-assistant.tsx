@@ -88,10 +88,22 @@ export function SiteAssistant() {
         },
       ]);
     };
+    const openWebsiteReview = () => {
+      setOpen(true);
+      window.setTimeout(() => {
+        const input = document.querySelector<HTMLInputElement>(
+          "[data-assistant-panel] input[autocomplete=url]",
+        );
+        input?.focus({ preventScroll: true });
+        input?.scrollIntoView({ block: "nearest" });
+      }, 0);
+    };
+    window.addEventListener("demore:open-review", openWebsiteReview);
     window.addEventListener("demore:pdf-ready", onPdfReady);
     window.addEventListener("demore:comparison-ready", onComparisonReady);
     window.addEventListener("demore:review-ready", onReviewReady);
     return () => {
+      window.removeEventListener("demore:open-review", openWebsiteReview);
       window.removeEventListener("demore:pdf-ready", onPdfReady);
       window.removeEventListener("demore:comparison-ready", onComparisonReady);
       window.removeEventListener("demore:review-ready", onReviewReady);
@@ -185,7 +197,10 @@ export function SiteAssistant() {
   return (
     <div className="fixed bottom-20 right-3 z-50 print:hidden sm:bottom-6">
       {open ? (
-        <div className="mb-3 flex h-[min(40rem,calc(100dvh-9rem))] w-[min(22rem,calc(100vw-1.5rem))] flex-col rounded-xl border border-line bg-bg shadow-lg">
+        <div
+          data-assistant-panel
+          className="mb-3 flex h-[min(40rem,calc(100dvh-9rem))] w-[min(22rem,calc(100vw-1.5rem))] flex-col rounded-xl border border-line bg-bg shadow-lg"
+        >
           <div className="flex items-center justify-between border-b border-line px-3 py-2">
             <div>
               <p className="text-sm font-medium">Ask Demore</p>

@@ -12,6 +12,7 @@ export function PageHero({
   lede,
   primary,
   secondary,
+  extraAction,
   media,
   className,
 }: {
@@ -25,6 +26,7 @@ export function PageHero({
     search?: ContactNeed;
     variant?: "volt" | "outline";
   };
+  extraAction?: ReactNode;
   media?: { src: string; alt: string };
   className?: string;
 }) {
@@ -49,8 +51,8 @@ export function PageHero({
         <div className="relative mt-6 max-w-2xl text-lg leading-relaxed text-muted sm:text-xl">
           {lede}
         </div>
-        {(primary || secondary) && (
-          <div className="relative mt-8 flex flex-col gap-3 sm:flex-row">
+        {(primary || secondary || extraAction) && (
+          <div className="relative mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             {primary ? (
               <Button asChild size="lg">
                 <Link to={primary.to} search={primary.search}>
@@ -69,6 +71,7 @@ export function PageHero({
                 )}
               </Button>
             ) : null}
+            {extraAction}
           </div>
         )}
       </div>

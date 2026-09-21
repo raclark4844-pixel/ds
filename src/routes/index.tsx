@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { AssistantWebsiteReview } from "@/components/assistant-website-review";
@@ -126,6 +127,16 @@ function Home() {
         }
         primary={{ to: "/contact", label: "Tell us what you want to build" }}
         secondary={{ to: "/platform", label: "See how the platform works", variant: "volt" }}
+        extraAction={
+          <Button
+            type="button"
+            size="lg"
+            variant="outline"
+            onClick={() => window.dispatchEvent(new CustomEvent("demore:open-review"))}
+          >
+            Ask Demore AI: Improve my website
+          </Button>
+        }
       />
 
       <Section

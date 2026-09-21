@@ -3,8 +3,13 @@ import { z } from "zod";
 export const reviewContactSchema = z.object({
   name: z.string().trim().min(2, "Enter your name.").max(120),
   email: z.string().trim().email("Enter a valid email address.").max(254),
-  phone: z.string().trim().max(60).optional(),
-  company: z.string().trim().max(160).optional(),
+  phone: z
+    .string()
+    .trim()
+    .min(7, "Enter your phone number.")
+    .max(60)
+    .refine((value) => value.replace(/\D/g, "").length >= 7, "Enter a valid phone number."),
+  company: z.string().trim().min(2, "Enter your company name.").max(160),
 });
 export type ReviewContact = z.infer<typeof reviewContactSchema>;
 export type PublicContact = { source: string; emails: string[]; phones: string[] };

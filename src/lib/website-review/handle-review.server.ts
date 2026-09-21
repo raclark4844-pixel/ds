@@ -57,8 +57,7 @@ export async function handleWebsiteReview(req: Request) {
   if (!parsed.success) {
     return Response.json(
       {
-        error:
-          "Enter a valid website, your name and email, and keep contact fields within their limits.",
+        error: "Enter a valid website, your name, company name, phone, and email.",
       },
       { status: 400 },
     );
@@ -78,7 +77,9 @@ export async function handleWebsiteReview(req: Request) {
   }
   if (!ownerReview && !parsed.data.contact)
     return Response.json(
-      { error: "Please enter your name and email before generating a report." },
+      {
+        error: "Please enter your name, company name, phone, and email before generating a report.",
+      },
       { status: 400 },
     );
   let url: string;
@@ -89,8 +90,7 @@ export async function handleWebsiteReview(req: Request) {
   } catch {
     return Response.json(
       {
-        error:
-          "Enter a valid website, your name and email, and keep contact fields within their limits.",
+        error: "Enter a valid website, your name, company name, phone, and email.",
       },
       { status: 400 },
     );

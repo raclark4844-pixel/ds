@@ -24,10 +24,10 @@ export function ReviewContactFields({
         <div className="grid gap-3 sm:grid-cols-2">
           {(
             [
-              ["name", "Name", "text", "name", 120],
+              ["name", "Full name", "text", "name", 120],
               ["email", "Email", "email", "email", 254],
-              ["phone", "Phone (optional)", "tel", "tel", 60],
-              ["company", "Company (optional)", "text", "organization", 160],
+              ["phone", "Phone", "tel", "tel", 60],
+              ["company", "Company name", "text", "organization", 160],
             ] as const
           ).map(([key, label, type, autoComplete, maxLength]) => (
             <label key={key} className="block text-xs">
@@ -35,7 +35,7 @@ export function ReviewContactFields({
               <input
                 type={type}
                 autoComplete={autoComplete}
-                required={key === "name" || key === "email"}
+                required
                 maxLength={maxLength}
                 value={state.contact[key] || ""}
                 onChange={(e) => state.setContact((c) => ({ ...c, [key]: e.target.value }))}
