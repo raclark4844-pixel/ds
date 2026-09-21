@@ -8,26 +8,79 @@ import { PlatformComparison } from "@/components/platform-comparison";
 import { RelatedOffers } from "@/components/related-offers";
 import { DirectAnswer, GeoQuote, Section } from "@/components/section";
 import { homeGeoQuote, whoForAnswer } from "@/lib/answers";
-import { audiences, engagementSteps, homeFaqs, offerCards, proofPoints } from "@/lib/site";
+import { audiences, engagementSteps, homeFaqs, proofPoints } from "@/lib/site";
 import { faqJsonLd, pageHead } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/")({
   head: () =>
     pageHead({
-      title: "Demore Technology Solutions | Websites, AI Marketing, Lead Generation & Automation",
+      title: "Demore Technology Solutions | Website Design, Bots, Growth & AI Platforms",
       description:
-        "Custom websites, ecommerce, AI-assisted digital marketing, lead generation, SEO, GEO, AEO, CRO, analytics, social automation, and content systems.",
+        "Custom website design, ecommerce, AI bots, growth marketing, lead generation, and AI-assisted platforms built around your business.",
       path: "/",
     }),
   component: Home,
 });
 
-const accentBar: Record<(typeof offerCards)[number]["accent"], string> = {
-  hot: "bg-hot",
-  volt: "bg-volt",
-  flare: "bg-flare",
-};
+const serviceAreas = [
+  {
+    number: "01",
+    title: "Website design & ecommerce",
+    accent: "bg-hot",
+    to: "/websites",
+    label: "Explore website design",
+    body: "Give your business a digital home that looks like you, explains what you offer, and makes the next step easy. We design new sites, refresh existing ones, and build online stores around the way your customers buy.",
+    details: [
+      "Custom design, mobile layouts, and clear navigation",
+      "Service pages, product catalogs, menus, and campaign landing pages",
+      "Contact forms, booking paths, checkout, and conversion tracking",
+    ],
+    outcome: "A clear path from first impression to inquiry, booking, or purchase.",
+  },
+  {
+    number: "02",
+    title: "Bots & business automation",
+    accent: "bg-flare",
+    to: "/automation",
+    label: "Explore bots & automation",
+    body: "Put useful assistants and repeatable workflows behind your website and daily operations. Connect customer questions, content preparation, lead intake, and follow-up to the tools your team already uses.",
+    details: [
+      "Website Q&A assistants and internal knowledge bots",
+      "Lead routing, CRM handoffs, alerts, and follow-up tasks",
+      "Social scheduling, AI-generated content drafts, and approval workflows",
+    ],
+    outcome: "Less repetitive work, with your team in control of what gets published and sent.",
+  },
+  {
+    number: "03",
+    title: "Growth, search & lead generation",
+    accent: "bg-volt",
+    to: "/growth",
+    label: "Explore growth services",
+    body: "Help the right people discover your business and understand why to choose it. Bring search visibility, local discovery, content, campaigns, and measurement together around a clear offer.",
+    details: [
+      "SEO, local search, and visibility in AI-generated answers (GEO / AEO)",
+      "Campaign content, social presence, and targeted landing pages",
+      "Conversion improvements (CRO), analytics, and lead-generation workflows",
+    ],
+    outcome: "A measurable customer journey from discovery through follow-up.",
+  },
+  {
+    number: "04",
+    title: "Custom AI platforms & business tools",
+    accent: "bg-hot",
+    to: "/platform",
+    label: "Explore custom platforms",
+    body: "Turn an idea or a manual process into a purpose-built web platform. We use AI-assisted development to create connected websites, dashboards, portals, and workflows tailored to your business.",
+    details: [
+      "Custom dashboards, customer portals, and business workspaces",
+      "AI-assisted content tools and connected marketing systems",
+      "Forms, data, integrations, and workflows shaped around your process",
+    ],
+    outcome: "A platform built around how your business works, with room to grow.",
+  },
+] as const;
 
 const platformCapabilities = [
   {
@@ -62,21 +115,82 @@ function Home() {
       <JsonLd data={faqJsonLd(homeFaqs)} />
       <PageHero
         kicker="Demore Technology Solutions"
-        title="We build custom AI-assisted digital marketing and lead-generation platforms."
+        title="Websites. Bots. Growth. Custom AI platforms."
         lede={
           <p>
-            One connected system built around your business: website or ecommerce, SEO, GEO, AEO,
-            CRO, content, social, campaigns, lead capture, analytics, follow-up, and automation.
-            Every service is also available à la carte when you need one focused solution.
+            Demore Technology Solutions designs custom websites, builds AI bots, grows your digital
+            presence, and creates AI-assisted platforms that connect marketing with everyday
+            business. Start with one service or bring them together in a complete system.
           </p>
         }
-        primary={{ to: "/contact", label: "Build my platform", search: { need: "platform" } }}
+        primary={{ to: "/contact", label: "Tell us what you want to build" }}
         secondary={{ to: "/platform", label: "See how the platform works", variant: "volt" }}
-        media={{
-          src: "/media/hero-orbs.jpg",
-          alt: "Geometric fluorescent orbs on a near-black field, the visual mark of Demore Technology Solutions.",
-        }}
       />
+
+      <Section
+        id="services"
+        kicker="Four ways to move your business forward"
+        title="Choose the service. Shape the system."
+        lede="Website design, bots, growth, and AI platforms each have their own purpose. Explore them individually, then connect the parts that fit your goals."
+      >
+        <ul className="grid gap-5 md:grid-cols-2">
+          {serviceAreas.map((service) => (
+            <li
+              key={service.number}
+              className="relative flex flex-col overflow-hidden rounded-xl border border-line bg-surface p-6 sm:p-8"
+            >
+              <span
+                aria-hidden="true"
+                className={cn("absolute inset-x-0 top-0 h-1", service.accent)}
+              />
+              <p className="kicker text-muted">{service.number} / Demore services</p>
+              <h3 className="mt-3 font-display text-2xl font-semibold tracking-tight">
+                {service.title}
+              </h3>
+              <p className="mt-4 text-sm leading-relaxed text-muted">{service.body}</p>
+              <ul className="mt-5 space-y-3 text-sm leading-relaxed">
+                {service.details.map((detail) => (
+                  <li key={detail} className="flex gap-3">
+                    <span
+                      aria-hidden="true"
+                      className={cn("mt-2 size-1.5 shrink-0 rounded-full", service.accent)}
+                    />
+                    {detail}
+                  </li>
+                ))}
+              </ul>
+              <p className="mb-6 mt-6 border-t border-line pt-4 text-sm leading-relaxed text-muted">
+                {service.outcome}
+              </p>
+              <Link
+                to={service.to}
+                className="mt-auto inline-flex items-center gap-2 self-start text-sm font-medium text-volt underline underline-offset-4"
+              >
+                {service.label}
+                <ArrowUpRight aria-hidden="true" className="size-4" />
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <div className="mt-5 rounded-xl border border-volt/30 bg-surface p-6 sm:p-8">
+          <p className="kicker text-volt">A dedicated workspace for leads</p>
+          <h3 className="mt-3 font-display text-2xl font-semibold tracking-tight">
+            Explore the Demore Lead Engine.
+          </h3>
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted">
+            Bring prospect research, campaign organization, outreach drafts, and follow-up into one
+            workspace. Explore industry examples for restaurants, pubs, pizza shops, and
+            contractors.
+          </p>
+          <Link
+            to="/lead-generation"
+            className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-volt underline underline-offset-4"
+          >
+            See the lead-generation workspace
+            <ArrowUpRight aria-hidden="true" className="size-4" />
+          </Link>
+        </div>
+      </Section>
 
       <GeoQuote>{homeGeoQuote}</GeoQuote>
 
@@ -114,34 +228,6 @@ function Home() {
             </li>
           ))}
         </ol>
-      </Section>
-
-      <Section
-        kicker="Complete platform or à la carte"
-        title="Build the full system—or start with the service you need now."
-        lede="The flagship offer connects every part of the customer journey. Websites, ecommerce, growth, lead generation, content, analytics, and automation also remain available as individual services."
-      >
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {offerCards.map((card) => (
-            <li key={card.title}>
-              <Link
-                to={card.to}
-                className="group flex h-full flex-col rounded-xl border border-line bg-surface p-5 no-underline transition-colors duration-200 hover:border-fg/25"
-              >
-                <span className={cn("h-1 w-10 rounded-pill", accentBar[card.accent])} />
-                <p className="kicker mt-4">{card.kicker}</p>
-                <h3 className="mt-2 font-display text-xl font-semibold tracking-tight">
-                  {card.title}
-                </h3>
-                <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">{card.body}</p>
-                <span className="mt-5 inline-flex items-center gap-1 text-sm text-fg">
-                  Open
-                  <ArrowUpRight className="size-4" />
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
       </Section>
 
       <Section
