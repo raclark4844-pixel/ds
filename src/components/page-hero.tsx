@@ -19,7 +19,7 @@ export function PageHero({
   kicker: string;
   title: string;
   lede: ReactNode;
-  primary?: { to: "/contact"; label: string; search?: ContactNeed };
+  primary?: { to: "/contact"; label: string; search?: ContactNeed; variant?: "primary" | "volt" | "outline" };
   secondary?: {
     to: SecondaryTo;
     label: string;
@@ -54,7 +54,7 @@ export function PageHero({
         {(primary || secondary || extraAction) && (
           <div className="relative mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             {primary ? (
-              <Button asChild size="lg">
+              <Button asChild size="lg" variant={primary.variant ?? "primary"}>
                 <Link to={primary.to} search={primary.search}>
                   {primary.label}
                 </Link>

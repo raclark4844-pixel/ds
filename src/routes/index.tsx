@@ -125,19 +125,19 @@ function Home() {
             business. Start with one service or bring them together in a complete system.
           </p>
         }
-        primary={{ to: "/contact", label: "Tell us what you want to build" }}
+        primary={{ to: "/contact", label: "Tell us what you want to build", variant: "volt" }}
         secondary={{ to: "/platform", label: "See how the platform works", variant: "volt" }}
         extraAction={
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <Button
               type="button"
               size="lg"
-              variant="outline"
+              variant="volt"
               onClick={() => window.dispatchEvent(new CustomEvent("demore:open-review"))}
             >
               Ask Demore AI: Improve my website
             </Button>
-            <Button asChild size="lg" variant="outline">
+            <Button asChild size="lg" variant="volt">
               <a href="/lead-generation#preview">Preview a campaign</a>
             </Button>
           </div>
