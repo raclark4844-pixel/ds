@@ -55,7 +55,7 @@ export type PublicFiles = {
 };
 
 export type WebsiteReviewReport = {
-  conversation?: Array<{role: "user" | "assistant"; content: string}>;
+  tailoredPriorities?: Array<{id: string; label: string; reason: string; action: string}>;
   competitors?: ReviewPage[];
   competitorNote?: string;
   contact?: import("./contact").ReviewContact;

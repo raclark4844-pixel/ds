@@ -15,7 +15,7 @@ export function AssistantWebsiteReview({ industries = [], onWebsiteChange, conve
   const helpId = useId();
   const [market, setMarket] = useState("");
   const [website, setWebsite] = useState("");
-  const [phase, setPhase] = useState<"idle" | "review" | "pdf">("idle");
+  const [phase, setPhase] = useState<"idle" | "review" | "personalize" | "pdf">("idle");
   const [error, setError] = useState("");
   const [download, setDownload] = useState<ReviewDownload | null>(latestReviewDownload);
   const busy = phase !== "idle";
@@ -39,7 +39,6 @@ export function AssistantWebsiteReview({ industries = [], onWebsiteChange, conve
           url: website.trim(),
           industry: industries.join(" | "),
           market,
-          conversation: conversation.slice(-20).map(item => ({...item, content: item.content.slice(0, 6000)})),
           contact: contactState.skipContact ? undefined : contactState.contact,
           skipContact: contactState.skipContact,
         }),
@@ -54,12 +53,24 @@ export function AssistantWebsiteReview({ industries = [], onWebsiteChange, conve
         }),
       );
       setPhase("pdf");
-      const active = {
+      let active = {
         recordId: review.recordId,
         token: review.token,
         brief: review.report.assistantBrief,
         revision: 1,
       };
+      const details = conversation.filter(item => item.role === "user").slice(-20).map(item => item.content.slice(0, 6000));
+      if (details.length) {
+        setPhase("personalize");
+        const personalized = await fetch("/api/website-review-personalize", {
+          method: "POST", headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({...active, details}), signal: AbortSignal.timeout(45000),
+        });
+        const tailored = await personalized.json();
+        if (!personalized.ok || !tailored.ok) throw new Error(tailored.error || "Unable to personalize your PDF. Please retry.");
+        active = tailored;
+      }
+      setPhase("pdf");
       registerReview(active);
       await downloadReview(active);
     } catch (err) {
@@ -99,7 +110,7 @@ export function AssistantWebsiteReview({ industries = [], onWebsiteChange, conve
       />
       <p id={helpId} className="text-xs leading-relaxed text-muted">
         Get a PDF showing how Demore could improve your website, search visibility, and customer
-        inquiries. Includes your latest 20 chat messages and replies (up to 6,000 characters each), alongside publicly available website information.
+        inquiries. Uses relevant details you provide in this session to tailor recommendations. Chat messages are not printed in your PDF.
       </p>
       <label className="block text-xs font-medium">Target city or region (optional)<input value={market} onChange={e=>setMarket(e.target.value)} maxLength={150} disabled={busy} placeholder="City, State — for competitor comparison" className="mt-1 min-h-10 w-full rounded-md border border-line bg-elevated px-2 text-base" /></label>
       <ReviewContactFields state={contactState} disabled={busy} />
@@ -112,13 +123,15 @@ export function AssistantWebsiteReview({ industries = [], onWebsiteChange, conve
       >
         {phase === "review"
           ? "Reviewing your website…"
+          : phase === "personalize"
+            ? "Tailoring your recommendations…"
           : phase === "pdf"
             ? "Preparing your PDF…"
             : "Create my improvement PDF"}
       </Button>
       {busy ? (
         <p role="status" className="text-xs text-muted">
-          This may take up to a minute. Includes the conversation available when you clicked; new messages can be included in your next PDF.
+          Uses relevant details available when you clicked. Website review and personalization may take up to two minutes.
         </p>
       ) : null}
       {error ? (

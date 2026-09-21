@@ -139,12 +139,11 @@ export function SiteAssistant() {
       const reply = data.ok
         ? data.text
         : data.error || "Live web information is temporarily unavailable.";
-      if (data.ok) setConversation(current => [...current, {role: "assistant", content: reply}]);
       setMessages([
         ...next,
         {
           role: "assistant",
-          content: data.ok ? `${reply}\n\nClick **Create my improvement PDF** to include your information and these recommendations in your PDF.` : reply,
+          content: data.ok ? `${reply}\n\nClick **Create my improvement PDF** for recommendations tailored to your website and the relevant details you shared.` : reply,
           citations: data.citations,
           searchedAt: data.searchedAt,
         },
@@ -246,7 +245,7 @@ export function SiteAssistant() {
             </div>
           </div>
           <div className="border-t border-line px-3 py-2 text-xs text-muted">
-            Share your goals, then click Create my improvement PDF to include your latest conversation.
+            Share your goals, then click Create my improvement PDF for a plan tailored to your relevant business details.
           </div>
           <form
             className="flex flex-wrap shrink-0 gap-2 border-t border-line p-2"

@@ -65,24 +65,24 @@ export function WebsiteReviewDocument({ report, logoSrc }: { report: WebsiteRevi
 
   return (
     <Document creationDate={new Date(report.createdAt)} modificationDate={new Date(report.createdAt)} title={`Website opportunity report — ${report.recordId}`} author="Demore Technology Solutions">
-      {report.conversation?.length ? <Page size="LETTER" style={s.page}>
+      {report.tailoredPriorities?.length ? <Page size="LETTER" style={s.page}>
         <Chrome report={report} logoSrc={logoSrc} />
-        <Text style={s.kicker}>Your personalized conversation</Text>
-        <Text style={s.h1}>Your goals and Demore’s recommendations</Text>
-        <Text style={s.disc}>Recent Ask Demore conversation captured when you requested this PDF. Your details are customer-provided; assistant suggestions are proposed improvements, not independently verified website findings. The website scan and comparison follow separately.</Text>
-        {report.conversation.map((item, index) => <View key={index}>
-          <Text style={s.h2}>{item.role === "user" ? "Your information and requests" : "Ask Demore recommendations"}</Text>
-          <Text style={s.p}>{item.content.replace(/\*\*/g, "").replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1 ($2)")}</Text>
+        <Text style={s.kicker}>Your tailored improvement plan</Text>
+        <Text style={s.h1}>Priorities for your business</Text>
+        <Text style={s.disc}>Recommendations informed by relevant business details you provided and the website review. Customer-provided details are not independently verified findings. Validate scope and integrations before implementation.</Text>
+        {report.tailoredPriorities.map(item => <View key={item.id} wrap={false}>
+          <Text style={s.h2}>{item.label}</Text>
+          <Text style={s.p}>{item.reason}</Text>
+          <Text style={s.p}>{item.action}</Text>
         </View>)}
       </Page> : null}
       {report.revisions?.length ? <Page size="LETTER" style={s.page}>
         <Chrome report={report} logoSrc={logoSrc} />
         <Text style={s.kicker}>Updated improvement plan · Version {report.revisions.length + 1}</Text>
-        <Text style={s.h1}>Changes requested in your chat</Text>
+        <Text style={s.h1}>Updated recommendations</Text>
         <Text style={s.p}>{report.current.url}</Text>
         <Text style={s.disc}>The latest revision below supersedes earlier recommendations where they conflict. These are customer-provided updates and proposed improvements, not a new website scan. Original detected findings follow for reference.</Text>
         {report.revisions.slice(-1).map(revision => <View key={revision.number}>
-          <Text style={s.h2}>Your requested changes</Text><Text style={s.p}>{revision.request}</Text>
           <Text style={s.h2}>Revised recommendations</Text><Text style={s.p}>{revision.response.replace(/\*\*/g, "").replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1 ($2)")}</Text>
         </View>)}
       </Page> : null}
