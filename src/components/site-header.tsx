@@ -11,6 +11,8 @@ import { cn } from "@/lib/utils";
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [signedIn, setSignedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [adminOpen, setAdminOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
   const [authError, setAuthError] = useState("");
   useEffect(() => {
@@ -19,7 +21,11 @@ export function SiteHeader() {
       try {
         const response = await fetch("/api/admin/review-access", { cache: "no-store" });
         const admin = await response.json();
-        if (active) setSignedIn(admin.canSkipContact === true);
+        if (active) {
+          setSignedIn(admin.canSkipContact === true);
+          setIsAdmin(admin.canSkipContact === true);
+          if (!admin.canSkipContact) setAdminOpen(false);
+        }
         const session = authEnabled ? await authClient.getSession() : null;
         if (active) setSignedIn(admin.canSkipContact === true || Boolean(session?.data?.user));
       } catch { /* Retain the last confirmed session state. */ }
@@ -48,7 +54,7 @@ export function SiteHeader() {
 
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape") { setOpen(false); setAdminOpen(false); }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -56,6 +62,27 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-line/80 bg-bg/75 backdrop-blur-xl">
+      {isAdmin ? <div className="border-b border-line bg-surface">
+        <div className="mx-auto max-w-6xl px-4 py-2 sm:px-6">
+          <button type="button" aria-expanded={adminOpen} aria-controls="admin-pages-nav"
+            onClick={() => { setAdminOpen(value => !value); setOpen(false); }}
+            className="min-h-11 rounded-lg border border-volt/30 px-4 py-2 text-sm font-medium text-volt">
+            {adminOpen ? "Close admin pages" : "Admin pages"}
+          </button>
+          {adminOpen ? <nav id="admin-pages-nav" aria-label="Administrator pages" className="mt-2 grid gap-2 sm:grid-cols-3">
+            {[
+              {to: "/control-center-admin", label: "Multi-site control center", description: "Bots, specialists, automation and spending controls"},
+              {to: "/admin", label: "Comparison queue", description: "Website reports, follow-up and comparison settings"},
+              {to: "/lead-inbox", label: "Shared lead inbox", description: "Leads and pipelines for both businesses"},
+            ].map(item => <Link key={item.to} to={item.to} onClick={() => setAdminOpen(false)}
+              className="rounded-lg border border-line px-3 py-3 text-sm hover:bg-elevated"
+              activeProps={{className: "border-volt/50 bg-elevated"}}>
+              <span className="block font-medium text-volt">{item.label}</span>
+              <span className="mt-1 block text-xs text-muted">{item.description}</span>
+            </Link>)}
+          </nav> : null}
+        </div>
+      </div> : null}
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:h-[4.25rem] sm:px-6">
         <Logo />
 
