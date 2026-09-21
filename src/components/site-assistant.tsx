@@ -165,11 +165,11 @@ export function SiteAssistant() {
   }
 
   return (
-    <div className="fixed bottom-20 right-3 z-50 print:hidden sm:bottom-6">
+    <div className="fixed bottom-20 right-3 z-50 print:hidden sm:bottom-24">
       {open ? (
         <div
           data-assistant-panel
-          className="mb-3 flex h-[min(40rem,calc(100dvh-9rem))] w-[min(22rem,calc(100vw-1.5rem))] flex-col rounded-xl border border-line bg-bg shadow-lg"
+          className="mb-3 flex h-[min(40rem,calc(100dvh-9rem))] sm:h-[min(40rem,calc(100dvh-11rem))] w-[min(22rem,calc(100vw-1.5rem))] flex-col rounded-xl border border-line bg-bg shadow-lg"
         >
           <div className="flex items-center justify-between border-b border-line px-3 py-2">
             <div>
