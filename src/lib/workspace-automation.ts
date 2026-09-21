@@ -36,7 +36,7 @@ export async function automationStatus(sql:DB){
  const jobs=await sql.query('select job_key,kind,site_id,status,details,created_at,completed_at from dts_automation_jobs order by created_at desc limit 20');
  const triage=await sql.query(`select t.*,r.admin_status from dts_comparison_triage t join comparison_reports r on r.id=t.report_id where r.admin_status in ('new','reviewing') order by case t.priority when 'needs_attention' then 0 when 'follow_up' then 1 else 2 end,t.updated_at desc limit 30`);
  const heartbeat=(await sql.query("select received_at from dts_inbox_health where site_id='demore'"))[0];
- return {settings,jobs,triage,heartbeat,providers:providerReady(),schedule:'Queue and routing every five minutes; website checks hourly; one independently reviewed specialist per site every six hours. One paid task per worker cycle, within the existing shared budget.'};
+ return {settings,jobs,triage,heartbeat,providers:providerReady(),schedule:'Queue and routing every five minutes; website checks hourly; one independently reviewed specialist per site every six hours. One paid task per worker cycle, with at most one automatic correction per scheduled draft, within the existing shared budget.'};
 }
 export async function runAutomation(sql:DB,fetcher:typeof fetch=fetch,now=new Date()){
  const enabled=(await sql.query<{enabled:boolean}>('select enabled from dts_automation_settings where id=1'))[0]?.enabled;
@@ -50,6 +50,16 @@ export async function runAutomation(sql:DB,fetcher:typeof fetch=fetch,now=new Da
   const start=Date.now();try{const response=await fetcher(site.url,{method:'HEAD',redirect:'error',signal:AbortSignal.timeout(5000)});await finish(sql,key,response.ok?'complete':'needs_attention',{url:site.url,httpStatus:response.status,latencyMs:Date.now()-start,notice:response.ok?'Public homepage responded.':'Homepage needs verification; no automatic deployment attempted.'});}catch{await finish(sql,key,'needs_attention',{url:site.url,notice:'Homepage check could not complete; verify availability or redirects.'});}
  }));
  const readiness=providerReady();if(!readiness.openai||!readiness.claude||!readiness.ratesCurrent)return {complete:true,paid:'waiting_for_providers_or_pricing'};
+ const revisions=await sql.query<{id:string;site_id:string;bot_id:string;objective:string;artifact:string;review:string}>(`select r.id,r.site_id,r.bot_id,r.objective,r.artifact,r.review from dts_bot_runs r where r.actor='bot:workspace-scheduler' and r.status='changes_required' and r.actual is not null and r.created_at>now()-interval '24 hours' and not exists(select 1 from dts_automation_jobs j where j.job_key='revision:'||r.id) order by r.created_at limit 1`);
+ const original=revisions[0];
+ if(original){const key='revision:'+original.id;if(await claim(sql,key,'specialist-correction',original.site_id)){
+  try{const objective=('Correct the prior analysis according to the independent review. Do not execute actions. Use only supplied facts; clearly label missing evidence. Original task: '+original.objective.slice(0,1800)+'\nPrior draft: '+original.artifact.slice(0,850)+'\nIndependent review: '+original.review.slice(0,850)).slice(0,4000);
+   const result=await runHosted(sql,{id:automaticRunId(key),siteId:original.site_id,botId:original.bot_id,objective},'bot:workspace-correction',fetcher);
+   const run=(await sql.query<{status:string}>('select status from dts_bot_runs where id=$1',[result.id]))[0];
+   await finish(sql,key,run?.status==='reviewed'?'complete':'needs_attention',{parentRunId:original.id,runId:result.id,reviewStatus:run?.status||'unknown',notice:'One bounded correction attempt. Further revision is not automatic.'});
+  }catch{await finish(sql,key,'blocked',{parentRunId:original.id,notice:'Correction blocked by budget or provider availability. No retry.'});}
+  return {complete:true};
+ }}
  const slot=Math.floor(now.getTime()/21600000);
  for(const [index,site] of automationSites.entries()){
   const key=`specialist:${site.id}:${slot}`;

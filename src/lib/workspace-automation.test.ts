@@ -27,3 +27,16 @@ test('triage captures and routes inquiries once, preserves manual state and avoi
 });
 test('stable paid-task identity prevents retry charges for one schedule slot',()=>{assert.equal(automaticRunId('same'),automaticRunId('same'));assert.notEqual(automaticRunId('same'),automaticRunId('other'));assert.match(automaticRunId('same'),/^[\da-f]{8}-[\da-f]{4}-4[\da-f]{3}-8[\da-f]{3}-[\da-f]{12}$/);});
 test('background fallback awaits work when no Vercel request context exists',async()=>{let done=false;await retainBackgroundWork(Promise.resolve().then(()=>{done=true}));assert.equal(done,true);});
+test('a reviewed draft gets at most one correction and unknown charges are excluded',async()=>{
+ const db=new PGlite();const sql:Pick<Sql,'query'>={query:async<T>(q:string,p?:unknown[])=>(await db.query<T>(q,p)).rows};const oldOpen=process.env.OPENAI_API_KEY,oldClaude=process.env.ANTHROPIC_API_KEY;process.env.OPENAI_API_KEY='test-only';process.env.ANTHROPIC_API_KEY='test-only';
+ try{
+  for(const name of ['0002_comparison_admin','0003_comparison_handoff','0006_control_leads','0007_inbox_health','0009_hosted_bots','0011_workspace_automation'])await db.exec(readFileSync(new URL('../../migrations/'+name+'.sql',import.meta.url),'utf8'));
+  await db.exec('update dts_bot_budget set enabled=true');
+  await sql.query(`insert into dts_bot_runs(id,request_hash,site_id,bot_id,objective,actor,status,day,month,reserved,actual,artifact,review) values('parent','h','demore','seo','Review supplied evidence','bot:workspace-scheduler','changes_required','2026-09-21','2026-09',100000,400,'First draft','Clarify uncertainty')`);
+  let paid=0;const fake:typeof fetch=async(url)=>{if(!String(url).includes('api.'))return new Response('',{status:200});paid++;return Response.json(String(url).includes('openai')?{model:'gpt-4o-mini-2024-07-18',usage:{prompt_tokens:100,completion_tokens:50},choices:[{message:{content:'Corrected draft'},finish_reason:'stop'}]}:{model:'claude-haiku-4-5-20251001',usage:{input_tokens:100,output_tokens:50},content:[{type:'text',text:JSON.stringify({verdict:'changes_required',reason:'More evidence required'})}],stop_reason:'end_turn'});};
+  const date=new Date();await runAutomation(sql,fake,date);assert.equal(paid,2);
+  assert.equal((await sql.query("select id from dts_bot_runs where actor='bot:workspace-correction'")).length,1);
+  await sql.query("update dts_automation_settings set enabled=false");await runAutomation(sql,fake,date);assert.equal(paid,2);
+  const candidates=await sql.query("select id from dts_bot_runs r where actor='bot:workspace-scheduler' and status='changes_required' and actual is not null and not exists(select 1 from dts_automation_jobs j where j.job_key='revision:'||r.id)");assert.equal(candidates.length,0);
+ }finally{await db.close();if(oldOpen===undefined)delete process.env.OPENAI_API_KEY;else process.env.OPENAI_API_KEY=oldOpen;if(oldClaude===undefined)delete process.env.ANTHROPIC_API_KEY;else process.env.ANTHROPIC_API_KEY=oldClaude;}
+});
