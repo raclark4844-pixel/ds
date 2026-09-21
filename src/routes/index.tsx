@@ -128,14 +128,19 @@ function Home() {
         primary={{ to: "/contact", label: "Tell us what you want to build" }}
         secondary={{ to: "/platform", label: "See how the platform works", variant: "volt" }}
         extraAction={
-          <Button
-            type="button"
-            size="lg"
-            variant="outline"
-            onClick={() => window.dispatchEvent(new CustomEvent("demore:open-review"))}
-          >
-            Ask Demore AI: Improve my website
-          </Button>
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <Button
+              type="button"
+              size="lg"
+              variant="outline"
+              onClick={() => window.dispatchEvent(new CustomEvent("demore:open-review"))}
+            >
+              Ask Demore AI: Improve my website
+            </Button>
+            <Button asChild size="lg" variant="outline">
+              <a href="/lead-generation#preview">Preview a campaign</a>
+            </Button>
+          </div>
         }
       />
 
