@@ -8,14 +8,16 @@ import { intakeStartAnswer } from "@/lib/answers";
 import { contactFaqs } from "@/lib/site";
 import { faqJsonLd, pageHead, serviceJsonLd } from "@/lib/seo";
 
-type ContactSearch = { need?: string; industry?: string; reportId?: string; handoffToken?: string };
+type ContactSearch = { need?: string; industry?: string; reportId?: string; handoffToken?: string; source?: string; rid?: string };
 
 export const Route = createFileRoute("/contact")({
   validateSearch: (search: Record<string, unknown>): ContactSearch => ({
     need: typeof search.need === "string" ? search.need : undefined,
     industry: typeof search.industry === "string" ? search.industry : undefined,
-    reportId: typeof search.reportId === "string" ? search.reportId : undefined,
+    reportId: typeof search.reportId === "string" ? search.reportId : typeof search.rid === "string" ? search.rid : undefined,
     handoffToken: typeof search.handoffToken === "string" ? search.handoffToken : undefined,
+    source: typeof search.source === "string" ? search.source : undefined,
+    rid: typeof search.rid === "string" ? search.rid : undefined,
   }),
   head: () =>
     pageHead({
@@ -28,7 +30,7 @@ export const Route = createFileRoute("/contact")({
 });
 
 function ContactPage() {
-  const { need, industry, reportId, handoffToken } = Route.useSearch();
+  const { need, industry, reportId, handoffToken, rid } = Route.useSearch();
 
   return (
     <main id="main" className="mx-auto max-w-3xl px-4 pb-20 sm:px-6">
@@ -65,7 +67,7 @@ function ContactPage() {
       </DirectAnswer>
 
       <div className="mt-10">
-        <IntakeForm need={need} industry={industry} reportId={reportId} handoffToken={handoffToken} />
+        <IntakeForm need={need} industry={industry} reportId={reportId || rid} handoffToken={handoffToken} />
       </div>
 
       <Section kicker="Also on this site" title="Which service is this brief for?">
