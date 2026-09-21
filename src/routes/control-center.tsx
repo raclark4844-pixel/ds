@@ -194,7 +194,8 @@ export function ControlCenter() {
           Read-only analysis and independent review have been tested in the owner-operated control
           center. This website provides a capability preview and an administrator readiness
           workspace. Hosted bot execution, customer messaging and unattended publishing are not
-          activated by this page.
+          activated by this page. The administrator lead inbox supports manual capture, separate
+          business pipelines, duplicate checks, owner assignment and routing history.
         </p>
         <div className="mt-5 flex flex-wrap gap-5">
           <a className="text-volt underline" href="https://demoreexteriorsolutions.com/">

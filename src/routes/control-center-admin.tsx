@@ -60,6 +60,12 @@ function Admin() {
     <main id="main" className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
       <p className="kicker">Administrator workspace</p>
       <h1 className="mt-4 text-4xl font-semibold">Multi-site control center</h1>
+      <Link
+        to="/lead-inbox"
+        className="mt-5 mr-6 inline-block rounded-lg bg-volt px-5 py-3 font-semibold text-black"
+      >
+        Open shared lead inbox →
+      </Link>
       <Link to="/control-center" className="mt-4 inline-block text-volt">
         View customer preview →
       </Link>

@@ -19,6 +19,7 @@ import { Route as ControlCenterAdminRouteImport } from './routes/control-center-
 import { Route as GrowthRouteImport } from './routes/growth'
 import { Route as IndustriesRouteImport } from './routes/industries'
 import { Route as LeadGenerationRouteImport } from './routes/lead-generation'
+import { Route as LeadInboxRouteImport } from './routes/lead-inbox'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PlatformRouteImport } from './routes/platform'
 import { Route as ProcessRouteImport } from './routes/process'
@@ -83,6 +84,11 @@ const IndustriesRoute = IndustriesRouteImport.update({
 const LeadGenerationRoute = LeadGenerationRouteImport.update({
   id: '/lead-generation',
   path: '/lead-generation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LeadInboxRoute = LeadInboxRouteImport.update({
+  id: '/lead-inbox',
+  path: '/lead-inbox',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -175,6 +181,7 @@ export interface FileRoutesByFullPath {
   '/growth': typeof GrowthRoute
   '/industries': typeof IndustriesRouteWithChildren
   '/lead-generation': typeof LeadGenerationRoute
+  '/lead-inbox': typeof LeadInboxRoute
   '/login': typeof LoginRoute
   '/platform': typeof PlatformRoute
   '/process': typeof ProcessRoute
@@ -201,6 +208,7 @@ export interface FileRoutesByTo {
   '/control-center-admin': typeof ControlCenterAdminRoute
   '/growth': typeof GrowthRoute
   '/lead-generation': typeof LeadGenerationRoute
+  '/lead-inbox': typeof LeadInboxRoute
   '/login': typeof LoginRoute
   '/platform': typeof PlatformRoute
   '/process': typeof ProcessRoute
@@ -229,6 +237,7 @@ export interface FileRoutesById {
   '/growth': typeof GrowthRoute
   '/industries': typeof IndustriesRouteWithChildren
   '/lead-generation': typeof LeadGenerationRoute
+  '/lead-inbox': typeof LeadInboxRoute
   '/login': typeof LoginRoute
   '/platform': typeof PlatformRoute
   '/process': typeof ProcessRoute
@@ -258,6 +267,7 @@ export interface FileRouteTypes {
     | '/growth'
     | '/industries'
     | '/lead-generation'
+    | '/lead-inbox'
     | '/login'
     | '/platform'
     | '/process'
@@ -284,6 +294,7 @@ export interface FileRouteTypes {
     | '/control-center-admin'
     | '/growth'
     | '/lead-generation'
+    | '/lead-inbox'
     | '/login'
     | '/platform'
     | '/process'
@@ -311,6 +322,7 @@ export interface FileRouteTypes {
     | '/growth'
     | '/industries'
     | '/lead-generation'
+    | '/lead-inbox'
     | '/login'
     | '/platform'
     | '/process'
@@ -339,6 +351,7 @@ export interface RootRouteChildren {
   GrowthRoute: typeof GrowthRoute
   IndustriesRoute: typeof IndustriesRouteWithChildren
   LeadGenerationRoute: typeof LeadGenerationRoute
+  LeadInboxRoute: typeof LeadInboxRoute
   LoginRoute: typeof LoginRoute
   PlatformRoute: typeof PlatformRoute
   ProcessRoute: typeof ProcessRoute
@@ -416,6 +429,13 @@ declare module '@tanstack/react-router' {
       path: '/lead-generation'
       fullPath: '/lead-generation'
       preLoaderRoute: typeof LeadGenerationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lead-inbox': {
+      id: '/lead-inbox'
+      path: '/lead-inbox'
+      fullPath: '/lead-inbox'
+      preLoaderRoute: typeof LeadInboxRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -567,6 +587,7 @@ const rootRouteChildren: RootRouteChildren = {
   GrowthRoute: GrowthRoute,
   IndustriesRoute: IndustriesRouteWithChildren,
   LeadGenerationRoute: LeadGenerationRoute,
+  LeadInboxRoute: LeadInboxRoute,
   LoginRoute: LoginRoute,
   PlatformRoute: PlatformRoute,
   ProcessRoute: ProcessRoute,
