@@ -130,7 +130,8 @@ export function responsesBody(input: {
     instructions: input.instructions,
     input: input.messages,
     store: false,
-    max_output_tokens: 1200,
+    max_output_tokens: 2400,
+    reasoning: { effort: "low" },
   };
   if (input.search) {
     body.tools = [{ type: "web_search" }];
@@ -147,6 +148,7 @@ export function chatBody(input: {
   return {
     model: input.model,
     messages: [{ role: "system" as const, content: input.instructions }, ...input.messages],
-    max_tokens: 1200,
+    max_tokens: 2400,
+    reasoning_effort: "low",
   };
 }

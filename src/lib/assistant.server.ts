@@ -42,7 +42,7 @@ async function postXai(url: string, apiKey: string, body: unknown) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
-    signal: AbortSignal.timeout(12000),
+    signal: AbortSignal.timeout(45000),
   });
 }
 

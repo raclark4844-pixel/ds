@@ -36,6 +36,8 @@ describe("Ask Demore formatting", () => {
     assert.equal("tools" in body, false);
     assert.equal("include" in body, false);
     assert.equal(body.store, false);
+    assert.deepEqual(body.reasoning, { effort: "low" });
+    assert.equal(body.max_output_tokens, 2400);
   });
 
   it("parses both Responses and Chat Completions payloads", () => {
@@ -81,6 +83,7 @@ describe("Ask Demore formatting", () => {
       messages: [{ role: "user", content: "Hello" }],
     });
     assert.equal(body.messages[0]?.role, "system");
-    assert.equal(body.max_tokens, 1200);
+    assert.equal(body.max_tokens, 2400);
+    assert.equal(body.reasoning_effort, "low");
   });
 });
