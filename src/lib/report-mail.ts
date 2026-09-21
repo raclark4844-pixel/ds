@@ -24,13 +24,20 @@ function attachment(filename: string, pdf: Buffer) {
   return { filename, content: pdf.toString("base64"), content_type: "application/pdf" };
 }
 
-async function sendResend(payload: Record<string, unknown>): Promise<MailResult> {
+async function sendResend(
+  payload: Record<string, unknown>,
+  idempotencyKey?: string,
+): Promise<MailResult> {
   const cfg = mailConfig();
   if (!cfg.apiKey) return { ok: false, error: "Email delivery is not configured." };
   try {
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
-      headers: { Authorization: `Bearer ${cfg.apiKey}`, "Content-Type": "application/json" },
+      headers: {
+        Authorization: `Bearer ${cfg.apiKey}`,
+        "Content-Type": "application/json",
+        ...(idempotencyKey ? { "Idempotency-Key": idempotencyKey } : {}),
+      },
       body: JSON.stringify(payload),
       signal: AbortSignal.timeout(8000),
     });
@@ -65,16 +72,28 @@ export async function sendInternalPdfCopy(opts: {
   });
 }
 
-export async function sendWebsiteReviewCopy(report: WebsiteReviewReport, pdf: Buffer): Promise<MailResult> {
-  return sendInternalPdfCopy({
-    subject: websiteReviewCopySubject(report),
-    text: websiteReviewCopyText(report),
-    filename: websiteReviewFilename(report.recordId),
-    pdf,
-  });
+export async function sendWebsiteReviewCopy(
+  report: WebsiteReviewReport,
+  pdf: Buffer,
+): Promise<MailResult> {
+  const cfg = mailConfig();
+  return sendResend(
+    {
+      from: `Demore Technology Solutions <${cfg.from}>`,
+      to: ["ryan@demoretechnologysolutions.com"],
+      reply_to: report.contact?.email,
+      subject: websiteReviewCopySubject(report),
+      text: websiteReviewCopyText(report),
+      attachments: [attachment(websiteReviewFilename(report.recordId), pdf)],
+    },
+    `website-review/${report.recordId}/${report.createdAt}`,
+  );
 }
 
-export async function sendInternalComparisonCopy(report: ComparisonReport, pdf: Buffer): Promise<MailResult> {
+export async function sendInternalComparisonCopy(
+  report: ComparisonReport,
+  pdf: Buffer,
+): Promise<MailResult> {
   const ids = unifiedIds(report.reportNumber);
   return sendInternalPdfCopy({
     subject: `New Website Comparison — ${report.companyName} — ${ids.reportId}`,
@@ -115,7 +134,16 @@ export async function sendReportEmails(report: ComparisonReport, pdf: Buffer) {
     from: `Demore Technology Solutions <${cfg.from}>`,
     to: [report.contactEmail],
     subject: "Your Demore Website Comparison Report",
-    text: [`Your Demore website comparison report is attached.`, `Demore Report ID: ${ids.reportId}`, `Customer ID / Lead ID / Comparison ID: ${ids.reportId}`, `Company: ${report.companyName}`, `Path: ${report.path}`, `Start a project using this same report ID: ${handoffUrl}`, ``, DISCLAIMER].join("\n"),
+    text: [
+      `Your Demore website comparison report is attached.`,
+      `Demore Report ID: ${ids.reportId}`,
+      `Customer ID / Lead ID / Comparison ID: ${ids.reportId}`,
+      `Company: ${report.companyName}`,
+      `Path: ${report.path}`,
+      `Start a project using this same report ID: ${handoffUrl}`,
+      ``,
+      DISCLAIMER,
+    ].join("\n"),
     attachments: [file],
   });
   const internal = await sendInternalComparisonCopy(report, pdf);

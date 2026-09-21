@@ -55,6 +55,9 @@ export type PublicFiles = {
 };
 
 export type WebsiteReviewReport = {
+  contact?: import("./contact").ReviewContact;
+  ownerReview?: boolean;
+  publicContacts?: import("./contact").PublicContact[];
   version: 3;
   recordId: string;
   createdAt: string;

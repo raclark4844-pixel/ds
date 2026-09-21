@@ -3,7 +3,6 @@ import { renderWebsiteReviewPdf, websiteReviewFilename } from "./render-pdf.serv
 import { readReviewTicket } from "./ticket.ts";
 
 const schema = z.object({
-  downloadOnly: z.boolean().optional(),
   recordId: z.string().trim().min(8).max(20),
   token: z.string().trim().min(16).max(400000),
 });
@@ -28,24 +27,24 @@ export async function handleWebsiteReviewPdf(req: Request) {
   if (!report || report.recordId !== parsed.data.recordId) {
     return Response.json({ error: "That report is not available." }, { status: 404 });
   }
+  if (!report.contact && !report.ownerReview) {
+    return Response.json(
+      { error: "Please create a new review with your contact details before downloading." },
+      { status: 400 },
+    );
+  }
   try {
     const pdf = await renderWebsiteReviewPdf(report);
     if (!pdf.subarray(0, 5).toString().startsWith("%PDF-"))
       throw new Error("renderer-did-not-return-pdf");
     const filename = websiteReviewFilename(report.recordId);
-    try {
-      const { claimInternalCopy, releaseInternalCopy, sendWebsiteReviewCopy } =
-        await import("@/lib/report-mail");
-      if (!parsed.data.downloadOnly && claimInternalCopy(report.recordId)) {
-        const mailed = await sendWebsiteReviewCopy(report, pdf);
-        if (!mailed.ok) releaseInternalCopy(report.recordId);
-      }
-    } catch (err) {
-      console.error(
-        "[website-review-report] internal copy failed",
-        err instanceof Error ? err.message : "unknown",
+    const { sendWebsiteReviewCopy } = await import("@/lib/report-mail");
+    const mailed = await sendWebsiteReviewCopy(report, pdf);
+    if (!mailed.ok)
+      return Response.json(
+        { error: "We could not send your report to Demore. Please try generating the PDF again." },
+        { status: 503 },
       );
-    }
     return new Response(new Uint8Array(pdf), {
       status: 200,
       headers: {

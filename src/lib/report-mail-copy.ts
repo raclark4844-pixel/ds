@@ -32,22 +32,47 @@ export function websiteReviewCopySubject(report: WebsiteReviewReport) {
 
 export function websiteReviewCopyText(report: WebsiteReviewReport) {
   const cfg = mailConfig();
-  const missing = report.current.checks.filter((row) => row.status === "Not detected").map((row) => row.label);
+  const missing = report.current.checks
+    .filter((row) => row.status === "Not detected")
+    .map((row) => row.label);
   const detected = report.categories.reduce((sum, row) => sum + row.detected, 0);
   const total = report.categories.reduce((sum, row) => sum + row.total, 0);
-  const recs = report.recommendations.slice(0, 8).map((row) => `- ${row.effort}: ${row.label} — ${row.action}`);
+  const recs = report.recommendations
+    .slice(0, 8)
+    .map((row) => `- ${row.effort}: ${row.label} — ${row.action}`);
   const handoff = `${cfg.site}/contact?need=platform&source=website-review&rid=${encodeURIComponent(report.recordId)}`;
   return [
     "New website review PDF",
     `Record ID: ${report.recordId}`,
     `Reviewed URL: ${report.current.url}`,
     `Page title: ${report.current.title || "—"}`,
+    `Requested by: ${report.ownerReview ? "Signed-in administrator (contact details skipped)" : report.contact?.name || "Not provided"}`,
+    `Provided email: ${report.contact?.email || "Not provided"}`,
+    `Provided phone: ${report.contact?.phone || "Not provided"}`,
+    `Provided company: ${report.contact?.company || "Not provided"}`,
+    "Public website contact details (detected, not verified):",
+    ...(report.publicContacts?.length
+      ? report.publicContacts.map(
+          (c) =>
+            `- Source: ${c.source} | Emails: ${c.emails.join(", ") || "None detected"} | Phones: ${c.phones.join(", ") || "None detected"}`,
+        )
+      : ["- None detected on scanned pages"]),
     `Reference: ${report.benchmark.unavailable ? "Unavailable" : report.benchmark.url}`,
     `Industry: ${report.industry.name}`,
     `Detected HTML signals: ${total ? `${detected}/${total}` : "Unavailable"}`,
     `Not detected: ${missing.length ? missing.join(", ") : "None"}`,
-    `Measurement: ${report.current.checks.filter((row) => row.category === "Measurement").map((row) => `${row.label} ${row.status}`).join("; ") || "—"}`,
-    `AI visibility: ${report.current.checks.filter((row) => row.category === "AI and search visibility").map((row) => `${row.label} ${row.status}`).join("; ") || "—"}`,
+    `Measurement: ${
+      report.current.checks
+        .filter((row) => row.category === "Measurement")
+        .map((row) => `${row.label} ${row.status}`)
+        .join("; ") || "—"
+    }`,
+    `AI visibility: ${
+      report.current.checks
+        .filter((row) => row.category === "AI and search visibility")
+        .map((row) => `${row.label} ${row.status}`)
+        .join("; ") || "—"
+    }`,
     "",
     "Recommendations",
     ...(recs.length ? recs : ["- None from this scan"]),

@@ -61,7 +61,7 @@ export function WebsiteReviewDocument({ report, logoSrc }: { report: WebsiteRevi
   const recommendations = [...report.recommendations].sort((a, b) => Number(a.effort !== "Quick win") - Number(b.effort !== "Quick win"));
 
   return (
-    <Document title={`Website opportunity report — ${report.recordId}`} author="Demore Technology Solutions">
+    <Document creationDate={new Date(report.createdAt)} modificationDate={new Date(report.createdAt)} title={`Website opportunity report — ${report.recordId}`} author="Demore Technology Solutions">
       <Page size="LETTER" style={s.page}>
         <Chrome report={report} logoSrc={logoSrc} />
         <Text style={s.kicker}>Website opportunity report</Text>

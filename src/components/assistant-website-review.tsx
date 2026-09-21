@@ -1,9 +1,12 @@
+import { ReviewContactFields } from "@/components/review-contact-fields";
+import { useReviewContact } from "@/lib/use-review-contact";
 import { useEffect, useId, useState } from "react";
 import { Button } from "@/components/ui/button";
 
 type Download = { href: string; filename: string };
 
 export function AssistantWebsiteReview() {
+  const contactState = useReviewContact();
   const fieldId = useId();
   const helpId = useId();
   const [website, setWebsite] = useState("");
@@ -29,7 +32,11 @@ export function AssistantWebsiteReview() {
       const response = await fetch("/api/website-review", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: website.trim() }),
+        body: JSON.stringify({
+          url: website.trim(),
+          contact: contactState.skipContact ? undefined : contactState.contact,
+          skipContact: contactState.skipContact,
+        }),
         signal: AbortSignal.timeout(30000),
       });
       const review = await response.json();
@@ -47,7 +54,6 @@ export function AssistantWebsiteReview() {
         body: JSON.stringify({
           recordId: review.recordId,
           token: review.token,
-          downloadOnly: true,
         }),
         signal: AbortSignal.timeout(45000),
       });
@@ -100,6 +106,7 @@ export function AssistantWebsiteReview() {
         Get a PDF showing how Demore could improve your website, search visibility, and customer
         inquiries. Uses publicly available website information.
       </p>
+      <ReviewContactFields state={contactState} disabled={busy} />
       <Button
         type="submit"
         size="sm"
