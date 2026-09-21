@@ -133,6 +133,7 @@ function Inbox() {
           </a>
         ))}
       </div>
+      {items !== null && site === "demore" && <SyncHealth />}
       <label className="mt-8 block max-w-xl">
         Business pipeline
         <select
@@ -359,4 +360,34 @@ function LeadCard({
       )}
     </article>
   );
+}
+
+function SyncHealth() {
+  const [health, setHealth] = useState<{ report: { enabled: boolean; lastRunAt: string | null; runFailed: boolean; pending: number; retry: number; failed: number }; received_at: string } | null>(null);
+  const [status, setStatus] = useState("Loading sync status…");
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    let active = true;
+    const refresh = async () => {
+      try {
+        const data = await api("/api/admin/inbox-health");
+        if (active) { setHealth(data.health); setStatus(data.health ? "" : "Waiting for the first sync report."); setNow(Date.now()); }
+      } catch { if (active) { setHealth(null); setStatus("Sync status unavailable. Sign in again or refresh this page."); } }
+    };
+    void refresh();
+    const timer = setInterval(refresh, 60000);
+    return () => { active = false; clearInterval(timer); };
+  }, []);
+  const stale = health && (now - Date.parse(health.received_at) > 15 * 60000 || !health.report.lastRunAt || now - Date.parse(health.report.lastRunAt) > 15 * 60000);
+  const count = (n: number) => n === 100 ? "100+" : String(n);
+  return <section className="mt-6 rounded-xl border border-line bg-surface p-5" aria-label="Exterior lead sync health">
+    <h2 className="text-lg font-semibold">Exterior lead sync</h2>
+    {status && <p className="mt-2 text-muted">{status}</p>}
+    {health && <>
+      <p className="mt-2">{!health.report.enabled ? "Paused" : stale ? "Needs attention — no recent completed sync" : health.report.runFailed || health.report.failed > 0 ? "Needs attention — inspect the delivery queue" : "Sync is current"}</p>
+      <p className="mt-2 text-sm text-muted">Last run: {health.report.lastRunAt ? new Date(health.report.lastRunAt).toLocaleString() : "Not reported"}. Last report received: {new Date(health.received_at).toLocaleString()}.</p>
+      <p className="mt-2">Waiting: {count(health.report.pending)} · Retrying: {count(health.report.retry)} · Failed: {count(health.report.failed)}</p>
+      <p className="mt-2 text-sm text-muted">Checks every five minutes. Counts are capped at 100+. Manage retries in the Exterior Solutions Base44 delivery queue. This panel refreshes every minute while open.</p>
+    </>}
+  </section>;
 }
