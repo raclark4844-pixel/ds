@@ -34,6 +34,7 @@ export function SiteAssistant() {
     recordId: string;
   } | null>(null);
   const [industries, setIndustries] = useState<string[]>([]);
+  const [chatWebsite, setChatWebsite] = useState("");
   const [open, setOpen] = useState(false);
   const [reportId, setReportId] = useState("");
   const [reviewBrief, setReviewBrief] = useState("");
@@ -218,6 +219,7 @@ export function SiteAssistant() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message,
+          website: chatWebsite,
           industries,
           history: next.slice(-8).map(({ role, content }) => ({ role, content })),
           reportId: reportId || undefined,
@@ -299,7 +301,7 @@ export function SiteAssistant() {
                 />
               </div>
             </details>
-            <AssistantWebsiteReview />
+            <AssistantWebsiteReview industries={industries} onWebsiteChange={setChatWebsite} />
             <label className="block border-b border-line px-3 py-2 text-xs">
               Demore Report ID
               <input

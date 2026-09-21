@@ -14,6 +14,7 @@ export default async function assistant(event: { req: Request }) {
   }
   let raw: {
     industries?: string[];
+    website?: string;
     message?: string;
     history?: Array<{ role: "user" | "assistant"; content: string }>;
     reportId?: string;
@@ -30,6 +31,7 @@ export default async function assistant(event: { req: Request }) {
   const result = await runAssistant({
     message,
     industries: raw.industries,
+    website: typeof raw.website === "string" ? raw.website.slice(0,2048) : "",
     history: Array.isArray(raw.history) ? raw.history : [],
     reportId: typeof raw.reportId === "string" ? raw.reportId : "",
     token: typeof raw.token === "string" ? raw.token : "",

@@ -1,4 +1,4 @@
-import { industries } from "./industries";
+import { industries } from "./industries.ts";
 
 export const industryChoices = [...industries.map((item) => item.label), "Other"];
 export function selectedIndustries(value: unknown): string[] {
@@ -15,6 +15,6 @@ export function selectedIndustries(value: unknown): string[] {
 export function industryContext(value: unknown) {
   const selected = selectedIndustries(value);
   return selected.length
-    ? `Visitor-selected industries: ${selected.join("; ")}. Tailor relevant advice to all selected industries. These are visitor-provided preferences, not verified website findings.`
+    ? `Visitor-selected industries: ${selected.join("; ")}. Tailor relevant advice to all selected industries. Combine every selection with website evidence and the latest chat goals. Other means use the supplied website and conversation to identify relevant capabilities, not a restaurant default. These are visitor-provided preferences, not verified website findings.`
     : "";
 }

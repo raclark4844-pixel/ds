@@ -150,7 +150,7 @@ const GENERAL = {
 
 export function normalizeIndustry(value: unknown) {
   if (value == null) return "";
-  if (typeof value !== "string" || value.length > 120) throw new Error("Enter an industry using 120 characters or fewer.");
+  if (typeof value !== "string" || value.length > 500) throw new Error("Enter an industry using 500 characters or fewer.");
   return value.replace(/[\u0000-\u001f\u007f]/g, " ").trim();
 }
 
@@ -195,17 +195,23 @@ function rankedMatches(text: string) {
   return PROFILES
     .map((profile) => ({
       ...profile,
-      hits: profile.terms.filter((term) => new RegExp(`\\b${term}\\b`, "i").test(text)),
+      hits: profile.terms.filter((term) => new RegExp(`\\b${term}s?\\b`, "i").test(text)),
     }))
     .sort((a, b) => b.hits.length - a.hits.length);
 }
 
-export function resolveIndustry(manual: string, pages: Array<{ html: string; url: string }>) {
-  const supplied = normalizeIndustry(manual);
+export function resolveIndustry(manual: string, pages: Array<{ html: string; url: string }>): {id:string;name:string;journey:string;conversion:string;measure:string;capabilities:IndustryCapability[];source:string;evidence:string;sources:string[]} {
+  const supplied = normalizeIndustry(manual).split(" | ").filter(item=>item.trim().toLowerCase()!=="other").join(" | ");
+  if (supplied.includes(" | ")) {
+    const parts = supplied.split(" | ").map(item=>resolveIndustry(item,pages));
+    return {...parts[0], id:"multiple", name:supplied, journey:parts.map(p=>p.name+": "+p.journey).join("; "), conversion:parts.map(p=>p.conversion).join("; "), measure:parts.map(p=>p.measure).join("; "), capabilities:Array.from(new Map(parts.flatMap(p=>p.capabilities).map(c=>[c.id,c])).values()), source:"Provided by you", evidence:"All selected industries inform these opportunities. Validate each against the website and your goals.", sources:pages.map(p=>p.url)};
+  }
+  const aliases: Record<string,string> = {"Restaurants":"hospitality", "Pubs":"hospitality", "Pizza Shops":"hospitality", "Hospitality":"hospitality", "Contractors & Home Services":"contractors", "Landscaping & Outdoor Services":"landscaping", "Professional Services":"professionals", "Service Companies":"services", "Retail & Ecommerce":"stores"};
+  const selectedProfile = PROFILES.find(p=>p.id===aliases[supplied]);
   const ranked = rankedMatches(supplied || pages.map(industryEvidence).join(" "));
   const best = ranked[0];
   const confident = Boolean(best && best.hits.length > 0 && best.hits.length > (ranked[1]?.hits.length || 0));
-  const profile = confident && best ? best : GENERAL;
+  const profile = selectedProfile || (confident && best ? best : GENERAL);
   return {
     id: profile.id,
     name: supplied || profile.name,

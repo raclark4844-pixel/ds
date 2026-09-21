@@ -9,7 +9,7 @@ import { useReviewContact } from "@/lib/use-review-contact";
 import { useEffect, useId, useState } from "react";
 import { Button } from "@/components/ui/button";
 
-export function AssistantWebsiteReview() {
+export function AssistantWebsiteReview({ industries = [], onWebsiteChange }: { industries?: string[]; onWebsiteChange?: (website: string) => void } = {}) {
   const contactState = useReviewContact();
   const fieldId = useId();
   const helpId = useId();
@@ -37,6 +37,7 @@ export function AssistantWebsiteReview() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           url: website.trim(),
+          industry: industries.join(" | "),
           contact: contactState.skipContact ? undefined : contactState.contact,
           skipContact: contactState.skipContact,
         }),
@@ -82,6 +83,7 @@ export function AssistantWebsiteReview() {
         value={website}
         onChange={(event) => {
           setWebsite(event.target.value);
+          onWebsiteChange?.(event.target.value);
           setDownload(null);
           setError("");
         }}

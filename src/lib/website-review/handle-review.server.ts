@@ -12,7 +12,7 @@ const schema = z.object({
   contact: reviewContactSchema.optional(),
   skipContact: z.boolean().optional(),
   url: z.string().trim().min(4).max(2048),
-  industry: z.string().trim().max(120).optional(),
+  industry: z.string().trim().max(500).optional(),
   record_id: z.string().trim().max(20).optional(),
   recordId: z.string().trim().max(20).optional(),
 });
