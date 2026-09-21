@@ -6,7 +6,7 @@ export const siteSchema = z.enum(["demore", "demore-technology"]);
 export const leadSchema = z
   .object({
     siteId: siteSchema,
-    source: z.enum(["manual", "website-test"]),
+    source: z.enum(["manual", "website-test", "website-brief"]),
     sourceRecordId: z.string().trim().min(8).max(100),
     name: z.string().trim().min(2).max(120),
     email: z

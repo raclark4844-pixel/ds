@@ -86,6 +86,7 @@ export function IntakeForm({
   const [copied, setCopied] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const skipInitialScroll = useRef(true);
+  const submission = useRef<{ signature: string; id: string; submittedAt: string } | null>(null);
 
   useEffect(() => {
     let next = emptyBrief();
@@ -147,16 +148,26 @@ export function IntakeForm({
   }
 
   async function submit() {
+    if (submitting) return;
     if (!brief.consent) {
       setError("Consent is required to submit the brief.");
       return;
     }
     setSubmitting(true);
     setError("");
+    const signature = JSON.stringify(brief);
+    if (!submission.current || submission.current.signature !== signature) {
+      submission.current = {
+        signature,
+        id: crypto.randomUUID(),
+        submittedAt: new Date().toISOString(),
+      };
+    }
     const completed = {
       ...brief,
       industries: selectedIndustries(brief.industry),
-      submittedAt: new Date().toISOString(),
+      submissionId: submission.current.id,
+      submittedAt: submission.current.submittedAt,
     };
     try {
       const response = await fetch("/api/project-brief", {

@@ -1,3 +1,4 @@
+import { captureProjectBrief, projectBriefLead } from "./project-brief-lead.ts";
 import type { Sql } from "./db";
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -74,6 +75,29 @@ test("lead pipelines preserve idempotency, isolation, version checks and audit h
     assert.equal(stored.email, "test@example.invalid");
     assert.equal("request_hash" in stored, false);
     await assert.rejects(addLead(sql, { ...fixture, siteId: "unknown" }, "test-owner"));
+    const brief = {
+      submissionId: "12345678-1234-4234-8234-123456789abc",
+      name: "Brief fixture",
+      email: "brief@example.invalid",
+      industry: "Restaurant",
+      wants: ["website"],
+      businessName: "Fixture business",
+      reportId: "DTS-TEST",
+    };
+    const captured = await captureProjectBrief(sql, brief);
+    const retry = await captureProjectBrief(sql, brief);
+    assert.equal(captured.id, retry.id);
+    assert.equal(retry.duplicate, true);
+    const briefRow = (await listLeads(sql, "demore-technology")).items.find(
+      (x) => x.id === captured.id,
+    );
+    assert.equal(briefRow?.source, "website-brief");
+    assert.match(String(briefRow?.interest), /DTS-TEST/);
+    assert.equal(
+      (await listLeads(sql, "demore")).items.some((x) => x.id === captured.id),
+      false,
+    );
+    assert.throws(() => projectBriefLead({ ...brief, submissionId: "bad" }), /Invalid submission/);
   } finally {
     await db.close();
   }

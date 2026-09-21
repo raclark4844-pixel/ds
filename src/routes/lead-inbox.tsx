@@ -118,8 +118,9 @@ function Inbox() {
       <h1 className="mt-4 text-4xl font-semibold">Shared lead inbox</h1>
       <p className="mt-4 max-w-3xl text-muted">
         Separate pipelines for both businesses. Capture leads manually, assign an owner, and track
-        progress. Website forms are not connected to this inbox yet. Email, SMS and automatic
-        follow-up remain off.
+        progress. New Technology Solutions project briefs are captured here before their existing
+        notifications. Exterior Solutions forms are not connected yet. This inbox does not send
+        email, SMS or automatic follow-up.
       </p>
       <Link to="/control-center-admin" className="mt-4 inline-block text-volt">
         ← Control center

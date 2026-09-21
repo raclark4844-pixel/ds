@@ -1,5 +1,6 @@
 import { selectedIndustries } from "../../../src/lib/industry-selection";
 type ProjectBrief = {
+  submissionId?: string;
   reportId?: string;
   handoffToken?: string;
   industry?: string;
@@ -138,6 +139,26 @@ export default async function projectBrief(event: { req: Request }) {
       { error: "Email delivery is not configured yet. Please try again later." },
       { status: 503 },
     );
+  }
+
+  // Capture in the owner inbox before delivery; retry references prevent duplicate records.
+  try {
+    const { getSql } = await import("../../../src/lib/db");
+    const { captureProjectBrief } = await import("../../../src/lib/project-brief-lead");
+    await captureProjectBrief(await getSql(), {
+      submissionId: clean(raw.submissionId, 100),
+      name,
+      email,
+      phone: clean(raw.phone, 40),
+      businessName: clean(raw.businessName, 160),
+      industry,
+      wants,
+      goal: clean(raw.goal),
+      reportId,
+    });
+  } catch (error) {
+    const { leadErrorResponse } = await import("../../../src/lib/control-leads");
+    return leadErrorResponse(error);
   }
 
   const fields = [
