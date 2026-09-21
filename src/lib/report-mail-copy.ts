@@ -43,6 +43,8 @@ export function websiteReviewCopyText(report: WebsiteReviewReport) {
   const handoff = `${cfg.site}/contact?need=platform&source=website-review&rid=${encodeURIComponent(report.recordId)}`;
   return [
     "New website review PDF",
+    `Version: ${(report.revisions?.length || 0) + 1}`,
+    ...(report.revisions?.slice(-1).flatMap(r => [`Requested changes: ${r.request}`, `Revised recommendations: ${r.response}`]) || []),
     `Record ID: ${report.recordId}`,
     `Reviewed URL: ${report.current.url}`,
     `Page title: ${report.current.title || "—"}`,

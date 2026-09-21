@@ -1,9 +1,13 @@
+import {
+  downloadReview,
+  registerReview,
+  latestReviewDownload,
+  type ReviewDownload,
+} from "@/lib/review-download";
 import { ReviewContactFields } from "@/components/review-contact-fields";
 import { useReviewContact } from "@/lib/use-review-contact";
 import { useEffect, useId, useState } from "react";
 import { Button } from "@/components/ui/button";
-
-type Download = { href: string; filename: string };
 
 export function AssistantWebsiteReview() {
   const contactState = useReviewContact();
@@ -12,15 +16,14 @@ export function AssistantWebsiteReview() {
   const [website, setWebsite] = useState("");
   const [phase, setPhase] = useState<"idle" | "review" | "pdf">("idle");
   const [error, setError] = useState("");
-  const [download, setDownload] = useState<Download | null>(null);
+  const [download, setDownload] = useState<ReviewDownload | null>(latestReviewDownload);
   const busy = phase !== "idle";
 
-  useEffect(
-    () => () => {
-      if (download) URL.revokeObjectURL(download.href);
-    },
-    [download],
-  );
+  useEffect(() => {
+    const ready = () => setDownload(latestReviewDownload());
+    window.addEventListener("demore:pdf-ready", ready);
+    return () => window.removeEventListener("demore:pdf-ready", ready);
+  }, []);
 
   async function createReport(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -48,26 +51,14 @@ export function AssistantWebsiteReview() {
         }),
       );
       setPhase("pdf");
-      const pdf = await fetch("/api/website-review-report", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          recordId: review.recordId,
-          token: review.token,
-        }),
-        signal: AbortSignal.timeout(45000),
-      });
-      if (!pdf.ok || !pdf.headers.get("content-type")?.includes("application/pdf")) {
-        const data = await pdf.json().catch(() => ({}));
-        throw new Error(data.error || "The PDF could not be created. Please try again.");
-      }
-      const blob = await pdf.blob();
-      if ((await blob.slice(0, 5).text()) !== "%PDF-")
-        throw new Error("The PDF could not be created. Please try again.");
-      setDownload({
-        href: URL.createObjectURL(blob),
-        filename: `Demore-Website-Improvements-${review.recordId}.pdf`,
-      });
+      const active = {
+        recordId: review.recordId,
+        token: review.token,
+        brief: review.report.assistantBrief,
+        revision: 1,
+      };
+      registerReview(active);
+      await downloadReview(active);
     } catch (err) {
       setError(
         err instanceof Error && err.name === "TimeoutError"
@@ -137,7 +128,7 @@ export function AssistantWebsiteReview() {
             download={download.filename}
             className="inline-block py-2 font-medium text-volt underline underline-offset-4"
           >
-            Download your improvement PDF
+            Download your improvement PDF (v{download.revision})
           </a>
           <p className="text-muted">Your review is also ready to discuss in this chat.</p>
         </div>

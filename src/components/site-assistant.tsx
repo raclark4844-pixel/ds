@@ -1,3 +1,10 @@
+import {
+  activeReview,
+  downloadReview,
+  registerReview,
+  type ReviewDownload,
+} from "@/lib/review-download";
+import { isPdfRevisionRequest } from "@/lib/website-review/revision";
 import { IndustryMultiselect } from "@/components/industry-multiselect";
 import { selectedIndustries } from "@/lib/industry-selection";
 import { useEffect, useState } from "react";
@@ -14,6 +21,7 @@ import {
 type Msg = {
   role: "user" | "assistant";
   content: string;
+  pdf?: ReviewDownload;
   citations?: Array<{ url: string; title?: string }>;
   searchedAt?: string | null;
 };
@@ -65,15 +73,58 @@ export function SiteAssistant() {
       }
       if (detail.open) setOpen(true);
     };
+    const onPdfReady = (event: Event) => {
+      const data = (event as CustomEvent<ReviewDownload & { brief: string }>).detail;
+      setReportId(data.recordId);
+      setReviewBrief(data.brief);
+      storeReviewBrief(data.brief);
+      storeReportId(data.recordId);
+      setMessages((current) => [
+        ...current,
+        {
+          role: "assistant",
+          content: `Your PDF version ${data.revision} is ready. A copy has been sent to Ryan.`,
+          pdf: data,
+        },
+      ]);
+    };
+    window.addEventListener("demore:pdf-ready", onPdfReady);
     window.addEventListener("demore:comparison-ready", onComparisonReady);
     window.addEventListener("demore:review-ready", onReviewReady);
     return () => {
+      window.removeEventListener("demore:pdf-ready", onPdfReady);
       window.removeEventListener("demore:comparison-ready", onComparisonReady);
       window.removeEventListener("demore:review-ready", onReviewReady);
     };
   }, []);
 
-  async function send() {
+  async function revisePdf(message: string) {
+    const review = activeReview();
+    if (!review || review.recordId !== reportId) {
+      setMessages((current) => [
+        ...current,
+        {
+          role: "assistant",
+          content:
+            "Generate a website review in this page first, then I can update its PDF. Your existing downloads remain available.",
+        },
+      ]);
+      return;
+    }
+    const response = await fetch("/api/website-review-revise", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...review, message, industries }),
+      signal: AbortSignal.timeout(60000),
+    });
+    const updated = await response.json();
+    if (!response.ok) throw new Error(updated.error || "Unable to revise the PDF. Please retry.");
+    registerReview(updated);
+    setMessages((current) => [...current, { role: "assistant", content: updated.text }]);
+    await downloadReview(updated);
+  }
+
+  async function send(updatePdf = false) {
     const message = draft.trim();
     if (!message || busy) return;
     setDraft("");
@@ -81,6 +132,10 @@ export function SiteAssistant() {
     setMessages(next);
     setBusy(true);
     try {
+      if (updatePdf || isPdfRevisionRequest(message)) {
+        await revisePdf(message);
+        return;
+      }
       const token = sessionStorage.getItem("demore-report-token") || "";
       const res = await fetch("/api/assistant", {
         method: "POST",
@@ -111,13 +166,15 @@ export function SiteAssistant() {
           searchedAt: data.searchedAt,
         },
       ]);
-    } catch {
-      setMessages([
-        ...next,
+    } catch (error) {
+      setMessages((current) => [
+        ...current,
         {
           role: "assistant",
           content:
-            "Live web information is temporarily unavailable. Use the saved comparison report or labeled benchmarks.",
+            error instanceof Error
+              ? error.message
+              : "The request could not be completed. Your previous PDF is still available.",
         },
       ]);
     } finally {
@@ -177,6 +234,15 @@ export function SiteAssistant() {
               {messages.map((item, index) => (
                 <div key={index} className={item.role === "user" ? "text-fg" : "text-muted"}>
                   <ChatCopy text={item.content} />
+                  {item.pdf ? (
+                    <a
+                      className="mt-2 inline-block rounded-md border border-volt/30 px-3 py-2 text-volt underline"
+                      href={item.pdf.href}
+                      download={item.pdf.filename}
+                    >
+                      Download PDF · Version {item.pdf.revision}
+                    </a>
+                  ) : null}
                   {item.citations?.length ? (
                     <ul className="mt-1 list-disc pl-4 text-xs">
                       {item.citations.map((cite) => (
@@ -193,8 +259,12 @@ export function SiteAssistant() {
               ))}
             </div>
           </div>
+          <div className="border-t border-line px-3 py-2 text-xs text-muted">
+            Type your changes, then choose Update PDF. Requests such as “Update my report to include
+            catering” also update it automatically.
+          </div>
           <form
-            className="flex shrink-0 gap-2 border-t border-line p-2"
+            className="flex flex-wrap shrink-0 gap-2 border-t border-line p-2"
             onSubmit={(e) => {
               e.preventDefault();
               void send();
@@ -209,6 +279,15 @@ export function SiteAssistant() {
             />
             <Button type="submit" size="sm" disabled={busy}>
               {busy ? "…" : "Send"}
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant="volt"
+              disabled={busy || !draft.trim()}
+              onClick={() => void send(true)}
+            >
+              Update PDF
             </Button>
           </form>
         </div>

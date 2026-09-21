@@ -1,3 +1,4 @@
+import { registerReview, downloadReview, activeReview } from "@/lib/review-download";
 import { ReviewContactFields } from "@/components/review-contact-fields";
 import { useReviewContact } from "@/lib/use-review-contact";
 import { useEffect, useState } from "react";
@@ -100,38 +101,16 @@ function ReviewResult({ report, token }: { report: WebsiteReviewReport; token: s
     setBusy(true);
     setError("");
     try {
-      const res = await fetch("/api/website-review-report", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ recordId: report.recordId, token }),
-      });
-      const type = res.headers.get("content-type") || "";
-      if (!res.ok || !type.includes("application/pdf")) {
-        let message = "The PDF could not be created. Please try again.";
-        try {
-          const data = await res.json();
-          if (data.error) message = data.error;
-        } catch {
-          /* keep fallback */
-        }
-        throw new Error(message);
-      }
-      const blob = await res.blob();
-      const head = new Uint8Array(await blob.slice(0, 5).arrayBuffer());
-      if (String.fromCharCode(...head) !== "%PDF-")
-        throw new Error("Server did not return a PDF file.");
-      const name =
-        res.headers.get("content-disposition")?.match(/filename="([^"]+)"/)?.[1] ||
-        `Demore-Website-Report-${report.recordId}.pdf`;
-      const href = URL.createObjectURL(blob);
+      const current = activeReview();
+      const file = await downloadReview(
+        current?.recordId === report.recordId
+          ? current
+          : { recordId: report.recordId, token, brief: report.assistantBrief, revision: 1 },
+      );
       const a = document.createElement("a");
-      a.href = href;
-      a.download = name;
-      a.rel = "noopener";
-      document.body.appendChild(a);
+      a.href = file.href;
+      a.download = file.filename;
       a.click();
-      a.remove();
-      URL.revokeObjectURL(href);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "The PDF could not be created. Please try again.",
@@ -431,6 +410,7 @@ export function WebsiteReview() {
       window.dispatchEvent(
         new CustomEvent("demore:review-ready", { detail: { reportId: nextId, brief, open: true } }),
       );
+      registerReview({ recordId: nextId, token: data.token, brief, revision: 1 });
       setToken(data.token);
       setReport(data.report);
     } catch (err) {

@@ -86,7 +86,7 @@ export async function sendWebsiteReviewCopy(
       text: websiteReviewCopyText(report),
       attachments: [attachment(websiteReviewFilename(report.recordId), pdf)],
     },
-    `website-review/${report.recordId}/${report.createdAt}`,
+    `website-review/${report.recordId}/${report.createdAt}/v${(report.revisions?.length || 0) + 1}`,
   );
 }
 

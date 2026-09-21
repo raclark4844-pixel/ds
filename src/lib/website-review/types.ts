@@ -58,6 +58,7 @@ export type WebsiteReviewReport = {
   contact?: import("./contact").ReviewContact;
   ownerReview?: boolean;
   publicContacts?: import("./contact").PublicContact[];
+  revisions?: Array<{ number: number; at: string; request: string; response: string }>;
   version: 3;
   recordId: string;
   createdAt: string;
