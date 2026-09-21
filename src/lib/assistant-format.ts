@@ -104,6 +104,21 @@ export function savedReviewFallback(reviewBrief: string, reportSummary = "") {
   ].join("\n");
 }
 
+export function publishedSiteFallback() {
+  return [
+    "A live model reply is temporarily unavailable. This is the published Demore Technology Solutions position, labeled **Customer provided / site copy**, not a ranking or competitor scan.",
+    "",
+    "- **Demore Technology Solutions** builds custom websites, stores, and AI-assisted growth systems.",
+    "- Based in **Mentor, Lake County, Ohio**. Nationwide, remote.",
+    "- Review a public website at https://www.demoretechnologysolutions.com/compare#website-review",
+    "- File a project at https://www.demoretechnologysolutions.com/contact",
+    "- Email ryan@demoretechnologysolutions.com",
+    "",
+    "Run the website review first if you want Ask Demore to use your page's public HTML findings.",
+    "Rankings, AI citations, and conversion lifts are not guaranteed.",
+  ].join("\n");
+}
+
 export function responsesBody(input: {
   model: string;
   instructions: string;

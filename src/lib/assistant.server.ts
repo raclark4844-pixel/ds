@@ -7,6 +7,7 @@ import {
   chatBody,
   conversationInput,
   parseAssistantOutput,
+  publishedSiteFallback,
   responsesBody,
   savedReviewFallback,
   shouldUseWebSearch,
@@ -59,23 +60,6 @@ export async function runAssistant(input: {
   const apiKey = process.env.XAI_API_KEY?.trim();
   const searchedAt = new Date().toISOString().slice(0, 10);
   const allowSearch = shouldUseWebSearch(input.message);
-  const empty = {
-    webSearchEnabled: allowSearch,
-    webSearchUsed: false,
-    citations: [] as Array<{ url: string; title?: string }>,
-    searchedAt,
-  };
-
-  if (!apiKey) {
-    return {
-      ok: false as const,
-      error: "The assistant is not configured on this environment (missing server XAI_API_KEY).",
-      model: ASSISTANT_MODEL,
-      ...empty,
-      reportId: null,
-      ids: null,
-    };
-  }
 
   let reportSummary = "";
   let reportId = input.reportId?.trim() || "";
@@ -92,9 +76,29 @@ export async function runAssistant(input: {
     }
   }
 
+  const ids = reportId ? unifiedIds(reportId) : null;
+  const localAnswer = () => {
+    const fallback = savedReviewFallback(reviewBrief, reportSummary) || publishedSiteFallback();
+    searchLog.push({ at: new Date().toISOString(), reportId: reportId || null, searches: 0, ok: false });
+    return {
+      ok: true as const,
+      text: fallback,
+      model: reviewBrief || reportSummary ? "saved-review" : "published-site",
+      endpoint: "local",
+      webSearchEnabled: allowSearch,
+      webSearchUsed: false,
+      webSearchCalls: 0,
+      citations: [] as Array<{ url: string; title?: string }>,
+      searchedAt: null,
+      reportId: reportId || null,
+      ids,
+    };
+  };
+
+  if (!apiKey) return localAnswer();
+
   const messages = conversationInput(input.message, input.history || []);
   const instructions = systemPrompt(reportSummary, reportId || null, reviewBrief);
-  const ids = reportId ? unifiedIds(reportId) : null;
 
   const done = (
     text: string,
@@ -177,30 +181,5 @@ export async function runAssistant(input: {
     }
   }
 
-  searchLog.push({ at: new Date().toISOString(), reportId: reportId || null, searches: 0, ok: false });
-  const fallback = savedReviewFallback(reviewBrief, reportSummary);
-  if (fallback) {
-    return {
-      ok: true as const,
-      text: fallback,
-      model: "saved-review",
-      endpoint: "local",
-      webSearchEnabled: allowSearch,
-      webSearchUsed: false,
-      webSearchCalls: 0,
-      citations: [],
-      searchedAt: null,
-      reportId: reportId || null,
-      ids,
-    };
-  }
-
-  return {
-    ok: false as const,
-    error: "Live web information is temporarily unavailable. Continue from the saved comparison report or labeled benchmarks.",
-    model: ASSISTANT_MODEL,
-    ...empty,
-    reportId: reportId || null,
-    ids,
-  };
+  return localAnswer();
 }

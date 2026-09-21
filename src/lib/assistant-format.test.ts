@@ -4,6 +4,7 @@ import {
   chatBody,
   conversationInput,
   parseAssistantOutput,
+  publishedSiteFallback,
   responsesBody,
   savedReviewFallback,
   shouldUseWebSearch,
@@ -53,10 +54,24 @@ describe("Ask Demore formatting", () => {
     assert.equal(savedReviewFallback(""), "");
   });
 
-  it("keeps vendor names out of the system prompt", () => {
+  it("answers from published site copy when no review is attached", () => {
+    const text = publishedSiteFallback();
+    assert.match(text, /Mentor, Lake County, Ohio/);
+    assert.match(text, /ryan@demoretechnologysolutions.com/);
+    assert.match(text, /Rankings, AI citations, and conversion lifts are not guaranteed/);
+    assert.doesNotMatch(text, /ChatGPT|Claude|Gemini|OpenAI/i);
+    assert.doesNotMatch(text, /guaranteed ranking/i);
+    assert.doesNotMatch(text, /Live web information is temporarily unavailable\. Continue from the saved comparison report or labeled benchmarks/);
+  });
+
+  it("keeps vendor names out of the system prompt and keeps lead-engine pages", () => {
     const prompt = systemPrompt("", "DTS-41F6B18F", "Public HTML scan only.");
     assert.doesNotMatch(prompt, /ChatGPT|Claude|Gemini|OpenAI/i);
     assert.match(prompt, /DTS-41F6B18F/);
+    assert.match(prompt, /lead-generation/);
+    assert.match(prompt, /industries\/restaurants/);
+    assert.match(prompt, /industries\/pubs/);
+    assert.match(prompt, /industries\/pizza-shops/);
   });
 
   it("keeps chat completions on the system-message path", () => {
