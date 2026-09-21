@@ -1,4 +1,13 @@
-import { CITY, CITY_LINE, COUNTRY, EMAIL, PHONE, REGION_ABBR, SITE_NAME, SITE_URL } from "@/lib/site";
+import {
+  CITY,
+  CITY_LINE,
+  COUNTRY,
+  EMAIL,
+  PHONE,
+  REGION_ABBR,
+  SITE_NAME,
+  SITE_URL,
+} from "@/lib/site";
 import { isPlaceholder } from "@/lib/publish";
 
 const postalAddress = isPlaceholder(CITY)
@@ -19,14 +28,46 @@ function contactFields() {
   };
 }
 
-export function pageHead({ title, description, path }: { title: string; description: string; path: string }) {
+export function pageHead({
+  title,
+  description,
+  path,
+}: {
+  title: string;
+  description: string;
+  path: string;
+}) {
   const url = `${SITE_URL}${path}`;
   const og = `${SITE_URL}/og.png`;
+  const privatePage = /^\/(?:login|admin|control-center-admin|lead-inbox)(?:\/|$)/.test(path);
   return {
+    scripts: privatePage
+      ? []
+      : [
+          {
+            type: "application/ld+json",
+            children: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebPage",
+              "@id": `${url}#webpage`,
+              url,
+              name: title,
+              description,
+              isPartOf: { "@id": `${SITE_URL}/#website` },
+              publisher: { "@id": `${SITE_URL}/#organization` },
+              inLanguage: "en-US",
+            }).replace(/</g, "\\u003c"),
+          },
+        ],
     meta: [
       { title },
       { name: "description", content: description },
-      { name: "robots", content: "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" },
+      {
+        name: "robots",
+        content: privatePage
+          ? "noindex,nofollow"
+          : "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1",
+      },
       { name: "author", content: SITE_NAME },
       ...(isPlaceholder(CITY_LINE) ? [] : [{ name: "geo.placename", content: CITY_LINE }]),
       ...(REGION_ABBR ? [{ name: "geo.region", content: `US-${REGION_ABBR}` }] : []),
@@ -126,7 +167,12 @@ export function organizationJsonLd() {
   };
 }
 
-export function serviceJsonLd({ name, description, path, serviceType }: {
+export function serviceJsonLd({
+  name,
+  description,
+  path,
+  serviceType,
+}: {
   name: string;
   description: string;
   path: string;
@@ -141,7 +187,12 @@ export function serviceJsonLd({ name, description, path, serviceType }: {
     url: `${SITE_URL}${path}`,
     areaServed,
     serviceType,
-    provider: { "@id": `${SITE_URL}/#organization`, "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    provider: {
+      "@id": `${SITE_URL}/#organization`,
+      "@type": "Organization",
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
   };
 }
 

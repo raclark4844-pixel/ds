@@ -75,6 +75,37 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-line/80 bg-bg/75 backdrop-blur-xl">
+      {signedIn ? (
+        <nav aria-label="Lead Engine shortcuts" className="border-b border-line bg-surface">
+          <div className="mx-auto flex max-w-6xl flex-wrap gap-2 px-4 py-2 sm:px-6">
+            {[
+              ["/operations", "Lead Engine"],
+              ["/campaigns/new", "New campaign"],
+              ["/campaign-history", "All campaigns — current & past"],
+            ].map(([path, label]) => (
+              <a
+                key={path}
+                href={`https://demore-lead-engine.vercel.app/api/website-signin/start?next=${encodeURIComponent(path)}`}
+                className="inline-flex min-h-11 items-center rounded-lg border border-volt/30 px-4 py-2 text-sm font-medium text-volt hover:bg-elevated"
+              >
+                {label}
+              </a>
+            ))}
+          </div>
+        </nav>
+      ) : (
+        <div className="border-b border-line bg-surface">
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-2 sm:px-6">
+            <span className="text-sm text-muted">Explore the Demore Lead Engine</span>
+            <a
+              href="/lead-generation#preview"
+              className="inline-flex min-h-11 items-center rounded-lg border border-volt/30 px-4 py-2 text-sm font-medium text-volt"
+            >
+              Preview lead generation
+            </a>
+          </div>
+        </div>
+      )}
       {isAdmin ? (
         <div className="border-b border-line bg-surface">
           <div className="mx-auto max-w-6xl px-4 py-2 sm:px-6">
@@ -158,14 +189,6 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          {signedIn ? (
-            <a
-              href="https://demore-lead-engine.vercel.app/api/website-signin/start"
-              className="shrink-0 px-2 py-2 text-sm font-medium text-volt"
-            >
-              Workspace
-            </a>
-          ) : null}
           {signedIn ? (
             <button
               type="button"

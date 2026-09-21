@@ -55,6 +55,7 @@ The Demore Report ID is the only identifier for one comparison interaction. The 
 ## Public pages
 - /
 - /platform
+- /lead-generation
 - /websites
 - /growth
 - /automation
@@ -80,3 +81,9 @@ Site: https://www.demoretechnologysolutions.com
 - /industries/restaurants: menus, reservations, catering and group inquiries.
 - /industries/pubs: events, private parties and group bookings.
 - /industries/pizza-shops: ordering paths, delivery coverage and catering inquiries.
+
+## Lead Engine preview and campaign access
+Public detailed guide: https://www.demoretechnologysolutions.com/lead-generation
+Interactive preview: https://www.demoretechnologysolutions.com/lead-generation#preview
+The preview uses fictional restaurant, pub, and pizza-shop examples. It shows all, current and past campaigns and a sample new-campaign planner. It creates no records and sends no messages.
+Signed-in users can choose Lead Engine, New campaign, or All campaigns — current & past from shared navigation. All campaigns displays current, past and draft campaigns across customers with a customer filter. Website sign-in matches an existing active workspace account and preserves its permissions. Customer campaign records are private and must not be represented as public examples.

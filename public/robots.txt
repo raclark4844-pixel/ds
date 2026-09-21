@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /login
+Disallow: /admin
+Disallow: /control-center-admin
+Disallow: /lead-inbox
 
 Sitemap: https://www.demoretechnologysolutions.com/sitemap.xml

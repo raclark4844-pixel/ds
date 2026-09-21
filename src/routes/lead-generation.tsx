@@ -1,3 +1,4 @@
+import { LeadEnginePreview } from "@/components/lead-engine-preview";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowDown, ArrowUpRight, Check, LockKeyhole } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,7 @@ import { JsonLd } from "@/components/json-ld";
 import { FaqList } from "@/components/faq-list";
 import { LeadIndustryExamples } from "@/components/lead-industry-examples";
 import { leadLayers, workspaceModules, leadFaqs } from "@/lib/lead-generation-content";
-import { pageHead, serviceJsonLd, faqJsonLd } from "@/lib/seo";
+import { pageHead, serviceJsonLd, faqJsonLd, breadcrumbJsonLd } from "@/lib/seo";
 
 const description =
   "A Demore Technology Solutions lead-generation platform connecting websites, campaigns, customer records, lead review, conversations, handoffs, costs, and billing.";
@@ -86,6 +87,12 @@ function LeadGeneration() {
         })}
       />
       <JsonLd data={faqJsonLd(leadFaqs)} />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "Lead generation", path: "/lead-generation" },
+        ])}
+      />
       <section className="relative grid gap-10 overflow-hidden pt-12 sm:pt-20 lg:grid-cols-[1.25fr_0.75fr] lg:items-center">
         <div>
           <p className="kicker">DEMORE TECHNOLOGY SOLUTIONS · LEAD GENERATION</p>
@@ -105,13 +112,13 @@ function LeadGeneration() {
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline">
-              <a href="#workspace">
-                Explore the workspace <ArrowDown className="ml-2 size-4" aria-hidden="true" />
+              <a href="#preview">
+                Preview lead generation <ArrowDown className="ml-2 size-4" aria-hidden="true" />
               </a>
             </Button>
           </div>
           <a
-            href="https://demore-lead-engine.vercel.app/login"
+            href="https://demore-lead-engine.vercel.app/api/website-signin/start"
             className="mt-6 inline-flex min-h-11 items-center gap-2 text-sm text-muted underline underline-offset-4"
           >
             <LockKeyhole className="size-4" aria-hidden="true" />
@@ -154,6 +161,8 @@ function LeadGeneration() {
         className="mt-10 flex flex-wrap gap-2 border-y border-line py-4"
       >
         {[
+          ["#preview", "Interactive preview"],
+          ["#campaign-access", "Campaign access"],
           ["#system", "The system"],
           ["#workspace", "Workspace features"],
           ["#workflow", "How it works"],
@@ -170,6 +179,63 @@ function LeadGeneration() {
           </a>
         ))}
       </nav>
+      <Section
+        id="preview"
+        className="scroll-mt-48"
+        kicker="TRY THE WORKFLOW"
+        title="See your next campaign take shape."
+        lede="Browse current and past example campaigns together, or preview the first steps in a new campaign."
+      >
+        <LeadEnginePreview />
+      </Section>
+      <Section
+        id="campaign-access"
+        className="scroll-mt-48"
+        kicker="ONE LOGIN. CONNECTED CAMPAIGNS."
+        title="Start new work. Keep the full history in view."
+      >
+        <div className="grid gap-4 md:grid-cols-3">
+          {[
+            {
+              title: "Start a new campaign",
+              body: "Choose the customer, industry, offer, territory, lead goals, and requested channels. Save a draft, then prepare and review it before any live activity.",
+              path: "/campaigns/new",
+              label: "New campaign",
+            },
+            {
+              title: "Current and past, together",
+              body: "Open all customers’ campaigns in one view, including drafts and previous activity. Narrow by customer and open a campaign to review its recorded status and history.",
+              path: "/campaign-history",
+              label: "View all campaigns",
+            },
+            {
+              title: "Keep the next step connected",
+              body: "Use the Lead Engine overview to move between customers, conversations, lead review, campaign sending, costs, and handoffs. Your existing account permissions apply.",
+              path: "/operations",
+              label: "Open Lead Engine",
+            },
+          ].map((item) => (
+            <article
+              key={item.title}
+              className="flex flex-col rounded-xl border border-line bg-surface p-6"
+            >
+              <h3 className="font-display text-2xl font-semibold">{item.title}</h3>
+              <p className="mt-3 mb-5 text-sm leading-relaxed text-muted">{item.body}</p>
+              <Button asChild variant="outline" className="mt-auto self-start">
+                <a
+                  href={`https://demore-lead-engine.vercel.app/api/website-signin/start?next=${encodeURIComponent(item.path)}`}
+                >
+                  {item.label}
+                </a>
+              </Button>
+            </article>
+          ))}
+        </div>
+        <p className="mt-5 text-sm text-muted">
+          Use your website login with the email on your active workspace account. Public visitors
+          can explore the preview above; customer records and live campaign tools require sign-in.
+        </p>
+      </Section>
       <Section
         id="system"
         className="scroll-mt-24"

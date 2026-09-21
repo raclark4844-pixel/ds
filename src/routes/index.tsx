@@ -191,16 +191,22 @@ function Home() {
           </h3>
           <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted">
             Bring prospect research, campaign organization, outreach drafts, and follow-up into one
-            workspace. Explore industry examples for restaurants, pubs, pizza shops, and
-            contractors.
+            workspace. Start a campaign draft, manage current activity, and review past campaigns
+            together across customers. Explore industry examples for restaurants, pubs, pizza shops,
+            and contractors.
           </p>
           <Link
             to="/lead-generation"
             className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-volt underline underline-offset-4"
           >
-            See the lead-generation workspace
+            Explore lead-generation features
             <ArrowUpRight aria-hidden="true" className="size-4" />
           </Link>
+          <div className="mt-5">
+            <Button asChild variant="outline">
+              <a href="/lead-generation#preview">Preview lead generation</a>
+            </Button>
+          </div>
         </div>
       </Section>
 
@@ -329,9 +335,20 @@ function Home() {
       </div>
       <section className="mt-16 rounded-2xl border border-line bg-surface p-6 sm:p-10">
         <p className="kicker">New · AI Control Center</p>
-        <h2 className="mt-4 font-display text-3xl font-semibold">Coordinate your sites, specialists and approvals.</h2>
-        <p className="mt-4 max-w-3xl text-muted">Explore a multi-site framework for SEO, content, lead routing, follow-up, phone-agent management, quality checks, reporting and monitoring. See how provider routing, independent review and cost controls fit together before activating integrations.</p>
-        <Link to="/control-center" className="mt-6 inline-flex rounded-lg bg-volt px-5 py-3 font-semibold text-black">Preview the AI Control Center →</Link>
+        <h2 className="mt-4 font-display text-3xl font-semibold">
+          Coordinate your sites, specialists and approvals.
+        </h2>
+        <p className="mt-4 max-w-3xl text-muted">
+          Explore a multi-site framework for SEO, content, lead routing, follow-up, phone-agent
+          management, quality checks, reporting and monitoring. See how provider routing,
+          independent review and cost controls fit together before activating integrations.
+        </p>
+        <Link
+          to="/control-center"
+          className="mt-6 inline-flex rounded-lg bg-volt px-5 py-3 font-semibold text-black"
+        >
+          Preview the AI Control Center →
+        </Link>
       </section>
     </main>
   );

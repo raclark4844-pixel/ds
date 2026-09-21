@@ -179,6 +179,18 @@ export const industryExamples = [
 
 export const leadFaqs = [
   {
+    q: "Can I preview Lead Engine without logging in?",
+    a: "Yes. The interactive preview on this page shows fictional current, past, and draft campaign examples and a sample campaign planner. It does not access customer data, create a live campaign, or send messages.",
+  },
+  {
+    q: "Can I see current and past campaigns at the same time?",
+    a: "Yes. Sign in and choose All campaigns — current & past. The campaign history view brings all customers’ campaigns together, with a customer filter and links to each campaign’s details.",
+  },
+  {
+    q: "Do I need a separate Lead Engine password?",
+    a: "You can use your website login when its verified email matches an existing active Lead Engine account. Your existing permissions are preserved. Existing employee username and password login remains available.",
+  },
+  {
     q: "Is this just a website or a separate lead list?",
     a: "The website is the public entry point. The private workspace organizes customers, campaign planning, lead review, conversations, handoffs, and costs. Website forms, existing tools, and provider connections are scoped during setup.",
   },
