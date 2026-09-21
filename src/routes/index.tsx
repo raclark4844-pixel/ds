@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
+import { AssistantWebsiteReview } from "@/components/assistant-website-review";
 import { CtaBand } from "@/components/cta-band";
 import { FaqList } from "@/components/faq-list";
 import { JsonLd } from "@/components/json-ld";
@@ -189,6 +190,21 @@ function Home() {
             See the lead-generation workspace
             <ArrowUpRight aria-hidden="true" className="size-4" />
           </Link>
+        </div>
+      </Section>
+
+      <Section
+        id="website-improvement-report"
+        kicker="Your website, with a next step"
+        title="See how Demore could improve your website."
+        lede="Add your website below for a downloadable PDF with practical recommendations for design, search visibility, measurement, and customer inquiries. Then ask Demore to help you understand the findings."
+      >
+        <div className="max-w-2xl rounded-xl border border-volt/30 bg-surface p-3 sm:p-5">
+          <AssistantWebsiteReview />
+          <p className="px-3 pt-3 text-xs leading-relaxed text-muted">
+            No website? You can still explore our services and chat with Ask Demore. Reports review
+            public website signals; recommendations are opportunities to verify and discuss.
+          </p>
         </div>
       </Section>
 
