@@ -1,5 +1,6 @@
 export type AppPath =
   | "/"
+  | "/control-center"
   | "/platform"
   | "/websites"
   | "/lead-generation"
@@ -38,6 +39,7 @@ export const dockTabs: readonly NavItem[] = [
 ];
 
 export const allMainPages: readonly NavItem[] = [
+  { to: "/control-center", label: "AI Control Center" },
   { to: "/lead-generation", label: "Lead Generation & Campaigns" },
   { to: "/", label: "Home" },
   { to: "/platform", label: "AI Marketing Platform" },

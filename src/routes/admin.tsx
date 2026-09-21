@@ -35,7 +35,7 @@ async function readJson<T>(response: Response): Promise<T> {
 }
 
 function AdminRoute() {
-  return <AdminDashboard />;
+  return <><div className="mx-auto max-w-6xl px-4 pt-6"><a href="/control-center-admin" className="text-volt underline">Open multi-site control center →</a></div><AdminDashboard /></>;
 }
 
 function AdminDashboard() {

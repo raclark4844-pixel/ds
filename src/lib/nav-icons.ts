@@ -15,6 +15,7 @@ import type { AppPath } from "@/lib/nav";
 
 export const navIcons: Record<AppPath, LucideIcon> = {
   "/": Home,
+  "/control-center": Bot,
   "/platform": Sparkles,
   "/websites": Globe,
   "/growth": TrendingUp,

@@ -327,6 +327,12 @@ function Home() {
           secondary={{ to: "/growth", label: "See the growth stack", variant: "volt" }}
         />
       </div>
+      <section className="mt-16 rounded-2xl border border-line bg-surface p-6 sm:p-10">
+        <p className="kicker">New · AI Control Center</p>
+        <h2 className="mt-4 font-display text-3xl font-semibold">Coordinate your sites, specialists and approvals.</h2>
+        <p className="mt-4 max-w-3xl text-muted">Explore a multi-site framework for SEO, content, lead routing, follow-up, phone-agent management, quality checks, reporting and monitoring. See how provider routing, independent review and cost controls fit together before activating integrations.</p>
+        <Link to="/control-center" className="mt-6 inline-flex rounded-lg bg-volt px-5 py-3 font-semibold text-black">Preview the AI Control Center →</Link>
+      </section>
     </main>
   );
 }

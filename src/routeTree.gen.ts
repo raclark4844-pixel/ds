@@ -14,6 +14,8 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AutomationRouteImport } from './routes/automation'
 import { Route as CompareRouteImport } from './routes/compare'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as ControlCenterRouteImport } from './routes/control-center'
+import { Route as ControlCenterAdminRouteImport } from './routes/control-center-admin'
 import { Route as GrowthRouteImport } from './routes/growth'
 import { Route as IndustriesRouteImport } from './routes/industries'
 import { Route as LeadGenerationRouteImport } from './routes/lead-generation'
@@ -56,6 +58,16 @@ const CompareRoute = CompareRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ControlCenterRoute = ControlCenterRouteImport.update({
+  id: '/control-center',
+  path: '/control-center',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ControlCenterAdminRoute = ControlCenterAdminRouteImport.update({
+  id: '/control-center-admin',
+  path: '/control-center-admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GrowthRoute = GrowthRouteImport.update({
@@ -158,6 +170,8 @@ export interface FileRoutesByFullPath {
   '/automation': typeof AutomationRoute
   '/compare': typeof CompareRoute
   '/contact': typeof ContactRoute
+  '/control-center': typeof ControlCenterRoute
+  '/control-center-admin': typeof ControlCenterAdminRoute
   '/growth': typeof GrowthRoute
   '/industries': typeof IndustriesRouteWithChildren
   '/lead-generation': typeof LeadGenerationRoute
@@ -183,6 +197,8 @@ export interface FileRoutesByTo {
   '/automation': typeof AutomationRoute
   '/compare': typeof CompareRoute
   '/contact': typeof ContactRoute
+  '/control-center': typeof ControlCenterRoute
+  '/control-center-admin': typeof ControlCenterAdminRoute
   '/growth': typeof GrowthRoute
   '/lead-generation': typeof LeadGenerationRoute
   '/login': typeof LoginRoute
@@ -208,6 +224,8 @@ export interface FileRoutesById {
   '/automation': typeof AutomationRoute
   '/compare': typeof CompareRoute
   '/contact': typeof ContactRoute
+  '/control-center': typeof ControlCenterRoute
+  '/control-center-admin': typeof ControlCenterAdminRoute
   '/growth': typeof GrowthRoute
   '/industries': typeof IndustriesRouteWithChildren
   '/lead-generation': typeof LeadGenerationRoute
@@ -235,6 +253,8 @@ export interface FileRouteTypes {
     | '/automation'
     | '/compare'
     | '/contact'
+    | '/control-center'
+    | '/control-center-admin'
     | '/growth'
     | '/industries'
     | '/lead-generation'
@@ -260,6 +280,8 @@ export interface FileRouteTypes {
     | '/automation'
     | '/compare'
     | '/contact'
+    | '/control-center'
+    | '/control-center-admin'
     | '/growth'
     | '/lead-generation'
     | '/login'
@@ -284,6 +306,8 @@ export interface FileRouteTypes {
     | '/automation'
     | '/compare'
     | '/contact'
+    | '/control-center'
+    | '/control-center-admin'
     | '/growth'
     | '/industries'
     | '/lead-generation'
@@ -310,6 +334,8 @@ export interface RootRouteChildren {
   AutomationRoute: typeof AutomationRoute
   CompareRoute: typeof CompareRoute
   ContactRoute: typeof ContactRoute
+  ControlCenterRoute: typeof ControlCenterRoute
+  ControlCenterAdminRoute: typeof ControlCenterAdminRoute
   GrowthRoute: typeof GrowthRoute
   IndustriesRoute: typeof IndustriesRouteWithChildren
   LeadGenerationRoute: typeof LeadGenerationRoute
@@ -355,6 +381,20 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/control-center': {
+      id: '/control-center'
+      path: '/control-center'
+      fullPath: '/control-center'
+      preLoaderRoute: typeof ControlCenterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/control-center-admin': {
+      id: '/control-center-admin'
+      path: '/control-center-admin'
+      fullPath: '/control-center-admin'
+      preLoaderRoute: typeof ControlCenterAdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/growth': {
@@ -522,6 +562,8 @@ const rootRouteChildren: RootRouteChildren = {
   AutomationRoute: AutomationRoute,
   CompareRoute: CompareRoute,
   ContactRoute: ContactRoute,
+  ControlCenterRoute: ControlCenterRoute,
+  ControlCenterAdminRoute: ControlCenterAdminRoute,
   GrowthRoute: GrowthRoute,
   IndustriesRoute: IndustriesRouteWithChildren,
   LeadGenerationRoute: LeadGenerationRoute,
