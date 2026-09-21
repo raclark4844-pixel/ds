@@ -95,7 +95,10 @@ export async function runAssistant(input: {
     };
   };
 
-  if (!apiKey) return localAnswer();
+  if (!apiKey) {
+    console.error(JSON.stringify({ event: "assistant_provider_failure", reason: "missing_key" }));
+    return localAnswer();
+  }
 
   const messages = conversationInput(input.message, input.history || []);
   const instructions = systemPrompt(reportSummary, reportId || null, reviewBrief);
@@ -128,6 +131,14 @@ export async function runAssistant(input: {
   };
 
   async function readOk(response: Response, model: string, endpoint: string) {
+    if (!response.ok) {
+      const detail = (await response.text()).toLowerCase();
+      const reason = /credit|balance|billing|spending/.test(detail) ? "billing"
+        : /api.key|authentication|unauthorized|incorrect key|invalid key/.test(detail) ? "authentication"
+        : /model.*(not found|not exist|access)|does not exist/.test(detail) ? "model_access"
+        : /rate.limit|too many/.test(detail) ? "rate_limit" : "provider_rejected";
+      console.error(JSON.stringify({ event: "assistant_provider_failure", status: response.status, reason, model }));
+    }
     if (response.status === 401 || response.status === 403) return "auth" as const;
     if (response.status === 404) return "missing-model" as const;
     if (!response.ok) return "fail" as const;
@@ -165,6 +176,7 @@ export async function runAssistant(input: {
       try {
         response = await postXai(shape.url, apiKey, shape.body);
       } catch (error) {
+        console.error(JSON.stringify({ event: "assistant_provider_failure", reason: isAbort(error) ? "timeout" : "network", model }));
         if (isAbort(error)) {
           stop = true;
           break;
