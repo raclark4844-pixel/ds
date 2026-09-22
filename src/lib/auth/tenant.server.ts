@@ -1,7 +1,8 @@
 import { getSql } from "@/lib/db";
 import { auth } from "@/lib/auth/server";
+import { ensurePlatformSuperAdmin } from "@/lib/auth/ensure-platform-admin.server";
+import { PLATFORM_ORG_ID, isPlatformOwnerEmail } from "@/lib/auth/platform-owners";
 import {
-  PLATFORM_ORG_ID,
   type ProductRole,
   roleMeets,
 } from "@/lib/auth/tenant-roles";
@@ -52,10 +53,35 @@ async function memberships(userId: string) {
   );
 }
 
+async function shopAdminCookieValid(req: Request) {
+  try {
+    const { accessCookieValid } = await import("@/lib/admin-auth.server");
+    return await accessCookieValid(req);
+  } catch {
+    return false;
+  }
+}
+
 export async function resolveActiveOrganization(req: Request): Promise<TenantContext | null> {
+  if (await shopAdminCookieValid(req)) {
+    return {
+      userId: "admin-access-key",
+      email: "admin access key",
+      organizationId: PLATFORM_ORG_ID,
+      role: "super_admin",
+    };
+  }
+
   const session = await sessionFromRequest(req);
   const userId = session?.user?.id;
   if (!userId) return null;
+
+  if (isPlatformOwnerEmail(session?.user?.email)) {
+    await ensurePlatformSuperAdmin({
+      id: userId,
+      email: session?.user?.email,
+    });
+  }
 
   const rows = await memberships(userId);
   if (!rows.length) return null;
@@ -76,6 +102,9 @@ export async function assertOrganizationAccess(
   minRole: ProductRole = "client_viewer",
 ) {
   if (!organizationId) throw new TenantAccessError("Organization is required.", 400);
+  if (user.id === "admin-access-key" || roleMeets(user.role, "super_admin")) {
+    return { organizationId, role: user.role || "super_admin" };
+  }
   const row = await membership(user.id, organizationId);
   const role = row?.role || user.role || "";
   if (roleMeets(role, "super_admin")) return { organizationId, role };

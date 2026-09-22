@@ -26,24 +26,31 @@ export async function ensurePlatformSuperAdmin(input: {
   const user = users[0];
   if (!user || !isPlatformOwnerEmail(user.email)) return null;
 
-  await sql.query(
-    `insert into "organization" ("id", "name", "slug", "metadata", "createdAt")
-     values ($1, 'Demore Technology Solutions', 'demore-technology-solutions', '{"platformOperator":true}', now())
-     on conflict ("slug") do nothing`,
-    [PLATFORM_ORG_ID],
+  const existing = await sql.query<{ role: string }>(
+    `select role from "member" where "userId" = $1 and "organizationId" = $2 limit 1`,
+    [user.id, PLATFORM_ORG_ID],
   );
-  await sql.query(
-    `insert into dts_tenant_billing(organization_id, current_day)
-     values ($1, to_char(now() at time zone 'America/New_York','YYYY-MM-DD'))
-     on conflict (organization_id) do nothing`,
-    [PLATFORM_ORG_ID],
-  );
-  await sql.query(
-    `insert into "member" ("id", "organizationId", "userId", "role", "createdAt")
-     values ($1, $2, $3, 'super_admin', now())
-     on conflict ("userId", "organizationId") do update set role = 'super_admin'`,
-    ["mem_" + randomUUID(), PLATFORM_ORG_ID, user.id],
-  );
+  if (existing[0]?.role !== "super_admin") {
+    await sql.query(
+      `insert into "organization" ("id", "name", "slug", "metadata", "createdAt")
+       values ($1, 'Demore Technology Solutions', 'demore-technology-solutions', '{"platformOperator":true}', now())
+       on conflict ("slug") do nothing`,
+      [PLATFORM_ORG_ID],
+    );
+    await sql.query(
+      `insert into dts_tenant_billing(organization_id, current_day)
+       values ($1, to_char(now() at time zone 'America/New_York','YYYY-MM-DD'))
+       on conflict (organization_id) do nothing`,
+      [PLATFORM_ORG_ID],
+    );
+    await sql.query(
+      `insert into "member" ("id", "organizationId", "userId", "role", "createdAt")
+       values ($1, $2, $3, 'super_admin', now())
+       on conflict ("userId", "organizationId") do update set role = 'super_admin'`,
+      ["mem_" + randomUUID(), PLATFORM_ORG_ID, user.id],
+    );
+  }
+
   await sql.query(
     `update "session" set "activeOrganizationId" = $2, "updatedAt" = now()
      where "userId" = $1 and ("activeOrganizationId" is null or "activeOrganizationId" = '')`,

@@ -33,6 +33,7 @@ import { betterAuth } from "better-auth";
 import { bearer, genericOAuth, organization } from "better-auth/plugins";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { tenantAccessControl, tenantRoles } from "./tenant-roles";
+import { ensurePlatformSuperAdmin } from "./ensure-platform-admin.server";
 import { getCookie } from "@tanstack/react-start/server";
 import { randomBytes } from "node:crypto";
 import { Pool } from "pg";
@@ -137,6 +138,22 @@ export const auth = betterAuth({
   },
   session: { cookieCache: { enabled: true, maxAge: 300 } },
   ...(emailAndPasswordEnabled ? { emailAndPassword: { enabled: true } } : {}),
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          await ensurePlatformSuperAdmin({ id: user.id, email: user.email });
+        },
+      },
+    },
+    session: {
+      create: {
+        after: async (session) => {
+          await ensurePlatformSuperAdmin({ userId: session.userId });
+        },
+      },
+    },
+  },
   advanced: {
     useSecureCookies: false,
     defaultCookieAttributes: { secure: true, sameSite: "lax", path: "/" },

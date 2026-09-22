@@ -6,12 +6,21 @@ const DEFAULT_OWNER_EMAILS = [
   "raclark4844@gmail.com",
 ];
 
-export function platformOwnerEmails() {
-  const extra = (process.env.PLATFORM_OWNER_EMAILS || "")
+function splitEmails(value: string | undefined) {
+  return (value || "")
     .split(",")
-    .map((value) => value.trim().toLowerCase())
+    .map((entry) => entry.trim().toLowerCase())
     .filter(Boolean);
-  return [...new Set([...DEFAULT_OWNER_EMAILS, ...extra])];
+}
+
+export function platformOwnerEmails() {
+  return [
+    ...new Set([
+      ...DEFAULT_OWNER_EMAILS,
+      ...splitEmails(process.env.PLATFORM_OWNER_EMAILS),
+      ...splitEmails(process.env.ADMIN_EMAILS),
+    ]),
+  ];
 }
 
 export function isPlatformOwnerEmail(email: string | null | undefined) {
