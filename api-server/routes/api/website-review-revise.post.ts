@@ -16,11 +16,7 @@ export default async function revise(event: { req: Request }) {
       { status: 400 },
     );
   const report = readReviewTicket(parsed.data.token);
-  if (
-    !report ||
-    report.recordId !== parsed.data.recordId ||
-    (!report.contact && !report.ownerReview)
-  )
+  if (!report || report.recordId !== parsed.data.recordId || (!report.contact && !report.ownerReview))
     return Response.json(
       { error: "Generate a website review with your contact details first." },
       { status: 403 },
@@ -33,12 +29,33 @@ export default async function revise(event: { req: Request }) {
       { error: "This report has reached 10 revisions. Generate a new review to continue." },
       { status: 400 },
     );
-  const result = await runAssistant({
-    message: `Prepare the revised recommendations for this website improvement PDF based on this customer request: ${parsed.data.message}. Explain the resulting changes directly. Treat additions and corrections as customer-provided information, not new scanned findings. Return only the revised improvement recommendations, consolidating prior requested changes with this request. Do not discuss PDF generation, email delivery, download links, or what the application can or cannot do.`,
-    industries: parsed.data.industries,
-    reviewBrief: report.assistantBrief,
-    reportId: report.recordId,
-  });
+  const { billTenantAiIfPresent, TenantSpendCapError } = await import(
+    "../../../src/lib/billing/process-billed-ai-request.server"
+  );
+  let result;
+  try {
+    result = await billTenantAiIfPresent(
+      event.req,
+      "website-review-revise",
+      () =>
+        runAssistant({
+          message: `Prepare the revised recommendations for this website improvement PDF based on this customer request: ${parsed.data.message}. Explain the resulting changes directly. Treat additions and corrections as customer-provided information, not new scanned findings. Return only the revised improvement recommendations, consolidating prior requested changes with this request. Do not discuss PDF generation, email delivery, download links, or what the application can or cannot do.`,
+          industries: parsed.data.industries,
+          reviewBrief: report.assistantBrief,
+          reportId: report.recordId,
+        }),
+      (outcome) => ({
+        rawCostMicrodollars: Math.max(1, Math.ceil(((outcome.text || "").length || 1) / 4)),
+        provider: "xai",
+        model: outcome.model,
+      }),
+    );
+  } catch (error) {
+    if (error instanceof TenantSpendCapError) {
+      return Response.json({ error: error.message }, { status: 429 });
+    }
+    throw error;
+  }
   if (!result.ok || result.endpoint === "local")
     return Response.json(
       {

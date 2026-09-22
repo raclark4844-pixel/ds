@@ -28,14 +28,34 @@ export default async function assistant(event: { req: Request }) {
   }
   const message = typeof raw.message === "string" ? raw.message.trim() : "";
   if (!message) return Response.json({ error: "Message is required." }, { status: 400 });
-  const result = await runAssistant({
-    message,
-    industries: raw.industries,
-    website: typeof raw.website === "string" ? raw.website.slice(0,2048) : "",
-    history: Array.isArray(raw.history) ? raw.history : [],
-    reportId: typeof raw.reportId === "string" ? raw.reportId : "",
-    token: typeof raw.token === "string" ? raw.token : "",
-    reviewBrief: typeof raw.reviewBrief === "string" ? raw.reviewBrief : "",
-  });
-  return Response.json(result, { status: result.ok ? 200 : 503 });
+  const { billTenantAiIfPresent, TenantSpendCapError } = await import(
+    "../../../src/lib/billing/process-billed-ai-request.server"
+  );
+  try {
+    const result = await billTenantAiIfPresent(
+      req,
+      "assistant",
+      () =>
+        runAssistant({
+          message,
+          industries: raw.industries,
+          website: typeof raw.website === "string" ? raw.website.slice(0, 2048) : "",
+          history: Array.isArray(raw.history) ? raw.history : [],
+          reportId: typeof raw.reportId === "string" ? raw.reportId : "",
+          token: typeof raw.token === "string" ? raw.token : "",
+          reviewBrief: typeof raw.reviewBrief === "string" ? raw.reviewBrief : "",
+        }),
+      (outcome) => ({
+        rawCostMicrodollars: Math.max(1, Math.ceil(((outcome.text || "").length || 1) / 4)),
+        provider: "xai",
+        model: outcome.model,
+      }),
+    );
+    return Response.json(result, { status: result.ok ? 200 : 503 });
+  } catch (error) {
+    if (error instanceof TenantSpendCapError) {
+      return Response.json({ error: error.message }, { status: 429 });
+    }
+    throw error;
+  }
 }

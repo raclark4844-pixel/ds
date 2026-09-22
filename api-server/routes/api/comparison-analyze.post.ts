@@ -31,17 +31,33 @@ export default async function comparisonAnalyze(event: { req: Request }) {
   const parsed = schema.safeParse(raw);
   if (!parsed.success) return Response.json({ error: "Check the company, website, industry, market, name, and email." }, { status: 400 });
   const { buildComparisonReport } = await import("../../../src/lib/comparison-engine");
-  const report = await buildComparisonReport({
-    ...parsed.data,
-    contactName: `${parsed.data.contactFirstName} ${parsed.data.contactLastName}`,
-    competitors: parsed.data.competitors || [],
-    confirmedTools: parsed.data.confirmedTools || "",
-    access: parsed.data.access || "",
-    domainRegistrar: parsed.data.domainRegistrar || "",
-    websiteHost: parsed.data.websiteHost || "",
-    siteBuilder: parsed.data.siteBuilder || "",
-    codeAccess: parsed.data.codeAccess || "",
-  });
+  const { billTenantAiIfPresent, TenantSpendCapError } = await import(
+    "../../../src/lib/billing/process-billed-ai-request.server"
+  );
+  let report;
+  try {
+    report = await billTenantAiIfPresent(
+      req,
+      "comparison-analyze",
+      () => buildComparisonReport({
+        ...parsed.data,
+        contactName: `${parsed.data.contactFirstName} ${parsed.data.contactLastName}`,
+        competitors: parsed.data.competitors || [],
+        confirmedTools: parsed.data.confirmedTools || "",
+        access: parsed.data.access || "",
+        domainRegistrar: parsed.data.domainRegistrar || "",
+        websiteHost: parsed.data.websiteHost || "",
+        siteBuilder: parsed.data.siteBuilder || "",
+        codeAccess: parsed.data.codeAccess || "",
+      }),
+      () => ({ rawCostMicrodollars: 5000, provider: "comparison-engine" }),
+    );
+  } catch (error) {
+    if (error instanceof TenantSpendCapError) {
+      return Response.json({ error: error.message }, { status: 429 });
+    }
+    throw error;
+  }
   const token = issueReportTicket(report);
   await saveComparison(report, token);
   const ids = unifiedIds(report.reportNumber);
