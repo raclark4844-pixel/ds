@@ -23,11 +23,11 @@ export default defineConfig(({ command, isPreview }) => ({
       ? [
           nitro({
             preset: "vercel",
-            vercel: {functions: {maxDuration: 60}},
+            vercel: { functions: { maxDuration: 60 } },
             serverDir: "./api-server",
             // Keep PDFKit inside its package scope so its Node package-import
             // aliases (for built-in fonts such as Helvetica) resolve at runtime.
-            traceDeps: ["pdfkit*"],
+            traceDeps: ["pdfkit*", "@electric-sql/pglite*"],
           }),
         ]
       : []),

@@ -1,11 +1,9 @@
 import { getSql } from "@/lib/db";
 import { auth } from "@/lib/auth/server";
 import { ensurePlatformSuperAdmin } from "@/lib/auth/ensure-platform-admin.server";
+import { hasPlatformAuthority, selectMembership } from "./tenant-policy";
 import { PLATFORM_ORG_ID, isPlatformOwnerEmail } from "@/lib/auth/platform-owners";
-import {
-  type ProductRole,
-  roleMeets,
-} from "@/lib/auth/tenant-roles";
+import { type ProductRole, roleMeets } from "@/lib/auth/tenant-roles";
 
 export class TenantAccessError extends Error {
   readonly status: number;
@@ -24,25 +22,19 @@ export type TenantContext = {
 };
 
 type SessionLike = {
-  user?: { id?: string; email?: string | null };
+  user?: { id?: string; email?: string | null; emailVerified?: boolean };
   session?: { activeOrganizationId?: string | null };
 };
 
 async function sessionFromRequest(req: Request): Promise<SessionLike | null> {
   try {
-    return (await auth.api.getSession({ headers: req.headers })) as SessionLike | null;
+    return (await auth.api.getSession({
+      headers: req.headers,
+      query: { disableCookieCache: true },
+    })) as SessionLike | null;
   } catch {
-    return null;
+    throw new TenantAccessError("Session verification is temporarily unavailable.", 503);
   }
-}
-
-async function membership(userId: string, organizationId: string) {
-  const sql = await getSql();
-  const rows = await sql.query<{ role: string }>(
-    `select role from "member" where "userId" = $1 and "organizationId" = $2 limit 1`,
-    [userId, organizationId],
-  );
-  return rows[0] || null;
 }
 
 async function memberships(userId: string) {
@@ -74,7 +66,18 @@ export async function resolveActiveOrganization(req: Request): Promise<TenantCon
 
   const session = await sessionFromRequest(req);
   const userId = session?.user?.id;
-  if (!userId) return null;
+  if (!userId) {
+    if (
+      req.headers.has("authorization") ||
+      /(?:__Host-grok-auth\.session_token|better-auth\.session_token|__Host-dts-admin)=/.test(
+        req.headers.get("cookie") || "",
+      )
+    )
+      throw new TenantAccessError("Sign in again before using this workspace.", 401);
+    return null;
+  }
+  if (session?.user?.emailVerified !== true)
+    throw new TenantAccessError("Verify your sign-in email before using the workspace.", 403);
 
   if (isPlatformOwnerEmail(session?.user?.email)) {
     await ensurePlatformSuperAdmin({
@@ -84,10 +87,11 @@ export async function resolveActiveOrganization(req: Request): Promise<TenantCon
   }
 
   const rows = await memberships(userId);
-  if (!rows.length) return null;
+  if (!rows.length) throw new TenantAccessError("This account has no workspace membership.");
 
   const requested = session?.session?.activeOrganizationId || "";
-  const active = rows.find((row) => row.organizationId === requested) || rows[0];
+  const active = selectMembership(rows, requested);
+  if (!active) throw new TenantAccessError("Select an authorized workspace.");
   return {
     userId,
     email: session?.user?.email ?? null,
@@ -102,12 +106,10 @@ export async function assertOrganizationAccess(
   minRole: ProductRole = "client_viewer",
 ) {
   if (!organizationId) throw new TenantAccessError("Organization is required.", 400);
-  if (user.id === "admin-access-key" || roleMeets(user.role, "super_admin")) {
-    return { organizationId, role: user.role || "super_admin" };
-  }
-  const row = await membership(user.id, organizationId);
-  const role = row?.role || user.role || "";
-  if (roleMeets(role, "super_admin")) return { organizationId, role };
+  // The caller's role is deliberately ignored; resolve fresh DB memberships.
+  const rows = await memberships(user.id);
+  if (hasPlatformAuthority(rows, PLATFORM_ORG_ID)) return { organizationId, role: "super_admin" };
+  const row = rows.find((r) => r.organizationId === organizationId);
   if (!row) throw new TenantAccessError("This account cannot use that workspace.", 403);
   if (!roleMeets(row.role, minRole)) {
     throw new TenantAccessError("This account cannot perform that action.", 403);
@@ -120,11 +122,7 @@ export function organizationScopeSql(organizationId: string | null | undefined) 
 }
 
 export async function tryResolveTenant(req: Request): Promise<TenantContext | null> {
-  try {
-    return await resolveActiveOrganization(req);
-  } catch {
-    return null;
-  }
+  return resolveActiveOrganization(req);
 }
 
 export function platformOrganizationId() {

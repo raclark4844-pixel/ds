@@ -1,102 +1,85 @@
-import { randomUUID } from "node:crypto";
 import { getSql } from "@/lib/db";
-import { tryResolveTenant } from "@/lib/auth/tenant.server";
+import { resolveActiveOrganization, TenantAccessError } from "@/lib/auth/tenant.server";
+import { billingFlags } from "./config";
+import { budgetClient, reserveRedisBudget, settleRedisBudget } from "./redis-budget";
+import { meterCatalog, stripeClient } from "./stripe";
 import {
-  billedCostMicrodollars,
-  DEFAULT_RESERVE_MICRODOLLARS,
-} from "./billing-math";
+  runWithUsageLedger,
+  UsageLedgerError,
+  PUBLIC_AI_FEATURES,
+  type UsageRequest,
+} from "./usage-ledger";
+export { TenantSpendCapError } from "./usage-ledger";
+export type { BilledAiRun } from "./usage-ledger";
 
-export class TenantSpendCapError extends Error {
-  readonly status = 429;
-  constructor(message = "This workspace has reached its daily AI spend cap.") {
-    super(message);
-    this.name = "TenantSpendCapError";
-  }
-}
-
-export type BilledAiRun<T> = {
-  result: T;
-  provider?: string;
-  model?: string;
-  inputTokens?: number;
-  outputTokens?: number;
-  rawCostMicrodollars: number;
-};
-
-export async function processBilledAiRequest<T>(opts: {
-  organizationId: string;
-  actorUserId?: string;
-  feature: string;
-  estimatedMicrodollars?: number;
-  run: () => Promise<BilledAiRun<T>>;
-}): Promise<T> {
-  const estimate = Math.max(1, Math.floor(opts.estimatedMicrodollars || DEFAULT_RESERVE_MICRODOLLARS));
-  const sql = await getSql();
-  const reserved = (
-    await sql.query<{
-      allowed: boolean;
-      day: string;
-      cap: string | number;
-      spend: string | number;
-      markup_bps: number;
-      reason: string;
-    }>("select * from dts_reserve_tenant_spend($1,$2)", [opts.organizationId, estimate])
-  )[0];
-
-  if (!reserved?.allowed) {
-    throw new TenantSpendCapError();
-  }
-
-  try {
-    const outcome = await opts.run();
-    const raw = Math.max(0, Math.floor(outcome.rawCostMicrodollars || 0));
-    const billed = billedCostMicrodollars(raw, Number(reserved.markup_bps));
-    await sql.query("select dts_commit_tenant_spend($1,$2,$3)", [
-      opts.organizationId,
-      estimate,
-      billed,
-    ]);
-    await sql.query(
-      `insert into dts_api_usage_logs(
-        id, organization_id, actor_user_id, feature, provider, model,
-        input_tokens, output_tokens, raw_cost_microdollars, billed_cost_microdollars, day
-      ) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,
-      [
-        randomUUID(),
+export async function processBilledAiRequest<T>(opts: UsageRequest<T>): Promise<T> {
+  if (!billingFlags(process.env).ledger)
+    throw new UsageLedgerError("Tenant usage ledger is not enabled.");
+  if (opts.requireVerifiedCost && process.env.BILLING_MODE !== "stripe")
+    throw new UsageLedgerError("Paid provider execution is disabled while billing is deferred.");
+  const sql = await getSql(),
+    redis = budgetClient();
+  let day = "";
+  const catalog = opts.requireVerifiedCost ? await meterCatalog(stripeClient()) : null;
+  return runWithUsageLedger(sql, {
+    ...opts,
+    beforeProvider: async (id) => {
+      const row = (
+        await sql.query<{ day: string; amount: number; cap: number }>(
+          `select o.day,o.reserved_microdollars as amount,b.daily_cap_microdollars as cap
+         from dts_usage_operations o join dts_tenant_billing b on b.organization_id=o.organization_id
+         where o.id=$1 and o.organization_id=$2`,
+          [id, opts.organizationId],
+        )
+      )[0];
+      if (!row) throw new UsageLedgerError("Usage reservation is missing.");
+      day = row.day;
+      await reserveRedisBudget(
+        redis,
         opts.organizationId,
-        opts.actorUserId || null,
-        opts.feature,
-        outcome.provider || null,
-        outcome.model || null,
-        outcome.inputTokens ?? null,
-        outcome.outputTokens ?? null,
-        raw,
-        billed,
-        reserved.day,
-      ],
-    );
-    return outcome.result;
-  } catch (error) {
-    await sql.query("select dts_release_tenant_spend($1,$2)", [opts.organizationId, estimate]);
-    throw error;
-  }
+        day,
+        id,
+        Number(row.amount),
+        Number(row.cap),
+      );
+      if (catalog)
+        await sql.query("select dts_bind_meter($1,$2,$3,$4)", [
+          opts.organizationId,
+          id,
+          catalog.priceId,
+          catalog.eventName,
+        ]);
+      await opts.beforeProvider?.(id);
+    },
+    afterSettlement: async (id, billed) => {
+      await settleRedisBudget(redis, opts.organizationId, day, id, billed);
+      await opts.afterSettlement?.(id, billed);
+    },
+  });
 }
-
 export async function billTenantAiIfPresent<T>(
   req: Request,
   feature: string,
   run: () => Promise<T>,
   cost: (result: T) => { rawCostMicrodollars: number; provider?: string; model?: string },
 ): Promise<T> {
-  const tenant = await tryResolveTenant(req);
-  if (!tenant) return run();
+  // Deliberately no catch-to-anonymous fallback: auth/DB failure blocks execution.
+  const tenant = await resolveActiveOrganization(req);
+  if (!tenant) {
+    if (!PUBLIC_AI_FEATURES.has(feature)) throw new TenantAccessError("Sign-in is required.", 401);
+    return run();
+  }
+  const requestKey = req.headers.get("idempotency-key");
+  if (requestKey && !/^[A-Za-z0-9_-]{8,80}$/.test(requestKey))
+    throw new UsageLedgerError("Invalid operation key.", 400);
   return processBilledAiRequest({
     organizationId: tenant.organizationId,
     actorUserId: tenant.userId,
     feature,
+    operationKey: requestKey ? `${tenant.userId}:${feature}:${requestKey}` : undefined,
     run: async () => {
       const result = await run();
-      return { result, ...cost(result) };
+      return { result, ...cost(result), costBasis: "ESTIMATE" };
     },
   });
 }

@@ -1,9 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { getSql } from "@/lib/db";
-import {
-  PLATFORM_ORG_ID,
-  isPlatformOwnerEmail,
-} from "./platform-owners";
+import { PLATFORM_ORG_ID, isPlatformOwnerEmail } from "./platform-owners";
 
 export async function ensurePlatformSuperAdmin(input: {
   id?: string | null;
@@ -15,16 +12,16 @@ export async function ensurePlatformSuperAdmin(input: {
   const sql = await getSql();
 
   const users = userId
-    ? await sql.query<{ id: string; email: string }>(
-        `select id, email from "user" where id = $1 limit 1`,
+    ? await sql.query<{ id: string; email: string; emailVerified: boolean }>(
+        `select id, email, "emailVerified" from "user" where id = $1 limit 1`,
         [userId],
       )
-    : await sql.query<{ id: string; email: string }>(
-        `select id, email from "user" where lower(email) = lower($1) limit 1`,
+    : await sql.query<{ id: string; email: string; emailVerified: boolean }>(
+        `select id, email, "emailVerified" from "user" where lower(email) = lower($1) limit 1`,
         [input.email],
       );
   const user = users[0];
-  if (!user || !isPlatformOwnerEmail(user.email)) return null;
+  if (!user || user.emailVerified !== true || !isPlatformOwnerEmail(user.email)) return null;
 
   const existing = await sql.query<{ role: string }>(
     `select role from "member" where "userId" = $1 and "organizationId" = $2 limit 1`,
@@ -42,6 +39,13 @@ export async function ensurePlatformSuperAdmin(input: {
        values ($1, to_char(now() at time zone 'America/New_York','YYYY-MM-DD'))
        on conflict (organization_id) do nothing`,
       [PLATFORM_ORG_ID],
+    );
+    console.info(
+      JSON.stringify({
+        event: "auth.platform_membership_provision",
+        decision: "verified_owner",
+        timestamp: new Date().toISOString(),
+      }),
     );
     await sql.query(
       `insert into "member" ("id", "organizationId", "userId", "role", "createdAt")

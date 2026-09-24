@@ -1,6 +1,7 @@
 import { getRequest } from "@tanstack/react-start/server";
 import { gateIdentityEnabled } from "./gate-identity.server";
 import { auth, authConfigured } from "./server";
+import { allowLocalFallback, resolveRequiredIdentity } from "./dev-fallback-policy";
 
 /**
  * Server-side session resolution (server-only).
@@ -54,9 +55,7 @@ export type VerifiedUser = { id: string; email: string | null };
  * as a bearer token, which we present as `Authorization: Bearer …` (the `bearer`
  * plugin resolves it). When deployed no token is passed and the cookie is used.
  */
-export async function getSessionUser(
-  bearerToken?: string,
-): Promise<VerifiedUser | null> {
+export async function getSessionUser(bearerToken?: string): Promise<VerifiedUser | null> {
   if (!authConfigured && !gateIdentityEnabled()) return null;
   const request = getRequest();
   if (!request) return null;
@@ -79,19 +78,25 @@ export async function getSessionUser(
  * - Auth disabled (`VITE_AUTH_ENABLED=false`) + `DATABASE_URL` set -> throw (fail
  *   closed): one shared dev user on a real database would let every visitor
  *   read/write everyone's rows.
- * - Auth disabled + no database -> the shared dev user id.
+ * - Shared development identity requires explicit local opt-in, no database,
+ *   development mode, and no Vercel environment. All other cases reject.
  */
 export async function requireUserId(bearerToken?: string): Promise<string> {
-  if (!authConfigured && !gateIdentityEnabled()) {
-    if (databaseConfigured) {
-      throw new Error(
-        "Auth is disabled (VITE_AUTH_ENABLED=false) but DATABASE_URL is set — " +
-          "refusing to fall back to the shared dev user against a real database.",
-      );
-    }
-    return DEV_USER_ID;
-  }
-  const user = await getSessionUser(bearerToken);
-  if (!user) throw new UnauthorizedError();
-  return user.id;
+  const authenticationEnabled = authConfigured || gateIdentityEnabled();
+  const allowFallback = allowLocalFallback(process.env);
+  if (!authenticationEnabled)
+    console.warn(
+      JSON.stringify({
+        event: "auth.local_fallback",
+        allowed: allowFallback,
+        timestamp: new Date().toISOString(),
+      }),
+    );
+  const id = await resolveRequiredIdentity({
+    authenticationEnabled,
+    allowFallback,
+    getUser: () => getSessionUser(bearerToken),
+  });
+  if (!id) throw new UnauthorizedError();
+  return id;
 }

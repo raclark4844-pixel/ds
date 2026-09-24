@@ -1,3 +1,4 @@
+import { allowLocalFallback } from "./auth/dev-fallback-policy";
 import { adminSessionSecret } from "./admin-credentials.server";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { auth, authConfigured } from "@/lib/auth/server";
@@ -67,15 +68,27 @@ export function clearAdminAccessCookie() {
 }
 
 export async function requireAdmin(req: Request) {
-  if (await accessCookieValid(req)) return { id: "admin-access-key", email: "admin access key", role: "super_admin" as const };
-  const production = process.env.VERCEL === "1" || process.env.NODE_ENV === "production";
+  if (await accessCookieValid(req))
+    return { id: "admin-access-key", email: "admin access key", role: "super_admin" as const };
   if (!authConfigured) {
-    if (!production && !process.env.DATABASE_URL?.trim())
-      return { id: "dev-user", email: "dev@example.com", role: "super_admin" as const };
+    const allowed = allowLocalFallback(process.env);
+    console.warn(
+      JSON.stringify({
+        event: "auth.admin_local_fallback",
+        allowed,
+        timestamp: new Date().toISOString(),
+      }),
+    );
+    if (allowed) return { id: "dev-user", email: "dev@example.com", role: "super_admin" as const };
     throw new AdminAuthError("Administrator sign-in is not configured.", 503);
   }
-  const session = await auth.api.getSession({ headers: req.headers });
+  const session = await auth.api.getSession({
+    headers: req.headers,
+    query: { disableCookieCache: true },
+  });
   if (!session?.user) throw new AdminAuthError("Sign in is required.", 401);
+  if (session.user.emailVerified !== true)
+    throw new AdminAuthError("Verify your administrator email before signing in.", 403);
   const email = session.user.email?.toLowerCase();
   if (!email || (!allowedEmails().has(email) && !isPlatformOwnerEmail(email)))
     throw new AdminAuthError("This account is not an administrator.", 403);

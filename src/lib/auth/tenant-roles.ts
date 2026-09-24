@@ -2,16 +2,8 @@ import { createAccessControl } from "better-auth/plugins/access";
 import { defaultStatements } from "better-auth/plugins/organization/access";
 
 export const PRODUCT_ROLES = ["client_viewer", "client_admin", "super_admin"] as const;
-export type ProductRole = (typeof PRODUCT_ROLES)[number];
-
-export const ROLE_RANK: Record<string, number> = {
-  member: 1,
-  client_viewer: 1,
-  admin: 2,
-  client_admin: 2,
-  owner: 3,
-  super_admin: 3,
-};
+export type { ProductRole } from "./tenant-policy";
+export { roleMeets } from "./tenant-policy";
 
 export const tenantStatements = {
   ...defaultStatements,
@@ -70,16 +62,6 @@ export const tenantRoles = {
     tenant: ["read", "manage", "bill"],
   }),
 };
-
-export function roleMeets(actual: string | null | undefined, minRole: ProductRole) {
-  const have = Math.max(
-    0,
-    ...(actual || "")
-      .split(",")
-      .map((part) => ROLE_RANK[part.trim()] || 0),
-  );
-  return have >= (ROLE_RANK[minRole] || 0);
-}
 
 export const PLATFORM_ORG_ID = "org_demore_technology_solutions";
 export const PLATFORM_ORG_SLUG = "demore-technology-solutions";

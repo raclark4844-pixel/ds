@@ -108,6 +108,9 @@ function createNeonSql(): Promise<Sql> {
     }) as Record<string, string>;
     const done = (await sql.query<{ name: string }>("select name from _migrations")).map((row) => row.name);
     for (const { name, path } of pendingMigrations(Object.keys(migrations), done)) {
+      if (name >= "0015" && process.env.LEAD_UPGRADE_MIGRATIONS_APPROVED !== "true") {
+        throw new Error("Lead Engine migrations require explicit release authorization.");
+      }
       const client = await pool.connect();
       try {
         await client.query("begin");

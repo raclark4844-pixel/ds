@@ -158,6 +158,18 @@ function Workspace() {
         </div>
       ) : (
         <>
+          <section className="mt-10">
+            <PageCard
+              title="Company sales workspace"
+              description="Your company’s activity feed, lead details, and message drafts."
+              href="/sales-desk"
+            />
+            <PageCard
+              title="Private BatchData records"
+              description="Your saved property spreadsheet and private access settings."
+              href="/private-data"
+            />
+          </section>
           {access.admin ? (
             <section className="mt-10">
               <h2 className="font-display text-2xl font-semibold">

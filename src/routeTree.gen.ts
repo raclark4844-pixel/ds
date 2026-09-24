@@ -22,7 +22,9 @@ import { Route as LeadGenerationRouteImport } from './routes/lead-generation'
 import { Route as LeadInboxRouteImport } from './routes/lead-inbox'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PlatformRouteImport } from './routes/platform'
+import { Route as PrivateDataRouteImport } from './routes/private-data'
 import { Route as ProcessRouteImport } from './routes/process'
+import { Route as SalesDeskRouteImport } from './routes/sales-desk'
 import { Route as WebsitesRouteImport } from './routes/websites'
 import { Route as WorkRouteImport } from './routes/work'
 import { Route as WorkspaceRouteImport } from './routes/workspace'
@@ -102,9 +104,19 @@ const PlatformRoute = PlatformRouteImport.update({
   path: '/platform',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivateDataRoute = PrivateDataRouteImport.update({
+  id: '/private-data',
+  path: '/private-data',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProcessRoute = ProcessRouteImport.update({
   id: '/process',
   path: '/process',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SalesDeskRoute = SalesDeskRouteImport.update({
+  id: '/sales-desk',
+  path: '/sales-desk',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WebsitesRoute = WebsitesRouteImport.update({
@@ -190,7 +202,9 @@ export interface FileRoutesByFullPath {
   '/lead-inbox': typeof LeadInboxRoute
   '/login': typeof LoginRoute
   '/platform': typeof PlatformRoute
+  '/private-data': typeof PrivateDataRoute
   '/process': typeof ProcessRoute
+  '/sales-desk': typeof SalesDeskRoute
   '/websites': typeof WebsitesRoute
   '/work': typeof WorkRoute
   '/workspace': typeof WorkspaceRoute
@@ -218,7 +232,9 @@ export interface FileRoutesByTo {
   '/lead-inbox': typeof LeadInboxRoute
   '/login': typeof LoginRoute
   '/platform': typeof PlatformRoute
+  '/private-data': typeof PrivateDataRoute
   '/process': typeof ProcessRoute
+  '/sales-desk': typeof SalesDeskRoute
   '/websites': typeof WebsitesRoute
   '/work': typeof WorkRoute
   '/workspace': typeof WorkspaceRoute
@@ -248,7 +264,9 @@ export interface FileRoutesById {
   '/lead-inbox': typeof LeadInboxRoute
   '/login': typeof LoginRoute
   '/platform': typeof PlatformRoute
+  '/private-data': typeof PrivateDataRoute
   '/process': typeof ProcessRoute
+  '/sales-desk': typeof SalesDeskRoute
   '/websites': typeof WebsitesRoute
   '/work': typeof WorkRoute
   '/workspace': typeof WorkspaceRoute
@@ -279,7 +297,9 @@ export interface FileRouteTypes {
     | '/lead-inbox'
     | '/login'
     | '/platform'
+    | '/private-data'
     | '/process'
+    | '/sales-desk'
     | '/websites'
     | '/work'
     | '/workspace'
@@ -307,7 +327,9 @@ export interface FileRouteTypes {
     | '/lead-inbox'
     | '/login'
     | '/platform'
+    | '/private-data'
     | '/process'
+    | '/sales-desk'
     | '/websites'
     | '/work'
     | '/workspace'
@@ -336,7 +358,9 @@ export interface FileRouteTypes {
     | '/lead-inbox'
     | '/login'
     | '/platform'
+    | '/private-data'
     | '/process'
+    | '/sales-desk'
     | '/websites'
     | '/work'
     | '/workspace'
@@ -366,7 +390,9 @@ export interface RootRouteChildren {
   LeadInboxRoute: typeof LeadInboxRoute
   LoginRoute: typeof LoginRoute
   PlatformRoute: typeof PlatformRoute
+  PrivateDataRoute: typeof PrivateDataRoute
   ProcessRoute: typeof ProcessRoute
+  SalesDeskRoute: typeof SalesDeskRoute
   WebsitesRoute: typeof WebsitesRoute
   WorkRoute: typeof WorkRoute
   WorkspaceRoute: typeof WorkspaceRoute
@@ -465,11 +491,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlatformRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/private-data': {
+      id: '/private-data'
+      path: '/private-data'
+      fullPath: '/private-data'
+      preLoaderRoute: typeof PrivateDataRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/process': {
       id: '/process'
       path: '/process'
       fullPath: '/process'
       preLoaderRoute: typeof ProcessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sales-desk': {
+      id: '/sales-desk'
+      path: '/sales-desk'
+      fullPath: '/sales-desk'
+      preLoaderRoute: typeof SalesDeskRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/websites': {
@@ -610,7 +650,9 @@ const rootRouteChildren: RootRouteChildren = {
   LeadInboxRoute: LeadInboxRoute,
   LoginRoute: LoginRoute,
   PlatformRoute: PlatformRoute,
+  PrivateDataRoute: PrivateDataRoute,
   ProcessRoute: ProcessRoute,
+  SalesDeskRoute: SalesDeskRoute,
   WebsitesRoute: WebsitesRoute,
   WorkRoute: WorkRoute,
   WorkspaceRoute: WorkspaceRoute,
