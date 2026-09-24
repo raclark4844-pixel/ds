@@ -1,0 +1,1 @@
+Vercel integration check: verification-only, non-production-facing build.
