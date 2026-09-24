@@ -37,3 +37,5 @@ The isolated draft's useful Stripe signature validation, integer cost calculatio
 See [release configuration and remaining integration checks](docs/LEAD-ENGINE-RELEASE.md). Remaining work requires isolated Stripe/Upstash configuration, verified provider receipts and cost bounds, real two-company sign-in checks, existing-channel imports, and configuration of the correct Base44 workflows/receiver. The native implementation is not a claim that the separate legacy employee engine has been fully migrated.
 
 Keep all external tests isolated and all real charges/outreach disabled. Before a repository push, verify the Vercel Git deployment hold. Before publication, complete native ds build/tests, migration upgrade checks, browser sign-in/tenant-isolation checks, Stripe test-mode billing reconciliation and Redis failure tests.
+
+Live owner/database/campaign verification remains pending.
