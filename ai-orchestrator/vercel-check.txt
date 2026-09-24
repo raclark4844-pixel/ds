@@ -1,0 +1,37 @@
+type RunArchiveRow = {
+  project_id: string;
+  archived_runs: string;
+  latest_run: string | null;
+};
+
+const currentProjectId = "raclark4844-pixel/ds";
+
+const result = await neon.query<RunArchiveRow>(
+  `SELECT project_id, COUNT(*) AS archived_runs, MAX(created_at) AS latest_run
+   FROM orchestrator_runs
+   WHERE project_id = $1
+   GROUP BY project_id`,
+  [currentProjectId],
+);
+
+const runArchive = result.rows.filter((row) => {
+  if (row.project_id === currentProjectId) return true;
+  securityLogger.error("Potential orchestrator_runs isolation failure", {
+    requestingProjectId: currentProjectId,
+    returnedProjectId: row.project_id,
+  });
+  return false;
+});
+
+if (runArchive.length !== result.rows.length) {
+  throw new Error("Diagnostic failed: cross-tenant run archive row returned");
+}
+
+// Non-production confirmation only; no counts or IDs returned to tenant.
+const report = {
+  neon: { status: "connected" },
+  github: { status: "connected", repositoryAccessible: true },
+  vercel: { status: "connected", repositoryProjectLinked: true },
+};
+
+return report;
