@@ -1,260 +1,417 @@
-import {capabilities} from "../control-capabilities";
-import {consoleOverview,offeringReadiness,leadGenerationOffering,customerPdfData} from "../console-offering";
 import { Document, Image, Link, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
+import { customerPdfData } from "../console-offering";
+import {
+  businessGuidance,
+  checkExplanation,
+  plainText,
+  reviewOverview,
+  supportAreas,
+} from "./plain-language";
 import type { WebsiteReviewReport } from "./types";
 
 const s = StyleSheet.create({
-  page: { backgroundColor: "#050505", color: "#F4F4F1", fontFamily: "Helvetica", fontSize: 10, paddingTop: 64, paddingBottom: 72, paddingHorizontal: 40 },
-  header: { position: "absolute", top: 18, left: 40, right: 40, flexDirection: "row", justifyContent: "space-between", borderBottomWidth: 1, borderBottomColor: "#2A2A28", paddingBottom: 8 },
-  footer: { position: "absolute", bottom: 14, left: 40, right: 40, height: 44, flexDirection: "row", alignItems: "center", justifyContent: "space-between", borderTopWidth: 1, borderTopColor: "#2A2A28", paddingTop: 6 },
-  brand: { color: "#00FF9C", fontSize: 8, letterSpacing: 1.1, fontFamily: "Helvetica-Bold" },
-  meta: { color: "#8B8B86", fontSize: 8 },
-  kicker: { color: "#8B8B86", fontSize: 8, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 6 },
-  h1: { fontSize: 20, fontFamily: "Helvetica-Bold", color: "#FFFFFF", marginBottom: 10 },
-  h2: { fontSize: 13, fontFamily: "Helvetica-Bold", color: "#FFFFFF", marginTop: 8, marginBottom: 4 },
-  p: { color: "#D8D8D5", fontSize: 9, lineHeight: 1.35, marginBottom: 4 },
-  disc: { color: "#A8A8A3", fontSize: 8, lineHeight: 1.4, marginTop: 8 },
-  row: { flexDirection: "row", gap: 8, marginBottom: 8 },
-  card: { flexGrow: 1, flexBasis: 0, borderWidth: 1, borderColor: "#2A2A28", backgroundColor: "#111111", padding: 8 },
-  label: { color: "#8B8B86", fontSize: 7, textTransform: "uppercase", marginBottom: 4 },
-  value: { color: "#00FF9C", fontSize: 16, fontFamily: "Helvetica-Bold" },
-  barTrack: { height: 8, backgroundColor: "#1A1A1A", marginBottom: 4 },
-  barFill: { height: 8, backgroundColor: "#00FF9C" },
-  tr: { flexDirection: "row", borderBottomWidth: 1, borderBottomColor: "#2A2A28", paddingVertical: 5 },
-  th: { color: "#FFE14A", fontSize: 8, fontFamily: "Helvetica-Bold" },
-  td: { color: "#E8E8E4", fontSize: 8 },
-  logo: { width: 92, height: 25, objectFit: "contain", objectPosition: "left center" },
-  footerBrand: { flexDirection: "row", alignItems: "center", gap: 8, width: "72%" },
-  footerText: { color: "#BDBDB8", fontSize: 6.8, lineHeight: 1.35 },
-  chip: { color: "#00FF9C", fontSize: 8, letterSpacing: 1, textTransform: "uppercase", marginBottom: 3 },
+  page: {
+    backgroundColor: "#080808",
+    color: "#EEEEEA",
+    fontFamily: "Helvetica",
+    fontSize: 10,
+    paddingTop: 80,
+    paddingBottom: 72,
+    paddingHorizontal: 40,
+  },
+  header: {
+    position: "absolute",
+    top: 24,
+    left: 40,
+    right: 40,
+    height: 38,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderBottomWidth: 1,
+    borderBottomColor: "#303030",
+    paddingBottom: 9,
+  },
+  footer: {
+    position: "absolute",
+    top: 740,
+    height: 32,
+    left: 40,
+    right: 40,
+    borderTopWidth: 1,
+    borderTopColor: "#303030",
+    paddingTop: 9,
+  },
+  footerRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  footerText: { fontSize: 7, color: "#B6B6B0", lineHeight: 1.5 },
+  logo: { width: 104, height: 28, objectFit: "contain" },
+  brand: { color: "#00FF9C", fontSize: 9, fontFamily: "Helvetica-Bold" },
+  meta: { color: "#B6B6B0", fontSize: 8, lineHeight: 1.5 },
+  kicker: { color: "#B6B6B0", fontSize: 8, letterSpacing: 1.5, marginBottom: 9 },
+  h1: { fontSize: 22, fontFamily: "Helvetica-Bold", color: "#FFFFFF", marginBottom: 13 },
+  h2: { fontSize: 12, fontFamily: "Helvetica-Bold", color: "#FFFFFF", marginBottom: 7 },
+  p: { fontSize: 10, lineHeight: 1.5, marginBottom: 10 },
+  note: { fontSize: 8.5, color: "#B6B6B0", lineHeight: 1.5, marginBottom: 9 },
+  score: {
+    borderWidth: 1,
+    borderColor: "#303030",
+    padding: 13,
+    marginVertical: 14,
+    flexDirection: "row",
+    gap: 20,
+    alignItems: "center",
+  },
+  scoreValue: { color: "#00FF9C", fontFamily: "Helvetica-Bold", fontSize: 24, marginTop: 5 },
+  label: { fontSize: 8, color: "#B6B6B0", marginBottom: 6 },
+  columns: { flexDirection: "row", gap: 20 },
+  column: { flex: 1 },
+  listTitle: {
+    color: "#00FF9C",
+    fontSize: 9,
+    fontFamily: "Helvetica-Bold",
+    borderBottomWidth: 1,
+    borderBottomColor: "#303030",
+    paddingBottom: 8,
+    marginBottom: 8,
+  },
+  item: { fontSize: 8.5, lineHeight: 1.45, marginBottom: 6 },
+  action: { borderTopWidth: 1, borderTopColor: "#303030", paddingTop: 12, marginBottom: 14 },
+  badge: { color: "#00FF9C", fontSize: 8, fontFamily: "Helvetica-Bold", marginBottom: 6 },
+  actionText: { fontSize: 9, lineHeight: 1.45 },
+  block: { borderTopWidth: 1, borderTopColor: "#303030", paddingTop: 13, marginTop: 8 },
+  card: { flex: 1, borderWidth: 1, borderColor: "#303030", padding: 13 },
+  cardTitle: { fontSize: 11, color: "#00FF9C", fontFamily: "Helvetica-Bold", marginBottom: 8 },
+  link: { color: "#EEEEEA", fontSize: 10, marginBottom: 8 },
 });
 
 function Chrome({ report, logoSrc }: { report: WebsiteReviewReport; logoSrc?: string }) {
   return (
     <>
       <View style={s.header} fixed>
-        <Text style={s.brand}>DEMORE TECHNOLOGY SOLUTIONS</Text>
+        {logoSrc ? (
+          <Image src={logoSrc} style={s.logo} />
+        ) : (
+          <Text style={s.brand}>DEMORE TECHNOLOGY SOLUTIONS</Text>
+        )}
         <Text style={s.meta}>{report.recordId}</Text>
       </View>
       <View style={s.footer} fixed>
-        <View style={s.footerBrand}>
-          {logoSrc ? <Image src={logoSrc} style={s.logo} /> : <Text style={s.brand}>DEMORE</Text>}
-          <View>
-            <Text style={s.footerText}>Demore Technology Solutions · Mentor, Lake County, Ohio · Nationwide, remote</Text>
-            <Text style={s.footerText}>ryan@demoretechnologysolutions.com · www.demoretechnologysolutions.com</Text>
-            <Text style={s.footerText}>Rankings, AI citations, and conversion lifts are not guaranteed.</Text>
-          </View>
+        <Text style={s.footerText}>
+          Demore Technology Solutions · Mentor, Lake County, Ohio · Nationwide, remote
+        </Text>
+        <View style={s.footerRow}>
+          <Text style={s.footerText}>
+            ryan@demoretechnologysolutions.com · www.demoretechnologysolutions.com
+          </Text>
         </View>
-        <Text style={s.meta} render={({ pageNumber, totalPages }) => `${report.recordId}  ·  ${pageNumber} / ${totalPages}`} />
       </View>
+      <Text
+        fixed
+        style={{
+          position: "absolute",
+          top: 758,
+          right: 40,
+          width: 70,
+          fontSize: 7,
+          color: "#B6B6B0",
+          textAlign: "right",
+        }}
+        render={({ pageNumber, totalPages }) => `Page ${pageNumber} / ${totalPages}`}
+      />
     </>
   );
 }
 
-function StatusColor(status: string) {
-  if (status === "Detected") return "#00FF9C";
-  if (status === "Not detected") return "#FF2A3A";
-  return "#8B8B86";
+function chunks<T>(items: T[], size: number): T[][] {
+  return Array.from({ length: Math.ceil(items.length / size) }, (_, i) =>
+    items.slice(i * size, (i + 1) * size),
+  );
 }
 
-export function WebsiteReviewDocument({ report, logoSrc }: { report: WebsiteReviewReport; logoSrc?: string }) {
-  report = customerPdfData(report);
-  const detected = report.current.checks.filter((item) => item.status === "Detected").length;
-  const applicable = report.current.checks.filter((item) => item.status !== "Not applicable").length;
-  const recommendations = [...report.recommendations].sort((a, b) => Number(a.effort !== "Quick win") - Number(b.effort !== "Quick win"));
-
+export function WebsiteReviewDocument({
+  report: source,
+  logoSrc,
+}: {
+  report: WebsiteReviewReport;
+  logoSrc?: string;
+}) {
+  const report = customerPdfData(source);
+  const overview = reviewOverview(report);
+  const actionPages = chunks(overview.actions, 4);
+  if (!actionPages.length) actionPages.push([]);
+  const guidance = businessGuidance(report);
+  const revision = report.revisions?.at(-1);
+  const title = plainText(report.current.title || report.current.url);
+  const latestVersion = (report.revisions?.length || 0) + 1;
   return (
-    <Document creationDate={new Date(report.createdAt)} modificationDate={new Date(report.createdAt)} title={`Website opportunity report — ${report.recordId}`} author="Demore Technology Solutions">
-      {report.tailoredPriorities?.length ? <Page size="LETTER" style={s.page}>
-        <Chrome report={report} logoSrc={logoSrc} />
-        <Text style={s.kicker}>Your tailored improvement plan</Text>
-        <Text style={s.h1}>Priorities for your business</Text>
-        <Text style={s.disc}>Recommendations informed by relevant business details you provided and the website review. Customer-provided details are not independently verified findings. Validate scope and integrations before implementation.</Text>
-        {report.tailoredPriorities.map(item => <View key={item.id} wrap={false}>
-          <Text style={s.h2}>{item.label}</Text>
-          <Text style={s.p}>{item.reason}</Text>
-          <Text style={s.p}>{item.action}</Text>
-        </View>)}
-      </Page> : null}
-      {report.revisions?.length ? <Page size="LETTER" style={s.page}>
-        <Chrome report={report} logoSrc={logoSrc} />
-        <Text style={s.kicker}>Updated improvement plan · Version {report.revisions.length + 1}</Text>
-        <Text style={s.h1}>Updated recommendations</Text>
-        <Text style={s.p}>{report.current.url}</Text>
-        <Text style={s.disc}>The latest revision below supersedes earlier recommendations where they conflict. These are customer-provided updates and proposed improvements, not a new website scan. Original detected findings follow for reference.</Text>
-        {report.revisions.slice(-1).map(revision => <View key={revision.number}>
-          <Text style={s.h2}>Revised recommendations</Text><Text style={s.p}>{revision.response.replace(/\*\*/g, "").replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1 ($2)")}</Text>
-        </View>)}
-      </Page> : null}
+    <Document
+      title={`Website review - ${title}`}
+      author="Demore Technology Solutions"
+      creationDate={new Date(report.createdAt)}
+    >
       <Page size="LETTER" style={s.page}>
-        <Chrome report={report} logoSrc={logoSrc} />
-        <Text style={s.h1}>Your website, competitors and improvements</Text>
-        <Text style={s.p}>{report.current.url}</Text>
-        {[0,1].map(i=><View key={i} wrap={false}><Text style={s.p}>{`Competitor ${i+1}: ${report.competitors?.[i]?.title || "Unavailable"}`}</Text>{report.competitors?.[i]&&<Link style={s.p} src={report.competitors[i].url}>{report.competitors[i].url}</Link>}</View>)}
-        <Text style={s.disc}>{report.competitorNote || "No verified competitor websites are attached to this saved report. Create a new report with a target market to request discovery."}</Text>
-        <View style={{flexDirection:"row",marginTop:12,marginBottom:8}}><Text style={[s.p,{width:"22%"}]}>Capability</Text><Text style={[s.p,{width:"14%"}]}>Your site</Text><Text style={[s.p,{width:"14%"}]}>Competitor 1</Text><Text style={[s.p,{width:"14%"}]}>Competitor 2</Text><Text style={[s.p,{width:"36%"}]}>Demore improvement</Text></View>
-        {report.current.checks.map(check=><View key={check.id} wrap={false} style={{flexDirection:"row",borderTopWidth:1,borderTopColor:"#2A2A28",paddingVertical:6}}><Text style={[s.p,{width:"22%",paddingRight:5}]}>{check.label}</Text><Text style={[s.p,{width:"14%",paddingRight:4}]}>{check.status}</Text>{[0,1].map(i=><Text key={i} style={[s.p,{width:"14%",paddingRight:4}]}>{report.competitors?.[i]?.checks.find(c=>c.id===check.id)?.status||"Unavailable"}</Text>)}<Text style={[s.p,{width:"36%"}]}>{check.improve}</Text></View>)}
-        <Text style={s.disc}>Not detected means absent from the public response, not proof the capability does not exist. Demore improvements are proposed work requiring validation, not guaranteed outcomes.</Text>
-      </Page>
-      <Page size="LETTER" style={s.page}>
-        <Chrome report={report} logoSrc={logoSrc} />
-        <Text style={s.kicker}>Website opportunity report</Text>
-        <Text style={s.h1}>See what this website could do next.</Text>
-        <Text style={s.p}>{report.current.url}</Text>
-        <View style={s.row}>
-          <View style={s.card}>
-            <Text style={s.label}>Detected signals</Text>
-            <Text style={s.value}>{`${detected} / ${applicable}`}</Text>
+        <Text style={s.h2}>{title}</Text>
+        <Text style={s.kicker}>WEBSITE REVIEW</Text>
+        <Text style={s.h1}>Here's what we found on your website.</Text>
+        <Text style={s.meta}>{plainText(report.current.url)}</Text>
+        <Text
+          style={s.meta}
+        >{`Prepared ${report.createdAt.slice(0, 10)} · Reference ${report.recordId}${revision ? ` · Updated plan v${latestVersion}` : ""}`}</Text>
+        <View style={{ marginTop: 13 }}>
+          <Text style={s.p}>
+            We checked the public page and available website files for basics that help people find
+            your business, understand what you offer and take the next step. Here is what we found
+            and what deserves a closer look.
+          </Text>
+        </View>
+        <View style={s.score} wrap={false}>
+          <View style={{ width: 140 }}>
+            <Text style={s.label}>BASICS FOUND</Text>
+            <Text style={[s.scoreValue, { fontSize: overview.total ? 24 : 16 }]}>
+              {overview.total ? `${overview.found.length} / ${overview.total}` : "Not available"}
+            </Text>
           </View>
-          <View style={s.card}>
-            <Text style={s.label}>Record ID</Text>
-            <Text style={s.value}>{report.recordId}</Text>
+          <Text style={[s.note, { flex: 1, marginBottom: 0 }]}>
+            This is a starting point, not a full test of how the website works. Finding an item does
+            not confirm its quality or results.
+          </Text>
+        </View>
+        <View style={s.columns}>
+          <View style={s.column}>
+            <Text style={s.listTitle}>ALREADY IN PLACE</Text>
+            {overview.found.length ? (
+              overview.found.map((c) => (
+                <Text key={c.id} style={s.item}>
+                  • {checkExplanation(c).found}
+                </Text>
+              ))
+            ) : (
+              <Text style={s.item}>
+                We could not confirm any of these basics in the available information.
+              </Text>
+            )}
+          </View>
+          <View style={s.column}>
+            <Text style={[s.listTitle, { color: "#FFE14A" }]}>WORTH A CLOSER LOOK</Text>
+            <Text style={s.note}>
+              Not found in this check; may exist elsewhere or need a manual check.
+            </Text>
+            {overview.missing.length ? (
+              overview.actions.map((c) => (
+                <Text key={c.id} style={s.item}>
+                  • {checkExplanation(c).name}
+                </Text>
+              ))
+            ) : (
+              <Text style={s.item}>
+                {overview.total
+                  ? "No missing items among the checks completed. Try the main customer journey next."
+                  : "A manual review is needed before recommending fixes."}
+              </Text>
+            )}
           </View>
         </View>
-        <Text style={s.p}>{`Prepared ${report.createdAt.slice(0, 10)} for a public HTML review. Bars show detected HTML signals, not speed, rankings, or revenue.`}</Text>
-        <Text style={s.h2}>Observable coverage by category</Text>
-        {report.categories.map((category) => {
-          const refs = report.benchmark.checks.filter((item) => item.category === category.name && item.status !== "Not applicable" && item.status !== "Unavailable");
-          const refDetected = refs.filter((item) => item.status === "Detected").length;
-          const refTotal = report.benchmark.unavailable ? 0 : refs.length;
-          return (
-            <View key={category.name} wrap={false} style={{ marginBottom: 8 }}>
-              <Text style={s.p}>{category.name}</Text>
-              <Text style={s.meta}>Your page</Text>
-              <View style={s.barTrack}>
-                <View style={[s.barFill, { width: `${category.total ? Math.max(4, (category.detected / category.total) * 100) : 0}%` }]} />
-              </View>
-              <Text style={s.meta}>{category.total ? `${category.detected} / ${category.total}` : "Not applicable"}</Text>
-              <Text style={s.meta}>Internal capability reference</Text>
-              <View style={s.barTrack}>
-                <View style={[s.barFill, { width: `${refTotal ? Math.max(4, (refDetected / refTotal) * 100) : 0}%`, backgroundColor: "#8B8B86" }]} />
-              </View>
-              <Text style={s.meta}>{report.benchmark.unavailable ? "Unavailable" : refTotal ? `${refDetected} / ${refTotal}` : "Not applicable"}</Text>
-            </View>
-          );
-        })}
-        <Text style={s.disc}>Preserve what works. Confirm apparent gaps before commissioning changes. Revenue, rankings, speed, and conversion lifts have not been measured and are not guaranteed.</Text>
-      </Page>
-
-      <Page size="LETTER" style={s.page}>
-        <Chrome report={report} logoSrc={logoSrc} />
-        <Text style={s.kicker}>Side-by-side comparison</Text>
-        <Text style={s.h1}>Your page. Relevant capability signals.</Text>
-        <Text style={s.p}>The reference combines publicly observed signals from two internal implementations. A signal means it was found on at least one reference, not that every feature is relevant to your business or active in your system.</Text>
-        <Text style={s.meta}>Internal reference sources are used for capability research only.</Text>
-        {report.benchmark.unavailable ? (
-          <Text style={s.p}>The reference site could not be fetched. Its findings are unavailable. No benchmark scores were invented.</Text>
-        ) : null}
-        <View style={[s.tr, { marginTop: 10 }]}>
-          <Text style={[s.th, { width: "40%" }]}>Website signal</Text>
-          <Text style={[s.th, { width: "30%" }]}>Your page</Text>
-          <Text style={[s.th, { width: "30%" }]}>Reference capabilities</Text>
-        </View>
-        {report.current.checks.map((item) => {
-          const reference = report.benchmark.checks.find((row) => row.id === item.id)?.status || "Unavailable";
-          return (
-            <View key={item.id} style={s.tr} wrap={false}>
-              <Text style={[s.td, { width: "40%" }]}>{item.label}</Text>
-              <Text style={[s.td, { width: "30%", color: StatusColor(item.status) }]}>{item.status}</Text>
-              <Text style={[s.td, { width: "30%", color: StatusColor(reference) }]}>{reference}</Text>
-            </View>
-          );
-        })}
-        <Text style={s.disc}>Detected = found in returned HTML. Not detected = not found in this limited scan. Not applicable = no relevant images to check. A detected feature still needs functional and quality testing.</Text>
-      </Page>
-
-      <Page size="LETTER" style={s.page}>
-        <Chrome report={report} logoSrc={logoSrc} />
-        <Text style={s.kicker}>Industry context</Text>
-        <Text style={s.h1}>Built around the customer journey.</Text>
-        <Text style={s.h2}>{report.industry.name}</Text>
-        <Text style={s.p}>{report.industry.source}</Text>
-        <Text style={s.p}>{report.industry.evidence}</Text>
-        <Text style={s.p}>{`Priority journey: ${report.industry.journey}`}</Text>
-        <Text style={s.p}>{`Measure: ${report.industry.measure}`}</Text>
-        <Text style={s.h2}>Industry-specific capabilities</Text>
-        <Text style={s.p}>These are scoped opportunities for this industry. They do not name third-party model vendors and they are not confirmed installations.</Text>
-        {(report.industry.capabilities || []).map((item) => (
-          <View key={item.id} wrap={false} style={{ marginBottom: 8 }}>
-            <Text style={s.chip}>{item.effort}</Text>
-            <Text style={s.h2}>{item.label}</Text>
-            <Text style={s.p}>{item.why}</Text>
-            <Text style={s.meta}>{`Verify: ${item.verify}`}</Text>
-            <Text style={s.p}>{`Proposed improvement: ${item.improve}`}</Text>
-          </View>
-        ))}
-        <Text style={s.h2}>Prioritized action plan</Text>
-        {recommendations.length ? recommendations.map((item, index) => (
-          <View key={item.id} wrap={false} style={{ marginBottom: 10 }}>
-            <Text style={s.chip}>{`${String(index + 1).padStart(2, "0")} / ${item.effort}`}</Text>
-            <Text style={s.h2}>{item.label}</Text>
-            <Text style={s.p}>{item.action}</Text>
-            <Text style={s.meta}>{`Verify: ${item.verify}`}</Text>
-            <Text style={s.p}>{`Proposed improvement: ${item.improve}`}</Text>
-            <Text style={s.meta}>{`Demore offering: ${item.offer}`}</Text>
-          </View>
-        )) : (
-          <Text style={s.p}>All applicable quick-review signals were detected. Next, validate the customer journey, lead routing, accessibility, and measurement with a manual review.</Text>
+        {(overview.unavailable > 0 || overview.skipped > 0) && (
+          <Text
+            style={[s.note, { marginTop: 12 }]}
+          >{`${overview.unavailable} checks could not be completed; ${overview.skipped} did not apply. These are excluded from the total above.`}</Text>
         )}
+        <Chrome report={report} logoSrc={logoSrc} />
+      </Page>
+
+      {actionPages.map((actions, pageIndex) => (
+        <Page size="LETTER" style={s.page} key={`actions-${pageIndex}`}>
+          <Text style={s.kicker}>PRIORITY ACTION PLAN{pageIndex ? " · CONTINUED" : ""}</Text>
+          <Text style={s.h1}>
+            {overview.actions.length ? "What to tackle first." : "Check the experience next."}
+          </Text>
+          <Text style={s.p}>
+            {overview.actions.length
+              ? "Start with the customer essentials below. Confirm each apparent gap before making a change; some features may be on other pages or inside accounts we cannot see."
+              : "There are no confirmed fixes to prescribe from these checks alone. Try the main inquiry, booking or buying path, then decide what needs attention."}
+          </Text>
+          {revision && (
+            <Text style={s.note}>
+              Your updated recommendations on the following pages take priority where they change
+              this original scan-based plan.
+            </Text>
+          )}
+          {actions.map((c, i) => {
+            const copy = checkExplanation(c);
+            return (
+              <View key={c.id} style={s.action} wrap={false}>
+                <Text style={s.badge}>
+                  {c.id === "llms" ? "OPTIONAL EXTRA" : c.effort.toUpperCase()}
+                </Text>
+                <Text style={s.h2}>{`${pageIndex * 4 + i + 1}. ${copy.name}`}</Text>
+                <View style={s.columns}>
+                  <View style={s.column}>
+                    <Text style={s.label}>WHY IT MATTERS</Text>
+                    <Text style={s.actionText}>{copy.why}</Text>
+                  </View>
+                  <View style={s.column}>
+                    <Text style={s.label}>WHAT WE'D DO</Text>
+                    <Text style={s.actionText}>{copy.action}</Text>
+                  </View>
+                </View>
+              </View>
+            );
+          })}
+          {!actions.length && (
+            <View style={s.block}>
+              <Text style={s.h2}>A useful first check</Text>
+              <Text style={s.p}>
+                Ask someone unfamiliar with your website to find your main offering and try the next
+                step. With your approval, test whether an inquiry reaches the right person and
+                whether it is recorded correctly.
+              </Text>
+            </View>
+          )}
+          <Chrome report={report} logoSrc={logoSrc} />
+        </Page>
+      ))}
+
+      <Page size="LETTER" style={s.page}>
+        <Text style={s.kicker}>PRIORITIES FOR YOUR BUSINESS</Text>
+        <Text style={s.h1}>{guidance[0]}</Text>
+        <Text style={s.meta}>
+          {plainText(report.industry.name)} · {plainText(report.industry.source)}
+        </Text>
+        <View style={s.block}>
+          <Text style={s.p}>{guidance[1]}</Text>
+          <Text style={s.p}>{guidance[2]}</Text>
+        </View>
+        {revision ? (
+          <>
+            <Text style={s.h2}>Your updated recommendations</Text>
+            <Text style={s.note}>
+              Based on the business details and changes you supplied, not a new website check. This
+              updated plan replaces earlier advice where it differs.
+            </Text>
+            <Text style={s.p}>{plainText(revision.response)}</Text>
+          </>
+        ) : report.tailoredPriorities?.length ? (
+          <>
+            <Text style={s.h2}>Tailored to what you told us</Text>
+            <Text style={s.note}>
+              These proposals use the business details you supplied. Those details have not been
+              independently checked.
+            </Text>
+            {report.tailoredPriorities.map((item, i) => (
+              <View key={item.id} style={s.block}>
+                <Text
+                  style={s.h2}
+                  minPresenceAhead={30}
+                >{`${i + 1}. ${report.current.checks.some((c) => c.id === item.id) ? checkExplanation(report.current.checks.find((c) => c.id === item.id)!).name : "Your business priority"}`}</Text>
+                <Text style={s.p}>{plainText(item.reason)}</Text>
+                <Text style={s.p}>{plainText(item.action)}</Text>
+              </View>
+            ))}
+          </>
+        ) : (
+          <View style={s.block}>
+            <Text style={s.h2}>Start with one useful improvement</Text>
+            <Text style={s.p}>
+              Choose the action most important to your business, such as an inquiry, a booking or a
+              purchase. Make that path easy to follow before adding more features.
+            </Text>
+            <Text style={s.note}>
+              This guidance is a proposal based on the selected or suggested business type. Confirm
+              it fits your business before starting work.
+            </Text>
+          </View>
+        )}
+        {!!report.competitors?.length && (
+          <View style={s.block}>
+            <Text style={s.h2} minPresenceAhead={30}>
+              Other websites considered
+            </Text>
+            <Text style={s.note}>
+              These are context for discussion, not proof of better results or confirmed
+              competitors.
+            </Text>
+            {report.competitors.map((site, i) => (
+              <Text key={`${site.url}-${i}`} style={s.note}>
+                {plainText(site.title || site.url)} · {plainText(site.url)}
+                {site.unavailable
+                  ? " · Could not review the public page"
+                  : " · Public page reviewed; business results not checked"}
+              </Text>
+            ))}
+          </View>
+        )}
+        <Chrome report={report} logoSrc={logoSrc} />
       </Page>
 
       <Page size="LETTER" style={s.page}>
+        <Text style={s.kicker}>HOW DEMORE CAN HELP</Text>
+        <Text style={s.h1}>Ongoing support, in six areas.</Text>
+        <Text style={s.p}>
+          Beyond the priority items, here is the kind of work we can discuss taking off your plate.
+        </Text>
+        {chunks([...supportAreas], 2).map((row, i) => (
+          <View key={i} style={[s.columns, { marginBottom: 14 }]} wrap={false}>
+            {row.map(([name, detail]) => (
+              <View key={name} style={s.card}>
+                <Text style={s.cardTitle}>{name}</Text>
+                <Text style={s.actionText}>{detail}</Text>
+              </View>
+            ))}
+          </View>
+        ))}
+        <Text style={s.note}>
+          These are services to consider, not a list of features already connected to your business.
+          Website changes, tracking, follow-up, social posting and phone services may need account
+          access, setup and your approval. We will confirm the scope and what works before relying
+          on it.
+        </Text>
         <Chrome report={report} logoSrc={logoSrc} />
-        <Text style={s.kicker}>Measurement</Text>
-        <Text style={s.h1}>Analytics, Search Console, and conversions.</Text>
-        <Text style={s.p}>Public tags and files only. Private Google Analytics and Search Console accounts were not opened. Rankings, AI citations, and conversion lifts are not guaranteed.</Text>
-        {report.current.checks.filter((item) => item.category === "Measurement").map((item) => (
-          <View key={item.id} wrap={false} style={{ marginBottom: 10 }}>
-            <Text style={s.chip}>{`${item.status} / ${item.effort}`}</Text>
-            <Text style={s.h2}>{item.label}</Text>
-            <Text style={s.p}>{item.evidence}</Text>
-            <Text style={s.meta}>{`Verify: ${item.verify}`}</Text>
-            <Text style={s.p}>{`Proposed improvement: ${item.improve}`}</Text>
-          </View>
-        ))}
-        <Text style={s.h2}>AI and search visibility</Text>
-        {report.current.checks.filter((item) => item.category === "AI and search visibility").map((item) => (
-          <View key={item.id} wrap={false} style={{ marginBottom: 10 }}>
-            <Text style={s.chip}>{`${item.status} / ${item.effort}`}</Text>
-            <Text style={s.h2}>{item.label}</Text>
-            <Text style={s.p}>{item.evidence}</Text>
-            <Text style={s.meta}>{`Verify: ${item.verify}`}</Text>
-            <Text style={s.p}>{`Proposed improvement: ${item.improve}`}</Text>
-          </View>
-        ))}
       </Page>
 
       <Page size="LETTER" style={s.page}>
+        <Text style={s.kicker}>NEXT STEPS</Text>
+        <Text style={s.h1}>A simple order to tackle this in.</Text>
+        <Text style={s.p}>
+          1. Confirm the priority items. Check the apparent gaps and agree on the changes most
+          useful to your customers.
+        </Text>
+        <Text style={s.p}>
+          2. Make the next step work. Test inquiries, bookings or purchases and confirm the right
+          person receives what they need.
+        </Text>
+        <Text style={s.p}>
+          3. Review on a schedule. Set up appropriate tracking and use regular, plain-language
+          reports to guide improvements.
+        </Text>
+        <View style={[s.block, { marginBottom: 20 }]}>
+          <Text style={s.h2}>Ready to start?</Text>
+          <Link
+            style={s.link}
+            src={`https://www.demoretechnologysolutions.com/contact?need=platform&source=website-review&rid=${encodeURIComponent(report.recordId)}`}
+          >
+            demoretechnologysolutions.com/contact
+          </Link>
+          <Link style={s.link} src="mailto:ryan@demoretechnologysolutions.com">
+            ryan@demoretechnologysolutions.com
+          </Link>
+          <Text style={s.p}>Mentor, Lake County, Ohio · Nationwide, remote</Text>
+        </View>
+        <Text style={s.note}>About this review</Text>
+        <Text style={s.note}>
+          This review uses a limited check of the submitted public page and available website files.
+          Some features may appear only after the page loads or on other pages. We did not open
+          private Google Analytics or Search Console accounts, submit forms, place calls or orders,
+          or test live pricing. Phone usability, accessibility, speed, search placement and business
+          results have not been verified.
+        </Text>
+        <Text style={s.note}>
+          Recommendations are proposed work, not confirmed installations or included services.
+          Search rankings, AI mentions, traffic and revenue are not guaranteed.
+        </Text>
+        <Text
+          style={s.note}
+        >{`Reviewed website: ${plainText(report.current.url)} · Reference ${report.recordId}`}</Text>
         <Chrome report={report} logoSrc={logoSrc} />
-        <Text style={s.kicker}>Control center and specialist teams</Text>
-        <Text style={s.h1}>Coordinate the work behind growth.</Text>
-        <Text style={s.p}>{consoleOverview}</Text>
-        <Text style={s.h2}>Automated lead generation</Text><Text style={s.p}>{leadGenerationOffering}</Text>
-        <Text style={s.h2}>What is available and what needs setup</Text><Text style={s.p}>{offeringReadiness}</Text>
-        <Text style={s.h2}>Specialists matched to the work</Text>
-        {capabilities.map(bot=><View key={bot.id} wrap={false} style={{marginBottom:7}}><Text style={s.h2}>{bot.name}</Text><Text style={s.p}>{bot.purpose}. Output: {bot.output}.</Text></View>)}
-      </Page>
-      <Page size="LETTER" style={s.page}>
-        <Chrome report={report} logoSrc={logoSrc} />
-        <Text style={s.kicker}>Beyond the public page</Text>
-        <Text style={s.h1}>Connect the website to the business.</Text>
-        <Text style={s.p}>These are opportunities Demore Technology Solutions can evaluate. They are not confirmed installations, included deliverables, prices, or guaranteed outcomes.</Text>
-        {report.offerings.map(([name, detail]) => (
-          <View key={name} wrap={false} style={{ marginBottom: 8 }}>
-            <Text style={s.h2}>{name}</Text>
-            <Text style={s.p}>{detail}</Text>
-          </View>
-        ))}
-        <Text style={s.h2}>Suggested delivery sequence</Text>
-        <Text style={s.p}>1. Validate the gaps and repair the primary inquiry path.</Text>
-        <Text style={s.p}>2. Connect qualification, routing, and follow-up.</Text>
-        <Text style={s.p}>3. Establish measurement and review approved improvements.</Text>
-        <Text style={s.h2}>What this review can tell you</Text>
-        <Text style={s.p}>{report.methodology}</Text>
-        <Text style={s.h2}>Start a project</Text>
-        <Text style={s.p}>{`demoretechnologysolutions.com/contact?need=platform&source=website-review&rid=${report.recordId}`}</Text>
-        <Text style={s.p}>ryan@demoretechnologysolutions.com · Mentor, Lake County, Ohio</Text>
-        <Text style={s.disc}>No passwords, pricing, or ranking guarantees are included in this report.</Text>
       </Page>
     </Document>
   );

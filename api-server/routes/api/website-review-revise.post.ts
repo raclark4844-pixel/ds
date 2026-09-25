@@ -39,7 +39,7 @@ export default async function revise(event: { req: Request }) {
       "website-review-revise",
       () =>
         runAssistant({
-          message: `Prepare the revised recommendations for this website improvement PDF based on this customer request: ${parsed.data.message}. Explain the resulting changes directly. Treat additions and corrections as customer-provided information, not new scanned findings. Return only the revised improvement recommendations, consolidating prior requested changes with this request. Do not discuss PDF generation, email delivery, download links, or what the application can or cannot do.`,
+          message: `Prepare the revised recommendations for this website improvement PDF based on this customer request: ${parsed.data.message}. Explain the resulting changes directly in nontechnical language for a business owner. Use short sections explaining why each change matters and what we would do. Avoid code, acronyms, internal architecture and technical jargon. Never reproduce raw prompts, questions or conversation transcripts. Clearly separate proposed work from verified findings. Treat additions and corrections as customer-provided information, not new scanned findings. Return only the revised improvement recommendations, consolidating prior requested changes with this request. Do not discuss PDF generation, email delivery, download links, or what the application can or cannot do.`,
           industries: parsed.data.industries,
           reviewBrief: report.assistantBrief,
           reportId: report.recordId,
