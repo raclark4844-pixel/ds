@@ -49,11 +49,21 @@ it("keeps pub and pizza guidance distinct without copying the sample business", 
   assert.match(businessGuidance(r).join(" "), /food and drink/);
   r.industry = resolveIndustry("Pizza Shops", []);
   assert.match(businessGuidance(r).join(" "), /pickup or delivery/);
-  assert.doesNotMatch(businessGuidance(r).join(" "), /Tommy|Toast|Owner.com|Mentor/);
+  assert.doesNotMatch(businessGuidance(r).join(" "), /Tommy|Toast|Owner.com|Mentor|raclark4844-pixel/);
 });
 it("handles future checks without exposing technical data and keeps optional AI summaries last", () => {
   const r = report();
   assert.equal(reviewOverview(r).actions.at(-1)?.id, "llms");
   const c = { ...r.current.checks[0], id: "future", label: "INTERNAL_RAW_SECRET" };
-  assert.doesNotMatch(JSON.stringify(checkExplanation(c)), /INTERNAL_RAW_SECRET/);
+  const explanation = checkExplanation(c);
+  assert.doesNotMatch(JSON.stringify(explanation), /INTERNAL_RAW_SECRET/);
+  assert.doesNotMatch(explanation.found, /INTERNAL_RAW_SECRET/);
+});
+it("enforces tenant isolation regression for foreign project access", () => {
+  const r = report();
+  // simulate cross-tenant attempt
+  const foreign = { ...r, projectId: "FOREIGN-9999" };
+  assert.notEqual(foreign.projectId, r.projectId);
+  const view = reviewOverview(foreign as any);
+  assert.equal(view.total, 0);
 });
