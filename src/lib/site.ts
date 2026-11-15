@@ -38,7 +38,6 @@ export const primaryNav = [
   { to: "/platform", label: "AI Growth Platform" },
   { to: "/websites", label: "Websites" },
   { to: "/growth", label: "Growth" },
-  { to: "/lead-generation", label: "Lead Engine" },
   { to: "/automation", label: "Automation" },
   { to: "/compare", label: "Free Comparison" },
 ] as const;
@@ -83,13 +82,6 @@ export const offerCards = [
     title: "Content systems",
     body: "Short-form video, social content, campaign assets, repurposing, approvals, and publishing workflows built to point traffic at a converting destination.",
     accent: "hot" as const,
-  },
-  {
-    to: "/lead-generation" as const,
-    kicker: "Leads",
-    title: "Lead generation",
-    body: "A Demore Technology Solutions workspace for customers, campaigns, lead review, conversations, qualified handoffs, and costs.",
-    accent: "volt" as const,
   },
   {
     to: "/contact" as const,
