@@ -7,14 +7,6 @@ import { breadcrumbJsonLd, serviceJsonLd } from "@/lib/seo";
 
 export function IndustryPage({ industry }: { industry: IndustryProfile }) {
   const path = `/industries/${industry.slug}`;
-  const factors = [
-    ["SEO", industry.seo],
-    ["GEO", industry.geo],
-    ["AEO", industry.aeo],
-    ["CRO", industry.cro],
-    ["Technical performance & UX", industry.performance],
-    ["Automation", industry.automation],
-  ] as const;
 
   return (
     <main id="main" className="mx-auto max-w-5xl px-4 pb-20 sm:px-6">
@@ -54,11 +46,6 @@ export function IndustryPage({ industry }: { industry: IndustryProfile }) {
           <span className="text-fg">Built for:</span> {industry.audience}
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Button asChild size="lg">
-            <Link to="/contact" search={{ industry: industry.label, need: "platform" }}>
-              Build my platform
-            </Link>
-          </Button>
           <Button asChild size="lg" variant="outline">
             <Link to="/platform">Why the platform is different</Link>
           </Button>
@@ -81,20 +68,6 @@ export function IndustryPage({ industry }: { industry: IndustryProfile }) {
         >
           See the platform comparison
         </Link>
-      </Section>
-
-      <Section
-        kicker="How we maximize the system"
-        title={`SEO, GEO, AEO, CRO, performance, and automation for ${industry.label.toLowerCase()}.`}
-      >
-        <div className="grid gap-4 md:grid-cols-2">
-          {factors.map(([title, body]) => (
-            <article key={title} className="rounded-xl border border-line bg-surface p-6">
-              <h2 className="font-display text-2xl font-semibold tracking-tight">{title}</h2>
-              <p className="mt-3 text-sm leading-relaxed text-muted">{body}</p>
-            </article>
-          ))}
-        </div>
       </Section>
 
       <Section kicker="Connected system" title="The pieces work together.">
@@ -144,18 +117,6 @@ export function IndustryPage({ industry }: { industry: IndustryProfile }) {
               Brief, discovery, scope, build, quality review, launch, measurement, and iteration.
             </p>
           </Link>
-          <Link
-            to="/contact"
-            search={{ industry: industry.label, need: "platform" }}
-            className="rounded-xl border border-volt/40 bg-volt-dim p-5 no-underline"
-          >
-            <h3 className="font-display text-xl font-semibold text-volt">
-              Build the complete platform
-            </h3>
-            <p className="mt-2 text-sm text-muted">
-              Send the industry, goals, budget, current website, and systems you want connected.
-            </p>
-          </Link>
         </div>
       </Section>
 
@@ -165,7 +126,7 @@ export function IndustryPage({ industry }: { industry: IndustryProfile }) {
             .filter((item) => item.slug !== industry.slug)
             .map((item) => (
               <Button key={item.slug} asChild variant="outline" size="sm">
-                <a href={`/industries/${item.slug}`}>{item.label}</a>
+                <Link to={`/industries/${item.slug}`}>{item.label}</Link>
               </Button>
             ))}
         </div>
