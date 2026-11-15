@@ -76,12 +76,18 @@ export function SiteFooter() {
             © {new Date().getFullYear()} {SITE_NAME}. Rankings, AI citations, traffic, lead volume,
             engagement, and conversion lifts are not guaranteed.
           </p>
-          <p>
+          <p className="flex flex-wrap gap-x-3 gap-y-1">
             <Link
               to="/privacy"
               className="underline decoration-line underline-offset-4 hover:text-volt"
             >
               Privacy Policy
+            </Link>
+            <Link
+              to="/terms"
+              className="underline decoration-line underline-offset-4 hover:text-volt"
+            >
+              Terms &amp; Conditions
             </Link>
           </p>
         </div>
