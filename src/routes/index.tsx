@@ -19,7 +19,7 @@ export const Route = createFileRoute("/")({
     pageHead({
       title: "Demore Technology Solutions | Website Design, Bots, Growth & AI Platforms",
       description:
-        "Custom website design, ecommerce, AI bots, growth marketing, lead generation, and AI-assisted platforms built around your business.",
+        "Custom website design, ecommerce, AI bots, growth marketing, and AI-assisted platforms built around your business.",
       path: "/",
     }),
   component: Home,
@@ -56,7 +56,7 @@ const serviceAreas = [
   },
   {
     number: "03",
-    title: "Growth, search & lead generation",
+    title: "Growth & search",
     accent: "bg-volt",
     to: "/growth",
     label: "Explore growth services",
@@ -64,7 +64,7 @@ const serviceAreas = [
     details: [
       "SEO, local search, and visibility in AI-generated answers (GEO / AEO)",
       "Campaign content, social presence, and targeted landing pages",
-      "Conversion improvements (CRO), analytics, and lead-generation workflows",
+      "Conversion improvements (CRO), analytics, and intake workflows",
     ],
     outcome: "A measurable customer journey from discovery through follow-up.",
   },
@@ -90,7 +90,7 @@ const platformCapabilities = [
     body: "A connected marketing system that helps plan campaigns, create and repurpose content, improve landing pages, organize offers, and keep the brand active without turning every task into a separate manual project.",
   },
   {
-    title: "Lead-generation systems",
+    title: "Campaign and intake systems",
     body: "Campaign pages, forms, calls to action, tracking, audience targeting, follow-up paths, and conversion-focused intake designed to turn traffic into qualified opportunities for the sales team.",
   },
   {
@@ -136,9 +136,6 @@ function Home() {
               onClick={() => window.dispatchEvent(new CustomEvent("demore:open-review"))}
             >
               Ask Demore AI: Improve my website
-            </Button>
-            <Button asChild size="lg" variant="volt">
-              <a href="/lead-generation#preview">Preview a campaign</a>
             </Button>
           </div>
         }
@@ -189,30 +186,6 @@ function Home() {
             </li>
           ))}
         </ul>
-        <div className="mt-5 rounded-xl border border-volt/30 bg-surface p-6 sm:p-8">
-          <p className="kicker text-volt">A dedicated workspace for leads</p>
-          <h3 className="mt-3 font-display text-2xl font-semibold tracking-tight">
-            Explore the Demore Lead Engine.
-          </h3>
-          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted">
-            Bring prospect research, campaign organization, outreach drafts, and follow-up into one
-            workspace. Start a campaign draft, manage current activity, and review past campaigns
-            together across customers. Explore industry examples for restaurants, pubs, pizza shops,
-            and contractors.
-          </p>
-          <Link
-            to="/lead-generation"
-            className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-volt underline underline-offset-4"
-          >
-            Explore lead-generation features
-            <ArrowUpRight aria-hidden="true" className="size-4" />
-          </Link>
-          <div className="mt-5">
-            <Button asChild variant="outline">
-              <a href="/lead-generation#preview">Preview lead generation</a>
-            </Button>
-          </div>
-        </div>
       </Section>
 
       <Section
@@ -270,7 +243,7 @@ function Home() {
 
       <Section
         kicker="AI-assisted marketing platform"
-        title="One system for visibility, content, leads, and follow-up."
+        title="One system for visibility, content, and follow-up."
         lede="The platform layer connects the website, search visibility, content engine, social channels, lead capture, analytics, and automation so the marketing stack behaves like one operating system instead of a pile of subscriptions."
       >
         <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -283,7 +256,7 @@ function Home() {
         </ul>
         <div className="mt-6 flex flex-wrap gap-3">
           <Link to="/growth" className="text-sm font-medium text-volt underline underline-offset-4">
-            Explore search, AI visibility, and lead generation
+            Explore search, AI visibility, and growth
           </Link>
           <Link
             to="/automation"
@@ -332,7 +305,7 @@ function Home() {
         <CtaBand
           kicker="Next"
           title="Start a project brief."
-          body="Tell us what needs to be built, what needs to generate leads, and what needs to be automated or measured. Rankings, AI citations, lead volume, and conversion lifts are not guaranteed."
+          body="Tell us what needs to be built, what needs to be measured, and what needs to be automated. Rankings, AI citations, lead volume, and conversion lifts are not guaranteed."
           primaryLabel="Build my platform"
           primaryNeed="platform"
           secondary={{ to: "/growth", label: "See the growth stack", variant: "volt" }}
@@ -344,7 +317,7 @@ function Home() {
           Coordinate your sites, specialists and approvals.
         </h2>
         <p className="mt-4 max-w-3xl text-muted">
-          Explore a multi-site framework for SEO, content, lead routing, follow-up, phone-agent
+          Explore a multi-site framework for SEO, content, routing, follow-up, phone-agent
           management, quality checks, reporting and monitoring. See how provider routing,
           independent review and cost controls fit together before activating integrations.
         </p>
