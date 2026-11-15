@@ -24,6 +24,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as PlatformRouteImport } from './routes/platform'
 import { Route as ProcessRouteImport } from './routes/process'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as WebsitesRouteImport } from './routes/websites'
 import { Route as WorkRouteImport } from './routes/work'
 import { Route as WorkspaceRouteImport } from './routes/workspace'
@@ -113,6 +114,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WebsitesRoute = WebsitesRouteImport.update({
   id: '/websites',
   path: '/websites',
@@ -197,6 +203,7 @@ export interface FileRoutesByFullPath {
   '/platform': typeof PlatformRoute
   '/process': typeof ProcessRoute
   '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/websites': typeof WebsitesRoute
   '/work': typeof WorkRoute
   '/workspace': typeof WorkspaceRoute
@@ -226,6 +233,7 @@ export interface FileRoutesByTo {
   '/platform': typeof PlatformRoute
   '/process': typeof ProcessRoute
   '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/websites': typeof WebsitesRoute
   '/work': typeof WorkRoute
   '/workspace': typeof WorkspaceRoute
@@ -257,6 +265,7 @@ export interface FileRoutesById {
   '/platform': typeof PlatformRoute
   '/process': typeof ProcessRoute
   '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/websites': typeof WebsitesRoute
   '/work': typeof WorkRoute
   '/workspace': typeof WorkspaceRoute
@@ -288,6 +297,7 @@ export interface FileRouteTypes {
     | '/platform'
     | '/process'
     | '/privacy'
+    | '/terms'
     | '/websites'
     | '/work'
     | '/workspace'
@@ -317,6 +327,7 @@ export interface FileRouteTypes {
     | '/platform'
     | '/process'
     | '/privacy'
+    | '/terms'
     | '/websites'
     | '/work'
     | '/workspace'
@@ -347,6 +358,7 @@ export interface FileRouteTypes {
     | '/platform'
     | '/process'
     | '/privacy'
+    | '/terms'
     | '/websites'
     | '/work'
     | '/workspace'
@@ -378,6 +390,7 @@ export interface RootRouteChildren {
   PlatformRoute: typeof PlatformRoute
   ProcessRoute: typeof ProcessRoute
   PrivacyRoute: typeof PrivacyRoute
+  TermsRoute: typeof TermsRoute
   WebsitesRoute: typeof WebsitesRoute
   WorkRoute: typeof WorkRoute
   WorkspaceRoute: typeof WorkspaceRoute
@@ -488,6 +501,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/websites': {
@@ -630,6 +650,7 @@ const rootRouteChildren: RootRouteChildren = {
   PlatformRoute: PlatformRoute,
   ProcessRoute: ProcessRoute,
   PrivacyRoute: PrivacyRoute,
+  TermsRoute: TermsRoute,
   WebsitesRoute: WebsitesRoute,
   WorkRoute: WorkRoute,
   WorkspaceRoute: WorkspaceRoute,
