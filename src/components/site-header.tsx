@@ -12,6 +12,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [signedIn, setSignedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [canSkipContact, setCanSkipContact] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
   const [authError, setAuthError] = useState("");
@@ -20,14 +21,25 @@ export function SiteHeader() {
     async function refresh() {
       try {
         const response = await fetch("/api/admin/review-access", { cache: "no-store" });
+        if (!response.ok) {
+          if (active) {
+            setSignedIn(false);
+            setIsAdmin(false);
+            setCanSkipContact(false);
+            setAdminOpen(false);
+          }
+          return;
+        }
         const admin = await response.json();
         if (active) {
-          setSignedIn(admin.canSkipContact === true);
-          setIsAdmin(admin.canSkipContact === true);
-          if (!admin.canSkipContact) setAdminOpen(false);
+          const nextSignedIn = Boolean(admin.signedIn ?? admin.canSkipContact ?? false);
+          const nextIsAdmin = Boolean(admin.isAdmin);
+          const nextCanSkip = Boolean(admin.canSkipContact);
+          setSignedIn(nextSignedIn);
+          setIsAdmin(nextIsAdmin);
+          setCanSkipContact(nextCanSkip);
+          if (!nextIsAdmin) setAdminOpen(false);
         }
-        const session = authEnabled ? await authClient.getSession() : null;
-        if (active) setSignedIn(admin.canSkipContact === true || Boolean(session?.data?.user));
       } catch {
         /* Retain the last confirmed session state. */
       }
@@ -197,41 +209,6 @@ export function SiteHeader() {
         <p className="border-t border-line px-4 py-2 text-sm text-hot sm:px-6" role="alert">
           {authError}
         </p>
-      ) : null}
-      {open ? (
-        <div className="border-t border-line bg-surface md:hidden">
-          <nav id="mobile-nav" aria-label="Mobile" className="mx-auto grid max-w-6xl gap-1 px-4 py-4 sm:px-6">
-            {primaryNav.map((item) => {
-              const Icon = navIcons[item.to];
-              return (
-                <Link
-                  key={item.to}
-                  to={item.to}
-                  onClick={() => setOpen(false)}
-                  className="inline-flex min-h-12 items-center gap-3 rounded-lg px-3 py-3 text-base text-fg hover:bg-elevated"
-                >
-                  {Icon ? <Icon className="size-5 text-muted" aria-hidden="true" /> : null}
-                  {item.label}
-                </Link>
-              );
-            })}
-            <Link
-              to="/industries"
-              onClick={() => setOpen(false)}
-              className="inline-flex min-h-12 items-center gap-3 rounded-lg px-3 py-3 text-base text-fg hover:bg-elevated"
-            >
-              <Building2 className="size-5 text-muted" aria-hidden="true" />
-              Industries
-            </Link>
-            <div className="mt-4 flex flex-col gap-2 pb-4">
-              <Button asChild size="lg">
-                <Link to="/contact" onClick={() => setOpen(false)}>
-                  Start a project brief
-                </Link>
-              </Button>
-            </div>
-          </nav>
-        </div>
       ) : null}
     </header>
   );
