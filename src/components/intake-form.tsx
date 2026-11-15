@@ -366,6 +366,15 @@ export function IntakeForm({
                 >
                   Privacy Policy
                 </Link>
+                <span className="mx-2 text-faint" aria-hidden="true">
+                  ·
+                </span>
+                <Link
+                  to="/terms"
+                  className="underline decoration-line underline-offset-4 hover:text-volt"
+                >
+                  Terms & Conditions
+                </Link>
               </p>
             </div>
             <div className="grid gap-5 sm:grid-cols-2">
