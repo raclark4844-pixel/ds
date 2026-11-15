@@ -102,6 +102,7 @@ export type Brief = {
   crmTools: string;
   anythingElse: string;
   consent: boolean;
+  smsOptIn: boolean;
   submittedAt: string;
 };
 
@@ -139,6 +140,7 @@ export const emptyBrief = (): Brief => ({
   crmTools: "",
   anythingElse: "",
   consent: false,
+  smsOptIn: false,
   submittedAt: "",
 });
 
@@ -196,6 +198,7 @@ export function formatBrief(brief: Brief): string {
     `CRM / tools: ${brief.crmTools}`,
     `Anything else: ${brief.anythingElse}`,
     `Consent: ${brief.consent ? "Yes" : "No"}`,
+    `SMS opt-in: ${brief.smsOptIn ? "Yes" : "No"}`,
   ].filter(Boolean).join("\n");
 }
 
