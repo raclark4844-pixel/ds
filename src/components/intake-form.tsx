@@ -353,10 +353,10 @@ export function IntakeForm({
                   onChange={(e) => patch({ smsOptIn: e.target.checked })}
                 />
                 <span className="text-sm leading-relaxed">
-                  I agree to receive text messages from Demore Technology Solutions or our partners
-                  about products and services, scheduling, and related updates. Message and data rates may apply.
-                  Reply STOP to opt out at any time. Consent is optional and not required to submit
-                  this brief.
+                  I agree to receive promotional and marketing text messages from Demore Technology
+                  Solutions, such as offers and service announcements. Message frequency varies.
+                  Message and data rates may apply. Reply HELP for help or STOP to opt out at any
+                  time. Consent is not required to submit this form or to make a purchase.
                 </span>
               </label>
               <p className="mt-3 pl-8 text-sm leading-relaxed">
