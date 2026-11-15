@@ -21,7 +21,7 @@ export type NavItem = {
 export const featuredPills: readonly NavItem[] = [
   { to: "/platform", label: "AI growth platform", short: "Platform" },
   { to: "/websites", label: "Websites & ecommerce", short: "Sites" },
-  { to: "/growth", label: "Growth & leads", short: "Growth" },
+  { to: "/growth", label: "Growth", short: "Growth" },
   { to: "/automation", label: "AI & automation", short: "AI" },
 ];
 
@@ -40,11 +40,10 @@ export const dockTabs: readonly NavItem[] = [
 
 export const allMainPages: readonly NavItem[] = [
   { to: "/control-center", label: "AI Control Center" },
-  { to: "/lead-generation", label: "Lead Generation & Campaigns" },
   { to: "/", label: "Home" },
   { to: "/platform", label: "AI Marketing Platform" },
   { to: "/websites", label: "Websites & Ecommerce" },
-  { to: "/growth", label: "Growth & Lead Generation" },
+  { to: "/growth", label: "Growth" },
   { to: "/automation", label: "AI & Automation" },
   { to: "/industries", label: "Industries" },
   { to: "/work", label: "Work" },
