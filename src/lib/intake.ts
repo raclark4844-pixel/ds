@@ -68,6 +68,15 @@ export const NEED_MAP: Record<string, string[]> = {
   platform: ["platform"],
 };
 
+/** Display separately beside an unchecked, optional SMS checkbox. */
+export const SMS_CONSENT_TEXT =
+  "I agree to receive text messages from Demore Technology Solutions about my " +
+  "project inquiry, including messages sent using automated technology. Consent " +
+  "is not a condition of purchase. Message frequency varies. Message and data " +
+  "rates may apply. Reply STOP to opt out or HELP for help.";
+
+export const SMS_CONSENT_SOURCE = "demore-project-brief";
+
 export type Brief = {
   reportId: string;
   handoffToken: string;
@@ -103,6 +112,10 @@ export type Brief = {
   anythingElse: string;
   consent: boolean;
   smsOptIn: boolean;
+  // Optional for compatibility with existing saved briefs; absent evidence is invalid.
+  smsConsentText?: string;
+  smsConsentTimestamp?: string;
+  smsConsentSource?: string;
   submittedAt: string;
 };
 
@@ -141,6 +154,9 @@ export const emptyBrief = (): Brief => ({
   anythingElse: "",
   consent: false,
   smsOptIn: false,
+  smsConsentText: "",
+  smsConsentTimestamp: "",
+  smsConsentSource: "",
   submittedAt: "",
 });
 
@@ -151,11 +167,148 @@ export function applyNeed(brief: Brief, need?: string): Brief {
   return { ...brief, wants: Array.from(new Set([...brief.wants, ...extras])) };
 }
 
+/**
+ * Call only from the dedicated SMS checkbox interaction, never from general
+ * consent or when hydrating stored data. Client evidence is not server proof.
+ */
+export function captureSmsConsent(brief: Brief, checked: boolean): Brief {
+  return {
+    ...brief,
+    smsOptIn: checked,
+    smsConsentText: checked ? SMS_CONSENT_TEXT : "",
+    smsConsentTimestamp: checked ? new Date().toISOString() : "",
+    smsConsentSource: checked ? SMS_CONSENT_SOURCE : "",
+  };
+}
+
+export function assertSmsConsentEvidence(brief: Brief): void {
+  if (typeof brief.smsOptIn !== "boolean") {
+    throw new Error("Invalid SMS consent selection.");
+  }
+  if (!brief.smsOptIn) return;
+
+  const timestamp = brief.smsConsentTimestamp ?? "";
+  const parsed = Date.parse(timestamp);
+
+  if (
+    brief.smsConsentText !== SMS_CONSENT_TEXT ||
+    brief.smsConsentSource !== SMS_CONSENT_SOURCE ||
+    !Number.isFinite(parsed) ||
+    new Date(parsed).toISOString() !== timestamp ||
+    parsed > Date.now()
+  ) {
+    throw new Error("Explicit SMS consent evidence is required.");
+  }
+}
+
+export type SmsConsentEvent = Readonly<{
+  project_id: string;
+  reportId: string;
+  action: "granted" | "revoked";
+  disclosure: string;
+  consentTimestamp: string;
+  source: string;
+  recordedAt: string;
+}>;
+
+/**
+ * Server integration contract, not a database implementation:
+ * - derive project/report authorization from the authenticated server context;
+ * - insert events durably, without UPDATE/DELETE, in the brief-write transaction;
+ * - scope every read/write by project_id AND reportId;
+ * - record revocation as another event, never overwrite a grant;
+ * - never log the brief or its handoffToken.
+ *
+ * Deployment remains blocked until the existing persistence route and isolated
+ * regression tests verify these guarantees. This client module cannot enforce
+ * database authorization, durability, or CI configuration.
+ */
+export function createSmsConsentEvent(
+  brief: Brief,
+  scope: Readonly<{ project_id: string; reportId: string }>,
+  action: "granted" | "revoked",
+): SmsConsentEvent {
+  if (
+    !scope.project_id.trim() ||
+    !scope.reportId.trim() ||
+    scope.reportId !== brief.reportId
+  ) {
+    throw new Error("Invalid consent scope.");
+  }
+
+  if (action !== "granted" && action !== "revoked") {
+    throw new Error("Invalid consent action.");
+  }
+
+  if (action === "granted") {
+    assertSmsConsentEvidence(brief);
+    if (!brief.smsOptIn) throw new Error("SMS consent was not granted.");
+  } else if (brief.smsOptIn !== false) {
+    throw new Error("SMS consent must be explicitly revoked.");
+  }
+
+  const recordedAt = new Date().toISOString();
+
+  return Object.freeze({
+    project_id: scope.project_id,
+    reportId: scope.reportId,
+    action,
+    disclosure: action === "granted" ? brief.smsConsentText! : "",
+    consentTimestamp:
+      action === "granted" ? brief.smsConsentTimestamp! : recordedAt,
+    source: SMS_CONSENT_SOURCE,
+    recordedAt,
+  });
+}
+
+function fmtList(values: readonly string[]): string {
+  return values.join(", ") || "—";
+}
+
+/** Defense in depth for free text; sensitive structured fields are omitted below. */
+function sanitizeReportText(text: string, brief: Brief): string {
+  let sanitized = text;
+
+  const sensitiveValues = [
+    brief.handoffToken,
+    brief.reportId,
+    brief.phone,
+    brief.email,
+  ]
+    .filter((value) => typeof value === "string" && value.length > 0)
+    .sort((a, b) => b.length - a.length);
+
+  for (const value of sensitiveValues) {
+    sanitized = sanitized.split(value).join("[redacted]");
+  }
+
+  return sanitized
+    .replace(
+      /\b[A-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi,
+      "[redacted email]",
+    )
+    .replace(
+      /(^|[^\w])(\+?\d[\d(). -]{5,}\d)(?!\w)/g,
+      (match: string, prefix: string, candidate: string) => {
+        const digits = candidate.replace(/\D/g, "").length;
+        return digits >= 7 && digits <= 15
+          ? `${prefix}[redacted phone]`
+          : match;
+      },
+    );
+}
+
+/**
+ * Customer-facing text only. Never serialize the entire brief here.
+ * SMS consent evidence belongs exclusively in the private audit trail.
+ */
 export function formatBrief(brief: Brief): string {
-  const wantLabels = brief.wants.map((id) => wantBuilt.find((item) => item.id === id)?.label ?? id);
-  return [
+  const wantLabels = brief.wants.map(
+    (id) => wantBuilt.find((item) => item.id === id)?.label ?? id,
+  );
+
+  const text = [
     "DEMORE TECHNOLOGY SOLUTIONS — PROJECT BRIEF",
-    brief.reportId ? `Demore Report ID: ${brief.reportId}` : "",
     brief.submittedAt ? `Submitted: ${brief.submittedAt}` : "",
     "",
     "STEP 1 — BUSINESS",
@@ -163,20 +316,18 @@ export function formatBrief(brief: Brief): string {
     `Full name: ${brief.name}`,
     `Role: ${brief.role}`,
     `Business name: ${brief.businessName}`,
-    `Phone: ${brief.phone}`,
-    `Email: ${brief.email}`,
     `City / market: ${brief.city}`,
     `Service area: ${brief.serviceArea}`,
     `Current website: ${brief.website}`,
     "",
     "STEP 2 — PROJECT",
-    `Looking for: ${wantLabels.join(", ") || "—"}`,
+    `Looking for: ${fmtList(wantLabels)}`,
     `Budget: ${brief.budget ? `$${Number(brief.budget).toLocaleString()}` : "—"}`,
     `Primary goal: ${brief.goal}`,
     `Timeline: ${brief.timeline}`,
     "",
     "STEP 3 — WEBSITE AND BRAND",
-    `Features: ${brief.features.join(", ") || "—"}`,
+    `Features: ${fmtList(brief.features)}`,
     `Must-have pages: ${brief.mustHavePages}`,
     `Brand notes: ${brief.brand}`,
     `Inspiration sites: ${brief.likedSites}`,
@@ -184,7 +335,7 @@ export function formatBrief(brief: Brief): string {
     `Buyer: ${brief.buyer}`,
     "",
     "STEP 4 — GROWTH AND CONTENT",
-    `Platforms: ${brief.platforms.join(", ") || "—"}`,
+    `Platforms: ${fmtList(brief.platforms)}`,
     `Posting frequency: ${brief.frequency}`,
     `Approver: ${brief.approver}`,
     `Assets on hand: ${brief.existingContent}`,
@@ -198,8 +349,11 @@ export function formatBrief(brief: Brief): string {
     `CRM / tools: ${brief.crmTools}`,
     `Anything else: ${brief.anythingElse}`,
     `Consent: ${brief.consent ? "Yes" : "No"}`,
-    `SMS opt-in: ${brief.smsOptIn ? "Yes" : "No"}`,
-  ].filter(Boolean).join("\n");
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  return sanitizeReportText(text, brief);
 }
 
 export const STEPS = [
