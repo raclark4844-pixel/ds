@@ -43,6 +43,7 @@ function PrivacyPage() {
           Privacy Policy
         </h1>
         <p className="mt-4 text-sm text-muted">Effective date: November 15, 2026</p>
+        <p className="mt-1 text-sm text-muted">Policy version: 1.0</p>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
           Demore Technology Solutions sends text messages and other communications about our
           services and the inquiries and requests you make with us. This policy explains what
@@ -182,46 +183,6 @@ function PrivacyPage() {
             </li>
           </ul>
         </section>
-
-        <section>
-          <h2 className="font-display text-2xl font-semibold tracking-tight text-fg">Children</h2>
-          <p className="mt-4">
-            Our services are not directed to children under 13, and we do not knowingly collect
-            their information.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="font-display text-2xl font-semibold tracking-tight text-fg">
-            Changes to this policy
-          </h2>
-          <p className="mt-4">
-            We may update this policy from time to time. The effective date at the top shows when it
-            last changed.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="font-display text-2xl font-semibold tracking-tight text-fg">Contact us</h2>
-          <p className="mt-4">
-            Demore Technology Solutions
-            <br />
-            6348 Meldon Dr
-            <br />
-            Mentor, Ohio 44060
-            <br />
-            <a className="text-fg underline-offset-4 hover:underline" href={EMAIL_MAILTO}>
-              {EMAIL}
-            </a>
-          </p>
-        </section>
-      </div>
-
-      <div className="mt-12 flex flex-col gap-3 sm:flex-row">
-        <BackButton />
-        <Button asChild size="lg" variant="outline">
-          <Link to="/contact">Start a project brief</Link>
-        </Button>
       </div>
     </main>
   );
