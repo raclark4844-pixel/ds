@@ -70,8 +70,8 @@ export const NEED_MAP: Record<string, string[]> = {
 
 /** Display separately beside an unchecked, optional SMS checkbox. */
 export const SMS_CONSENT_TEXT =
-  "I agree to receive text messages from Demore Technology Solutions about my " +
-  "project inquiry, including messages sent using automated technology. Consent " +
+  "I agree to receive text messages from Demore Technology Solutions about " +
+  "products and services, including messages sent using automated technology. Consent " +
   "is not a condition of purchase. Message frequency varies. Message and data " +
   "rates may apply. Reply STOP to opt out or HELP for help.";
 
