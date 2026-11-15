@@ -342,6 +342,21 @@ export function IntakeForm({
                 />
               </Field>
             </div>
+
+            <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-line bg-elevated px-4 py-3">
+              <input
+                type="checkbox"
+                className="mt-1 size-5 accent-hot"
+                checked={brief.smsOptIn}
+                onChange={(e) => patch({ smsOptIn: e.target.checked })}
+              />
+              <span className="text-sm leading-relaxed">
+                I agree to receive text messages from Demore Technology Solutions or our partners
+                about my project, scheduling, and related updates. Message and data rates may apply.
+                Reply STOP to opt out at any time. Consent is optional and not required to submit
+                this brief.
+              </span>
+            </label>
             <div className="grid gap-5 sm:grid-cols-2">
               <Field label="City / market" htmlFor="city">
                 <input
@@ -540,7 +555,7 @@ export function IntakeForm({
                 onChange={(e) => patch({ frequency: e.target.value })}
               />
             </Field>
-            <Field label="Who approves content" htmlFor="approver">
+            <Field label="Who approves content?" htmlFor="approver">
               <input
                 id="approver"
                 className={control}
@@ -548,7 +563,7 @@ export function IntakeForm({
                 onChange={(e) => patch({ approver: e.target.value })}
               />
             </Field>
-            <Field label="Content and assets already available" htmlFor="existingContent">
+            <Field label="Existing content / assets" htmlFor="existingContent">
               <textarea
                 id="existingContent"
                 className={textarea}
@@ -556,7 +571,7 @@ export function IntakeForm({
                 onChange={(e) => patch({ existingContent: e.target.value })}
               />
             </Field>
-            <Field label="Current SEO / search / AI visibility" htmlFor="seoNow">
+            <Field label="Current SEO / AI visibility" htmlFor="seoNow">
               <textarea
                 id="seoNow"
                 className={textarea}
@@ -566,20 +581,20 @@ export function IntakeForm({
             </Field>
             <fieldset>
               <legend className="text-sm font-medium text-fg">Growth priority</legend>
-              <div className="mt-3 grid gap-2">
+              <div className="mt-3 grid gap-2 sm:grid-cols-2">
                 {growthPriorities.map((item) => (
                   <label
-                    key={item}
+                    key={item.id}
                     className="flex min-h-12 cursor-pointer items-center gap-3 rounded-lg border border-line bg-elevated px-4"
                   >
                     <input
                       type="radio"
-                      name="growthPriority"
                       className="size-5 accent-hot"
-                      checked={brief.growthPriority === item}
-                      onChange={() => patch({ growthPriority: item })}
+                      name="growthPriority"
+                      checked={brief.growthPriority === item.id}
+                      onChange={() => patch({ growthPriority: item.id })}
                     />
-                    <span>{item}</span>
+                    <span>{item.label}</span>
                   </label>
                 ))}
               </div>
@@ -642,20 +657,6 @@ export function IntakeForm({
                 I understand this is a project brief, not a contract, and results such as rankings,
                 AI citations, traffic, lead volume, engagement, or conversion lifts are not
                 guaranteed.
-              </span>
-            </label>
-            <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-line bg-elevated px-4 py-3">
-              <input
-                type="checkbox"
-                className="mt-1 size-5 accent-hot"
-                checked={brief.smsOptIn}
-                onChange={(e) => patch({ smsOptIn: e.target.checked })}
-              />
-              <span className="text-sm leading-relaxed">
-                I agree to receive text messages from Demore Technology Solutions or our partners
-                about my project, scheduling, and related updates. Message and data rates may apply.
-                Reply STOP to opt out at any time. Consent is optional and not required to submit
-                this brief.
               </span>
             </label>
           </>
