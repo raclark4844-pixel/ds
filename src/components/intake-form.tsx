@@ -103,6 +103,7 @@ export function IntakeForm({
     if (!Array.isArray(next.wants)) next.wants = [];
     if (!Array.isArray(next.features)) next.features = [];
     if (!Array.isArray(next.platforms)) next.platforms = [];
+    if (typeof next.smsOptIn !== "boolean") next.smsOptIn = false;
     setBrief(next);
     setHydrated(true);
   }, [need, industry, reportId, handoffToken]);
@@ -588,16 +589,16 @@ export function IntakeForm({
 
         {step === 5 ? (
           <>
-            <Field label="How do new leads reach you today?" htmlFor="leadProcess">
+            <Field label="Current lead process" htmlFor="leadProcess">
               <textarea
                 id="leadProcess"
                 className={textarea}
                 value={brief.leadProcess}
                 onChange={(e) => patch({ leadProcess: e.target.value })}
-                placeholder="Phone, form, email, CRM, booking tool, social DMs…"
+                placeholder="How do leads come in today?"
               />
             </Field>
-            <Field label="Analytics / tracking in place today" htmlFor="analyticsNow">
+            <Field label="Current analytics / tracking" htmlFor="analyticsNow">
               <textarea
                 id="analyticsNow"
                 className={textarea}
@@ -641,6 +642,20 @@ export function IntakeForm({
                 I understand this is a project brief, not a contract, and results such as rankings,
                 AI citations, traffic, lead volume, engagement, or conversion lifts are not
                 guaranteed.
+              </span>
+            </label>
+            <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-line bg-elevated px-4 py-3">
+              <input
+                type="checkbox"
+                className="mt-1 size-5 accent-hot"
+                checked={brief.smsOptIn}
+                onChange={(e) => patch({ smsOptIn: e.target.checked })}
+              />
+              <span className="text-sm leading-relaxed">
+                I agree to receive text messages from Demore Technology Solutions or our partners
+                about my project, scheduling, and related updates. Message and data rates may apply.
+                Reply STOP to opt out at any time. Consent is optional and not required to submit
+                this brief.
               </span>
             </label>
           </>
