@@ -14,7 +14,6 @@ export function IndustryPage({ industry }: { industry: IndustryProfile }) {
     ["CRO", industry.cro],
     ["Technical performance & UX", industry.performance],
     ["Automation", industry.automation],
-    ["Lead generation", industry.leadGen],
   ] as const;
 
   return (
@@ -37,7 +36,6 @@ export function IndustryPage({ industry }: { industry: IndustryProfile }) {
             "GEO",
             "AEO",
             "CRO",
-            "Lead generation",
             "Marketing automation",
           ],
         })}
@@ -87,7 +85,7 @@ export function IndustryPage({ industry }: { industry: IndustryProfile }) {
 
       <Section
         kicker="How we maximize the system"
-        title={`SEO, GEO, AEO, CRO, performance, leads, and automation for ${industry.label.toLowerCase()}.`}
+        title={`SEO, GEO, AEO, CRO, performance, and automation for ${industry.label.toLowerCase()}.`}
       >
         <div className="grid gap-4 md:grid-cols-2">
           {factors.map(([title, body]) => (
@@ -116,7 +114,7 @@ export function IndustryPage({ industry }: { industry: IndustryProfile }) {
           >
             <h3 className="font-display text-xl font-semibold">Growth</h3>
             <p className="mt-2 text-sm text-muted">
-              SEO, GEO, AEO, CRO, analytics, visibility, and lead-generation strategy.
+              SEO, GEO, AEO, CRO, analytics, and visibility strategy.
             </p>
           </Link>
           <Link
@@ -155,24 +153,10 @@ export function IndustryPage({ industry }: { industry: IndustryProfile }) {
               Build the complete platform
             </h3>
             <p className="mt-2 text-sm text-muted">
-              Send the industry, goals, budget, current website, lead flow, and systems you want
-              connected.
+              Send the industry, goals, budget, current website, and systems you want connected.
             </p>
           </Link>
         </div>
-      </Section>
-
-      <Section kicker="Campaign workspace" title="Keep inquiries and follow-up together.">
-        <p className="text-muted">
-          Organize customers, campaigns, lead review, conversations, qualified handoffs, and
-          campaign costs in the Demore Technology Solutions workspace.
-        </p>
-        <Link
-          to="/lead-generation"
-          className="mt-4 inline-flex text-volt underline underline-offset-4"
-        >
-          Explore lead generation and campaign management
-        </Link>
       </Section>
 
       <Section kicker="Other industries" title="Explore another industry.">
