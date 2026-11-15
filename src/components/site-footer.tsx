@@ -76,6 +76,14 @@ export function SiteFooter() {
             © {new Date().getFullYear()} {SITE_NAME}. Rankings, AI citations, traffic, lead volume,
             engagement, and conversion lifts are not guaranteed.
           </p>
+          <p>
+            <Link
+              to="/privacy"
+              className="underline decoration-line underline-offset-4 hover:text-volt"
+            >
+              Privacy Policy
+            </Link>
+          </p>
         </div>
       </div>
     </footer>
