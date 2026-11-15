@@ -6,7 +6,7 @@ const industry = getIndustry("pizza-shops");
 export const Route = createFileRoute("/industries/pizza-shops")({
   head: () =>
     pageHead({
-      title: "Pizza Shops Websites & Lead Generation | Demore Technology Solutions",
+      title: "Pizza Shops Websites & Growth | Demore Technology Solutions",
       description: industry.description,
       path: "/industries/pizza-shops",
     }),

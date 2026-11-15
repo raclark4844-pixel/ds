@@ -6,7 +6,7 @@ const industry = getIndustry("pubs");
 export const Route = createFileRoute("/industries/pubs")({
   head: () =>
     pageHead({
-      title: "Pubs Websites & Lead Generation | Demore Technology Solutions",
+      title: "Pubs Websites & Growth | Demore Technology Solutions",
       description: industry.description,
       path: "/industries/pubs",
     }),
