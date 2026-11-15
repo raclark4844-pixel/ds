@@ -35,6 +35,7 @@ type ProjectBrief = {
   crmTools?: string;
   anythingElse?: string;
   consent?: boolean;
+  smsOptIn?: boolean;
   submittedAt?: string;
 };
 
@@ -80,6 +81,7 @@ export default async function projectBrief(event: { req: Request }) {
   const wants = list(raw.wants);
   const reportId = clean(raw.reportId, 40);
   const handoffToken = clean(raw.handoffToken, 200);
+  const smsOptIn = raw.smsOptIn === true;
 
   if (!industry || !name || !email || !email.includes("@")) {
     return Response.json(
@@ -201,6 +203,7 @@ export default async function projectBrief(event: { req: Request }) {
     textLine("Automation needs", clean(raw.automationNeeds)),
     textLine("CRM / tools", clean(raw.crmTools)),
     textLine("Anything else", clean(raw.anythingElse)),
+    textLine("SMS opt-in", smsOptIn ? "Yes" : "No"),
   ];
 
   const isTest = /TEST\s*[\u2014-]\s*discard|TEST ONLY/i.test(
