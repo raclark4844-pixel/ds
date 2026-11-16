@@ -27,7 +27,8 @@ test('shared budget serializes both sites, deduplicates and retains unknown cost
 
 import {runHosted,parseHostedReview} from './hosted-bots.ts';
 import type {Sql} from './db';
-test('hosted run persists independent review, reconciles usage and never redispatches duplicates',async()=>{
+test('hosted run persists independent review, reconciles usage and never redispatches duplicates',async(t)=>{
+ t.mock.timers.enable({apis:['Date'],now:Date.parse('2026-09-21T12:00:00Z')});
  const db=new PGlite();
  const sql:Pick<Sql,'query'>={query:async<T>(q:string,p?:unknown[])=>(await db.query<T>(q,p)).rows};
  const beforeOpen=process.env.OPENAI_API_KEY,beforeClaude=process.env.ANTHROPIC_API_KEY;

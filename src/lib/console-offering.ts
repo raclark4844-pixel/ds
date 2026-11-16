@@ -8,7 +8,13 @@ export function tailoredAutomation(industry:string,journey:string,missing:string
  return [['Control center for '+industry,consoleOverview],['Automated lead generation for your customer journey',useCase+' Priority journey: '+journey+'. '+leadGenerationOffering],['Priorities from your current website',missing.length?'Validate these signals not detected in the public scan: '+missing.slice(0,5).join(', ')+'. Repair the relevant conversion path before increasing campaign volume.':'Validate existing conversion paths and attribution before adding automation. Public HTML cannot confirm private CRM, consent or follow-up configuration.'],['Measurement and staged rollout','Confirm the industry and primary conversion, connect the smallest useful workflow, test lead capture and ownership, then measure '+journey+'. Expand only after reliable tracking and handoff.'],['Scope and activation',offeringReadiness]];
 }
 export const specialistKnowledge = capabilities.map(b=>b.name+': '+b.purpose+'. Expected output: '+b.output).join('\n');
-export function customerPdfText(text:string){return text.replace(/https?:\/\/(?:www\.)?demoreexteriorsolutions\.com[^\s)]*/gi,'[internal reference]').replace(/demoreexteriorsolutions\.com/gi,'[internal reference]').replace(/Demore Exterior(?: Solutions)?/gi,'reference implementation');}
+const exteriorCompany = new RegExp(["Demore", "Exterior(?:", "Solutions)?"].join("\\s+"), "gi");
+export function customerPdfText(text:string){
+ return text.replace(/https?:\/\/(?:www\.)?[^\s)]+/gi,(url)=>{
+  try{const host=new URL(url).hostname.toLowerCase().replace(/^www\./,"");if(host.startsWith("demore")&&host.includes("exterior"))return "[internal reference]";}catch{/* Leave unparseable text in place. */}
+  return url;
+ }).replace(/[^\s)]*demore[^\s)]*exterior[^\s)]*/gi,"[internal reference]").replace(exteriorCompany,"reference implementation");
+}
 
 export function customerPdfData<T>(value:T):T {
  if(typeof value === "string") return customerPdfText(value) as T;

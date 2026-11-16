@@ -19,7 +19,7 @@ export const Route = createFileRoute("/lead-inbox")({
   head: () => {
     const h = pageHead({
       title: "Lead Inbox | Demore Technology Solutions",
-      description: "Private lead pipelines for Demore businesses.",
+      description: "Private lead pipeline for Demore Technology Solutions.",
       path: "/lead-inbox",
     });
     return {
@@ -32,7 +32,6 @@ export const Route = createFileRoute("/lead-inbox")({
   component: Inbox,
 });
 const sites = [
-  { id: "demore", name: "Demore Exterior Solutions", url: "https://demoreexteriorsolutions.com/" },
   {
     id: "demore-technology",
     name: "Demore Technology Solutions",
@@ -51,7 +50,7 @@ async function api(path: string, init?: RequestInit) {
   return data;
 }
 function Inbox() {
-  const [site, setSite] = useState("demore");
+  const [site, setSite] = useState("demore-technology");
   const [items, setItems] = useState<Lead[] | null>(null);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -117,10 +116,9 @@ function Inbox() {
       <p className="kicker">Private administrator workspace</p>
       <h1 className="mt-4 text-4xl font-semibold">Shared lead inbox</h1>
       <p className="mt-4 max-w-3xl text-muted">
-        Separate pipelines for both businesses. Capture leads manually, assign an owner, and track
+        Pipeline for Demore Technology Solutions. Capture leads manually, assign an owner, and track
         progress. New Technology Solutions project briefs are captured here before their existing
-        notifications. New Exterior Solutions leads are checked every five minutes, with tracked
-        delivery and retries. Existing records are not imported automatically. New, untouched, unassigned leads are automatically assigned to Ryan during the five-minute sync. Existing human routing decisions are preserved. Administrator action alerts go to both Ryan email addresses. Customer email, SMS and automatic follow-up remain separate.
+        notifications. Existing records are not imported automatically. New, untouched, unassigned leads are automatically assigned to Ryan during the five-minute sync. Existing human routing decisions are preserved. Administrator action alerts go to ryan@demoretechnologysolutions.com. Customer email, SMS and automatic follow-up remain separate.
       </p>
       <Link to="/control-center-admin" className="mt-4 inline-block text-volt">
         ← Control center
@@ -384,15 +382,15 @@ function SyncHealth() {
   }, []);
   const stale = health && (now - Date.parse(health.received_at) > 15 * 60000 || !health.report.lastRunAt || now - Date.parse(health.report.lastRunAt) > 15 * 60000);
   const count = (n: number) => n === 100 ? "100+" : String(n);
-  return <section className="mt-6 rounded-xl border border-line bg-surface p-5" aria-label="Exterior lead sync health">
-    <h2 className="text-lg font-semibold">Exterior lead sync</h2>
-    {alerts && <div className="mb-4 border-b border-line pb-4"><h3 className="font-semibold">Email action alerts</h3><p className="mt-2 text-sm">Sent to ryan@demoretechnologysolutions.com and ryan@demoreexteriorsolutions.com. Use the email link to sign in, review and authorize inbox routing changes. Email replies do not authorize actions.</p><p className="mt-2 text-sm text-muted">{!emailConfigured ? "Email service needs configuration." : !alerts.latest ? "Ready — no action alert queued yet." : alerts.latest.status === "accepted" ? `Last alert accepted by email provider: ${new Date(alerts.latest.accepted_at!).toLocaleString()}.` : `Last alert: ${alerts.latest.status}. ${alerts.latest.last_error || "Waiting for delivery attempt."}`}</p><p className="mt-2 text-xs text-muted">Alerts are checked with the five-minute Exterior sync. If that scheduler stops, email checks also stop. Provider acceptance does not confirm inbox delivery.</p></div>}
+  return <section className="mt-6 rounded-xl border border-line bg-surface p-5" aria-label="Lead sync health">
+    <h2 className="text-lg font-semibold">Lead sync</h2>
+    {alerts && <div className="mb-4 border-b border-line pb-4"><h3 className="font-semibold">Email action alerts</h3><p className="mt-2 text-sm">Sent to ryan@demoretechnologysolutions.com. Use the email link to sign in, review and authorize inbox routing changes. Email replies do not authorize actions.</p><p className="mt-2 text-sm text-muted">{!emailConfigured ? "Email service needs configuration." : !alerts.latest ? "Ready — no action alert queued yet." : alerts.latest.status === "accepted" ? `Last alert accepted by email provider: ${new Date(alerts.latest.accepted_at!).toLocaleString()}.` : `Last alert: ${alerts.latest.status}. ${alerts.latest.last_error || "Waiting for delivery attempt."}`}</p><p className="mt-2 text-xs text-muted">Alerts are checked with the five-minute sync. If that scheduler stops, email checks also stop. Provider acceptance does not confirm inbox delivery.</p></div>}
     {status && <p className="mt-2 text-muted">{status}</p>}
     {health && <>
       <p className="mt-2">{!health.report.enabled ? "Paused" : stale ? "Needs attention — no recent completed sync" : health.report.runFailed || health.report.failed > 0 ? "Needs attention — inspect the delivery queue" : "Sync is current"}</p>
       <p className="mt-2 text-sm text-muted">Last run: {health.report.lastRunAt ? new Date(health.report.lastRunAt).toLocaleString() : "Not reported"}. Last report received: {new Date(health.received_at).toLocaleString()}.</p>
       <p className="mt-2">Waiting: {count(health.report.pending)} · Retrying: {count(health.report.retry)} · Failed: {count(health.report.failed)}</p>
-      <p className="mt-2 text-sm text-muted">Checks every five minutes. Counts are capped at 100+. Manage retries in the Exterior Solutions Base44 delivery queue. This panel refreshes every minute while open.</p>
+      <p className="mt-2 text-sm text-muted">Checks every five minutes. Counts are capped at 100+. Manage retries in the Base44 delivery queue. This panel refreshes every minute while open.</p>
     </>}
   </section>;
 }

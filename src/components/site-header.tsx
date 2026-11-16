@@ -137,7 +137,7 @@ export function SiteHeader() {
                   {
                     to: "/lead-inbox",
                     label: "Shared lead inbox",
-                    description: "Leads and pipelines for both businesses",
+                    description: "Leads and pipeline for Demore Technology Solutions",
                   },
                 ].map((item) => (
                   <Link

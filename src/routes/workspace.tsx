@@ -28,7 +28,7 @@ const websitePages = [
     title: "Shared lead inbox",
     path: "/lead-inbox",
     description:
-      "Website leads and pipelines for both businesses, with inbox health and follow-up.",
+      "Website leads and pipeline for Demore Technology Solutions, with inbox health and follow-up.",
   },
 ];
 const enginePages = [

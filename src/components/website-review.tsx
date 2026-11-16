@@ -151,7 +151,7 @@ function ReviewResult({ report, token }: { report: WebsiteReviewReport; token: s
           </p>
         ) : null}
         <p className="mt-3 text-sm text-muted">
-          Compare observable website features with Demore Exterior Solutions and plan the next
+          Compare observable website features with the reference site and plan the next
           improvements.
         </p>
       </div>
@@ -163,7 +163,7 @@ function ReviewResult({ report, token }: { report: WebsiteReviewReport; token: s
         </span>
         <span className="inline-flex items-center gap-2">
           <span className="size-2.5 rounded-sm bg-muted" />
-          Demore Exterior Solutions
+          Reference site
         </span>
       </div>
 
@@ -185,7 +185,7 @@ function ReviewResult({ report, token }: { report: WebsiteReviewReport; token: s
                 value={count}
                 total={refTotal}
                 tone="reference"
-                label="Demore Exterior Solutions"
+                label="Reference site"
               />
             </div>
           );
@@ -207,13 +207,13 @@ function ReviewResult({ report, token }: { report: WebsiteReviewReport; token: s
       <div className="overflow-x-auto rounded-md border border-line">
         <table className="w-full min-w-[640px] text-left text-sm">
           <caption className="px-3 py-2 text-left text-xs font-medium text-muted">
-            Current page compared with Demore Exterior Solutions
+            Current page compared with the reference site
           </caption>
           <thead className="bg-bg text-muted">
             <tr>
               <th className="p-3 font-medium">Capability</th>
               <th className="font-medium">Your page</th>
-              <th className="font-medium">Demore Exterior</th>
+              <th className="font-medium">Reference site</th>
               <th className="pr-3 font-medium">Demore can help with</th>
             </tr>
           </thead>
@@ -310,7 +310,7 @@ function ReviewResult({ report, token }: { report: WebsiteReviewReport; token: s
 
       <div>
         <h3 className="font-display text-xl font-semibold">
-          Beyond the Exterior Solutions benchmark
+          Beyond the reference benchmark
         </h3>
         <p className="mt-2 text-sm text-muted">
           These Demore Technology Solutions recommendations are tailored to your industry, whether
@@ -479,8 +479,8 @@ export function WebsiteReview() {
       </form>
       {busy ? (
         <p role="status" className="mt-4 text-sm text-muted">
-          Inspecting your page, public measurement files, and the Demore Exterior Solutions
-          reference. This may take up to 25 seconds.
+          Inspecting your page, public measurement files, and the reference site. This may take
+          up to 25 seconds.
         </p>
       ) : null}
       {error ? (

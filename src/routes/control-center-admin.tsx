@@ -38,7 +38,7 @@ export const Route = createFileRoute("/control-center-admin")({
 function Admin() {
   const [data, setData] = useState<Registry | null>(null);
   const [error, setError] = useState("");
-  const [selected, setSelected] = useState("demore");
+  const [selected, setSelected] = useState("demore-technology");
   useEffect(() => {
     const controller = new AbortController();
     fetch("/api/admin/control-center", { credentials: "same-origin", signal: controller.signal })

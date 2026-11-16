@@ -13,7 +13,7 @@ test('missing or failed competitors remain unavailable and proposals are text',(
  const matrix=comparisonMatrix(report);assert.deepEqual(matrix.rows[0].competitorValues,['Unavailable','Unavailable']);assert.match(matrix.rows[0].solution,/service pages/);
 });
 test('excludes internal references and unsafe website links',()=>{
- assert.equal(topCompetitors({website:'https://own.example',competitors:[row('javascript:alert(1)'),row('https://user:pass@example.com'),row('https://demoreexteriorsolutions.com')]}).length,0);
+ assert.equal(topCompetitors({website:'https://own.example',competitors:[row('javascript:alert(1)'),row('https://user:pass@example.com'),row('https://www.demoretechnologysolutions.com')]}).length,0);
 });
 import {websiteMarket} from './website-review/competitors.server.ts';
 test('uses a published structured address and does not guess a market',()=>{

@@ -6,7 +6,7 @@ import {runHosted,providerReady} from './hosted-bots.ts';
 import {routeNewLeads} from './automatic-lead-routing.ts';
 import type {ComparisonReport} from './report-pdf/report-types.ts';
 type DB=Pick<Sql,'query'>;
-export const automationSites=[{id:'demore',url:'https://demoreexteriorsolutions.com/'},{id:'demore-technology',url:'https://www.demoretechnologysolutions.com/'}] as const;
+export const automationSites=[{id:'demore-technology',url:'https://www.demoretechnologysolutions.com/'}] as const;
 const digest=(value:string)=>createHash('sha256').update(value).digest('hex');
 export function automaticRunId(key:string){const h=digest(key);return `${h.slice(0,8)}-${h.slice(8,12)}-4${h.slice(13,16)}-8${h.slice(17,20)}-${h.slice(20,32)}`;}
 export function triageComparison(report:Partial<ComparisonReport>,delivery:{pdf_status:string;customer_email_status:string;handoff_status:string}){

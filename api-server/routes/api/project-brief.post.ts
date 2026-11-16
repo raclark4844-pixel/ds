@@ -176,7 +176,12 @@ function loadConfig(): Config {
   };
 }
 
-const EXTERIOR_COPY = /@demoreexteriorsolutions\.com$/i;
+function omitExteriorDomain(list: string[]): string[] {
+  return list.filter((address) => {
+    const domain = address.split("@")[1]?.toLowerCase() ?? "";
+    return !(domain.startsWith("demore") && domain.includes("exterior"));
+  });
+}
 
 export function resolveRecipients(
   industries: string[],
@@ -184,14 +189,16 @@ export function resolveRecipients(
   routing: Record<string, Routing>,
 ): Routing {
   // Mixed-industry requests never inherit a business-specific CC.
-  if (industries.length !== 1) return { to: defaultTo, cc: [] };
+  const fallback = omitExteriorDomain(defaultTo);
+  if (industries.length !== 1) return { to: fallback, cc: [] };
   const route = Object.hasOwn(routing, industries[0])
     ? routing[industries[0]]
     : undefined;
   const selected = route ?? { to: defaultTo, cc: [] };
+  const to = omitExteriorDomain(selected.to);
   return {
-    to: selected.to,
-    cc: selected.cc.filter((address) => !EXTERIOR_COPY.test(address)),
+    to: to.length ? to : fallback,
+    cc: omitExteriorDomain(selected.cc),
   };
 }
 
@@ -673,8 +680,9 @@ export default async function projectBrief({ req }: { req: Request }) {
  * CI RELEASE GATES — configure these as required checks before merging:
  * 1. assertConsentEvidence(true, { value: true }) throws; missing disclosure,
  *    timestamp, or source independently throws; failed audit writes send nothing.
- * 2. Every industry selection drops an exteriors-domain CC. Mixed-industry
- *    and unknown industries use defaultTo with no CC. Primary `to` lists stay.
+ * 2. Recipient lists drop any address on an exterior Demore domain.
+ *    Mixed-industry and unknown industries use defaultTo with no CC.
+ *    If a selected `to` list is only that domain, delivery falls back to defaultTo.
  * 3. Capture CRM fetch calls and independently verify the HMAC over the exact
  *    timestamp.eventId.body bytes; reject altered bodies, missing signatures,
  *    stale timestamps, and replayed event IDs at the receiving endpoint.

@@ -198,9 +198,6 @@ export function ControlCenter() {
           business pipelines, duplicate checks, owner assignment and routing history.
         </p>
         <div className="mt-5 flex flex-wrap gap-5">
-          <a className="text-volt underline" href="https://demoreexteriorsolutions.com/">
-            Demore Exterior Solutions
-          </a>
           <a className="text-volt underline" href="https://www.demoretechnologysolutions.com/">
             Demore Technology Solutions
           </a>
