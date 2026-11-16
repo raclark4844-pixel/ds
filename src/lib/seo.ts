@@ -21,10 +21,24 @@ const postalAddress = isPlaceholder(CITY)
 
 const areaServed = { "@type": "Country", name: COUNTRY };
 
+/** United States and Ohio. City-only address stays on postalAddress — no street or postal code. */
+const entityAreaServed = [
+  { "@type": "Country", name: COUNTRY },
+  { "@type": "State", name: "Ohio" },
+];
+
 function contactFields() {
   return {
     ...(isPlaceholder(EMAIL) ? {} : { email: EMAIL }),
     ...(isPlaceholder(PHONE) ? {} : { telephone: PHONE }),
+  };
+}
+
+/** Published business phone for the shared organization graph. Not an Offer or price. */
+function entityContact() {
+  return {
+    ...contactFields(),
+    telephone: "+1-440-920-6133",
   };
 }
 
@@ -56,6 +70,7 @@ export function pageHead({
               name: title,
               description,
               isPartOf: { "@id": `${SITE_URL}/#website` },
+              ...(path === "/" ? { about: { "@id": `${SITE_URL}/#organization` } } : {}),
               publisher: { "@id": `${SITE_URL}/#organization` },
               inLanguage: "en-US",
             }).replace(/</g, "\\u003c"),
@@ -97,12 +112,13 @@ export function organizationJsonLd() {
         "@type": "Organization",
         "@id": `${SITE_URL}/#organization`,
         name: SITE_NAME,
+        legalName: "Demore Technology Solutions LLC",
         url: SITE_URL,
         logo: `${SITE_URL}/logo.png`,
         image: `${SITE_URL}/logo.png`,
-        ...contactFields(),
+        ...entityContact(),
         address: postalAddress,
-        areaServed,
+        areaServed: entityAreaServed,
         description:
           "Demore Technology Solutions builds custom websites, ecommerce, AI-assisted digital marketing, lead-generation systems, SEO, GEO, AEO, CRO, analytics, conversion tracking, social automation, content workflows, and custom business automation. Based in Mentor, Ohio and serving clients nationwide.",
         knowsAbout: [
@@ -138,6 +154,7 @@ export function organizationJsonLd() {
         name: SITE_NAME,
         url: SITE_URL,
         publisher: { "@id": `${SITE_URL}/#organization` },
+        about: { "@id": `${SITE_URL}/#organization` },
         inLanguage: "en-US",
       },
       {
@@ -145,9 +162,9 @@ export function organizationJsonLd() {
         "@id": `${SITE_URL}/#service`,
         name: SITE_NAME,
         url: SITE_URL,
-        ...contactFields(),
+        ...entityContact(),
         address: postalAddress,
-        areaServed,
+        areaServed: entityAreaServed,
         description:
           "Nationwide digital technology, website, ecommerce, AI-assisted marketing, lead-generation, search optimization, analytics, content, and automation services.",
         serviceType: [
