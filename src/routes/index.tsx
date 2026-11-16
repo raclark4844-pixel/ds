@@ -121,8 +121,9 @@ function Home() {
         lede={
           <p>
             Demore Technology Solutions designs custom websites, builds AI bots, grows your digital
-            presence, runs the Lead Engine for campaigns and follow-up, and creates AI-assisted platforms that connect marketing with everyday
-            business. Start with one service or bring them together in a complete system.
+            presence, runs the Lead Engine for campaigns and follow-up, and creates AI-assisted
+            platforms that connect marketing with everyday business. Start with one service or bring
+            them together in a complete system.
           </p>
         }
         primary={{ to: "/contact", label: "Tell us what you want to build", variant: "volt" }}
@@ -138,7 +139,9 @@ function Home() {
               Ask Demore AI: Improve my website
             </Button>
             <Button asChild size="lg" variant="volt">
-              <a href="/lead-generation#preview">Preview a campaign</a>
+              <Link to="/lead-generation" hash="preview">
+                Preview a campaign
+              </Link>
             </Button>
           </div>
         }
@@ -209,7 +212,9 @@ function Home() {
           </Link>
           <div className="mt-5">
             <Button asChild variant="outline">
-              <a href="/lead-generation#preview">Preview lead generation</a>
+              <Link to="/lead-generation" hash="preview">
+                Preview lead generation
+              </Link>
             </Button>
           </div>
         </div>
@@ -312,8 +317,7 @@ function Home() {
         <ol className="grid gap-4 md:grid-cols-2">
           {engagementSteps.map((item) => (
             <li key={item.n} className="rounded-xl border border-line bg-surface p-6">
-              <p className="font-display text-sm text-volt">{item.n}
-              </p>
+              <p className="font-display text-sm text-volt">{item.n}</p>
               <h3 className="mt-2 font-display text-xl font-semibold tracking-tight">
                 {item.title}
               </h3>
@@ -339,23 +343,6 @@ function Home() {
           secondary={{ to: "/growth", label: "See the growth stack", variant: "volt" }}
         />
       </div>
-      <section className="mt-16 rounded-2xl border border-line bg-surface p-6 sm:p-10">
-        <p className="kicker">New · AI Control Center</p>
-        <h2 className="mt-4 font-display text-3xl font-semibold">
-          Coordinate your sites, specialists and approvals.
-        </h2>
-        <p className="mt-4 max-w-3xl text-muted">
-          Explore a multi-site framework for SEO, content, lead routing, follow-up, phone-agent
-          management, quality checks, reporting and monitoring. See how provider routing,
-          independent review and cost controls fit together before activating integrations.
-        </p>
-        <Link
-          to="/control-center"
-          className="mt-6 inline-flex rounded-lg bg-volt px-5 py-3 font-semibold text-black"
-        >
-          Preview the AI Control Center →
-        </Link>
-      </section>
     </main>
   );
 }
