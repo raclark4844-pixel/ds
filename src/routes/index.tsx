@@ -17,9 +17,9 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/")({
   head: () =>
     pageHead({
-      title: "Demore Technology Solutions | Website Design, Bots, Growth & AI Platforms",
+      title: "Demore Technology Solutions | Website Design, Bots, Growth, Lead Engine & AI Platforms",
       description:
-        "Custom website design, ecommerce, AI bots, growth marketing, lead generation, and AI-assisted platforms built around your business.",
+        "Custom website design, ecommerce, AI bots, growth marketing, lead generation, Lead Engine, and AI-assisted platforms built around your business.",
       path: "/",
     }),
   component: Home,
@@ -117,11 +117,11 @@ function Home() {
       <JsonLd data={faqJsonLd(homeFaqs)} />
       <PageHero
         kicker="Demore Technology Solutions"
-        title="Websites. Bots. Growth. Custom AI platforms."
+        title="Websites. Bots. Growth. Lead Engine. Custom AI platforms."
         lede={
           <p>
             Demore Technology Solutions designs custom websites, builds AI bots, grows your digital
-            presence, and creates AI-assisted platforms that connect marketing with everyday
+            presence, runs the Lead Engine for campaigns and follow-up, and creates AI-assisted platforms that connect marketing with everyday
             business. Start with one service or bring them together in a complete system.
           </p>
         }
