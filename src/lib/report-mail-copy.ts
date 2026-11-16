@@ -1,7 +1,6 @@
 import type { WebsiteReviewReport } from "./website-review/types.ts";
 
 export const INTERNAL_TO = ["ryan@demoretechnologysolutions.com"];
-export const INTERNAL_CC = ["ryan@demoreexteriorsolutions.com"];
 export const DISCLAIMER = "Rankings, AI citations, and conversion lifts are not guaranteed.";
 const sentCopies = new Set<string>();
 
@@ -10,7 +9,6 @@ export function mailConfig() {
     apiKey: process.env.RESEND_API_KEY || "",
     from: process.env.REPORT_FROM_EMAIL || "projects@demorehomesolutions.com",
     internal: INTERNAL_TO,
-    internalCc: INTERNAL_CC,
     site: process.env.NEXT_PUBLIC_SITE_URL || "https://www.demoretechnologysolutions.com",
   };
 }

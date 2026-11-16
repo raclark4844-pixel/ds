@@ -18,9 +18,7 @@ export { seoGeoAeoAnswer, whoForAnswer } from "@/lib/answers";
 
 export const PHONE = "[PHONE]";
 export const EMAIL = "ryan@demoretechnologysolutions.com";
-/** Hidden copy inbox. Never render as visible page copy. */
-export const EMAIL_COPY = "ryan@demoreexteriorsolutions.com";
-export const EMAIL_MAILTO = `mailto:${EMAIL}?cc=${EMAIL_COPY}`;
+export const EMAIL_MAILTO = `mailto:${EMAIL}`;
 export const CITY = "Mentor";
 export const REGION = "Ohio";
 export const REGION_ABBR = "OH";

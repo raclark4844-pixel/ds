@@ -176,6 +176,8 @@ function loadConfig(): Config {
   };
 }
 
+const EXTERIOR_COPY = /@demoreexteriorsolutions\.com$/i;
+
 export function resolveRecipients(
   industries: string[],
   defaultTo: string[],
@@ -186,7 +188,11 @@ export function resolveRecipients(
   const route = Object.hasOwn(routing, industries[0])
     ? routing[industries[0]]
     : undefined;
-  return route ?? { to: defaultTo, cc: [] };
+  const selected = route ?? { to: defaultTo, cc: [] };
+  return {
+    to: selected.to,
+    cc: selected.cc.filter((address) => !EXTERIOR_COPY.test(address)),
+  };
 }
 
 export function assertConsentEvidence(
@@ -667,8 +673,8 @@ export default async function projectBrief({ req }: { req: Request }) {
  * CI RELEASE GATES — configure these as required checks before merging:
  * 1. assertConsentEvidence(true, { value: true }) throws; missing disclosure,
  *    timestamp, or source independently throws; failed audit writes send nothing.
- * 2. Every non-exteriors industry and every mixed-industry selection excludes
- *    the exteriors inbox; an unknown industry uses defaultTo with no CC.
+ * 2. Every industry selection drops an exteriors-domain CC. Mixed-industry
+ *    and unknown industries use defaultTo with no CC. Primary `to` lists stay.
  * 3. Capture CRM fetch calls and independently verify the HMAC over the exact
  *    timestamp.eventId.body bytes; reject altered bodies, missing signatures,
  *    stale timestamps, and replayed event IDs at the receiving endpoint.

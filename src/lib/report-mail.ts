@@ -64,7 +64,6 @@ export async function sendInternalPdfCopy(opts: {
   return sendResend({
     from: `Demore Technology Solutions <${cfg.from}>`,
     to: cfg.internal,
-    cc: cfg.internalCc,
     reply_to: opts.replyTo,
     subject: opts.subject,
     text: opts.text,

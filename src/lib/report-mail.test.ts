@@ -55,7 +55,9 @@ describe("internal PDF copy", () => {
     const report = sampleReport();
     const text = websiteReviewCopyText(report);
     const subject = websiteReviewCopySubject(report);
-    assert.equal(mailConfig().internal[0], "ryan@demoretechnologysolutions.com");
+    assert.deepEqual(mailConfig().internal, ["ryan@demoretechnologysolutions.com"]);
+    assert.equal("internalCc" in mailConfig(), false);
+    assert.doesNotMatch(JSON.stringify(mailConfig()), /demoreexteriorsolutions\.com/);
     assert.match(subject, /DTS-41F6B18F/);
     assert.match(text, /Record ID: DTS-41F6B18F/);
     assert.match(text, /https:\/\/example\.com\//);
