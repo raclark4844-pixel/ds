@@ -47,19 +47,19 @@ export const workspaceModules = [
     ],
   },
   {
-    title: "Lead sourcing & contact review",
+    title: "Lead & contact review",
     category: "LEAD OPERATIONS",
-    body: "Prepare source jobs through configured providers or approved imports. Review records, targeting fit, and contact readiness before moving to outreach.",
+    body: "Bring in your existing customer lists and approved imports. Review each record for targeting fit and contact readiness before outreach starts.",
     details: [
-      "Provider availability and job status",
+      "Import status for your existing lists",
       "Lead and contact records connected to a campaign",
-      "Verification evidence and channel-readiness review",
+      "Review notes and channel-readiness checks",
     ],
   },
   {
     title: "Inbox & assisted conversations",
     category: "COMMUNICATIONS",
-    body: "Keep campaign replies and context in one inbox. When AI service is configured, staff can review suggested responses grounded in approved business information.",
+    body: "Email and text replies stay in one Demore Lead Engine inbox with their campaign context. Staff can review AI-suggested replies grounded in approved business information. Suggestions are drafts, and a person decides what gets sent.",
     details: [
       "Email and text conversation history",
       "Employee-reviewed reply drafts",
@@ -89,7 +89,7 @@ export const workspaceModules = [
   {
     title: "Sending & campaign readiness",
     category: "CONTROLLED OUTREACH",
-    body: "Prepare email, SMS, and calling batches around reviewed content, configured services, and contact readiness. Your team controls activation and sending.",
+    body: "Prepare email and SMS batches around reviewed content and contact readiness, with opt-out handling. Your team controls activation and sending.",
     details: [
       "Channel-specific preparation",
       "Sending status and opt-out handling",
@@ -99,7 +99,7 @@ export const workspaceModules = [
   {
     title: "Employees & operations",
     category: "WORKSPACE CONTROL",
-    body: "Give authorized employees a private workspace. Administrators manage accounts, password resets, provider setup, and operational status.",
+    body: "Give authorized employees a private workspace. Administrators manage accounts, password resets, service setup, and operational status.",
     details: [
       "Employee accounts and administrator controls",
       "Password management and sign-in",
@@ -179,7 +179,7 @@ export const industryExamples = [
 
 export const leadFaqs = [
   {
-    q: "Can I preview Lead Engine without logging in?",
+    q: "Can I preview Demore Lead Engine without logging in?",
     a: "Yes. The interactive preview on this page shows fictional current, past, and draft campaign examples for viewing purposes only. Visitors cannot create or save campaign drafts. The follow-up form sends your contact details and goals to Ryan so he can contact you; it does not create a campaign.",
   },
   {
@@ -187,12 +187,12 @@ export const leadFaqs = [
     a: "Yes. Sign in and choose All campaigns — current & past. The campaign history view brings all customers’ campaigns together, with a customer filter and links to each campaign’s details.",
   },
   {
-    q: "Do I need a separate Lead Engine password?",
-    a: "You can use your website login when its verified email matches an existing active Lead Engine account. Your existing permissions are preserved. Existing employee username and password login remains available.",
+    q: "Do I need a separate Demore Lead Engine password?",
+    a: "You can use your website login when its verified email matches an existing active Demore Lead Engine account. Your existing permissions are preserved. Existing employee username and password login remains available.",
   },
   {
     q: "Is this just a website or a separate lead list?",
-    a: "The website is the public entry point. The private workspace organizes customers, campaign planning, lead review, conversations, handoffs, and costs. Website forms, existing tools, and provider connections are scoped during setup.",
+    a: "The website is the public entry point. Demore Lead Engine is the private workspace that organizes customers, campaign planning, lead review, conversations, handoffs, and costs. It is not a lead list. Website forms, existing tools, and imports of your own customer lists are scoped during setup.",
   },
   {
     q: "Can we use the tools we already have?",
@@ -200,19 +200,19 @@ export const leadFaqs = [
   },
   {
     q: "Does choosing an industry automatically generate leads?",
-    a: "No. An industry preset supplies relevant campaign criteria and qualification questions. It does not provide a contact list or enable a data source. Providers, imports, permissions, and campaign preparation must be configured separately.",
+    a: "No. An industry preset supplies relevant campaign criteria and qualification questions. It does not provide a contact list. Imports of your own lists, permissions, and campaign preparation are configured separately.",
   },
   {
     q: "Will AI send messages or replace our employees?",
-    a: "AI-assisted responses are drafts for staff review. Live messaging depends on configured services, contact readiness, permissions, and campaign approval. Your team retains responsibility for the offer, accuracy, and the next action.",
+    a: "No. AI-assisted replies are drafts for staff review. Live email or SMS goes out only after contact readiness and permissions are checked and your team approves the campaign. Your team retains responsibility for the offer, accuracy, and the next action.",
   },
   {
     q: "What can we see about costs and billing?",
-    a: "The workspace separates recorded costs from usage estimates and keeps lead delivery and invoice history connected to campaigns. Rates and billing arrangements should be confirmed during setup; estimates are not a substitute for provider invoices.",
+    a: "The workspace shows recorded costs separately from usage estimates, and keeps lead delivery and invoice history tied to each campaign. Rates and billing are confirmed during setup.",
   },
   {
     q: "Can the system be introduced in phases?",
-    a: "Yes. Start with the website, customer records, and campaign structure. Then configure lead sources, review, inbox, and handoffs. Add approved sending, AI assistance, and wider integrations as the workflow is ready.",
+    a: "Yes. Start with the website, customer records, and campaign structure. Then set up imports of your existing lists, lead review, the inbox, and handoffs. Add approved email and SMS sending, AI reply drafts, and wider integrations as the workflow is ready.",
   },
   {
     q: "Are appointments, sales, or a specific lead volume guaranteed?",

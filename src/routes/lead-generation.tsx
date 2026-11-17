@@ -28,7 +28,7 @@ const workflow = [
   ],
   [
     "Prepare and review",
-    "Configure the source or import, prepare messaging, and review lead and contact readiness.",
+    "Import your existing lists, prepare email and SMS messaging, and review lead and contact readiness.",
   ],
   [
     "Manage conversations",
@@ -96,14 +96,13 @@ function LeadGeneration() {
       <section className="relative grid gap-10 overflow-hidden pt-12 sm:pt-20 lg:grid-cols-[1.25fr_0.75fr] lg:items-center">
         <div>
           <p className="kicker">DEMORE TECHNOLOGY SOLUTIONS · LEAD GENERATION</p>
-          <h1 className="mt-5 font-display text-[2.8rem] font-semibold leading-[0.98] tracking-tight sm:text-6xl lg:text-7xl">
-            Find the opportunity.
-            <br />
-            <span className="text-volt">Connect every next step.</span>
+          <h1 className="mt-5 font-display text-[2.4rem] font-semibold leading-[1.02] tracking-tight sm:text-5xl lg:text-6xl">
+            <span className="text-volt">Demore Lead Engine:</span> a private lead generation
+            workspace for every campaign.
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-            Bring your website, customer records, campaigns, conversations, and qualified handoffs
-            into one connected growth system.
+            Demore Lead Engine brings your website, customer records, campaigns, conversations, and
+            qualified handoffs into one connected growth system.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button asChild size="lg">
@@ -210,9 +209,9 @@ function LeadGeneration() {
             },
             {
               title: "Keep the next step connected",
-              body: "Use the Lead Engine overview to move between customers, conversations, lead review, campaign sending, costs, and handoffs. Your existing account permissions apply.",
+              body: "Use the Demore Lead Engine overview to move between customers, conversations, lead review, campaign sending, costs, and handoffs. Your existing account permissions apply.",
               path: "/operations",
-              label: "Open Lead Engine",
+              label: "Open Demore Lead Engine",
             },
           ].map((item) => (
             <article
@@ -320,8 +319,9 @@ function LeadGeneration() {
           <h3 className="font-medium">Your team stays in control.</h3>
           <p className="mt-2 text-sm leading-relaxed text-muted">
             Campaign preparation, contact review, and staff approval remain part of the workflow.
-            AI-assisted replies are drafts. Data providers, email, SMS, calling, verification, and
-            AI services require configuration before their corresponding live features can run.
+            Demore Lead Engine&apos;s AI-assisted replies are drafts that staff review. Email and
+            SMS sending runs only after it is set up for your account and your team approves the
+            campaign.
           </p>
         </div>
       </Section>
@@ -343,8 +343,7 @@ function LeadGeneration() {
         <div className="overflow-x-auto rounded-xl border border-line">
           <table className="w-full min-w-[660px] text-left text-sm">
             <caption className="sr-only">
-              Typical disconnected workflow compared with a configured Demore Technology Solutions
-              workspace
+              Typical disconnected workflow compared with a configured Demore Lead Engine workspace
             </caption>
             <thead className="bg-elevated">
               <tr>
@@ -355,7 +354,7 @@ function LeadGeneration() {
                   When tools are disconnected
                 </th>
                 <th scope="col" className="p-5 font-medium text-volt">
-                  With a configured Demore workspace
+                  With a configured Demore Lead Engine
                 </th>
               </tr>
             </thead>
@@ -389,11 +388,11 @@ function LeadGeneration() {
             ],
             [
               "Lead workflow",
-              "Source or import setup, lead review, qualification questions, inbox, staff roles, and handoff process.",
+              "List import setup, lead review, qualification questions, inbox, staff roles, and handoff process.",
             ],
             [
               "Connected growth",
-              "Approved sending, AI assistance, reporting, and wider website or marketing integrations as the workflow is ready.",
+              "Approved email and SMS sending, AI-assisted reply drafts, reporting, and wider website or marketing integrations as the workflow is ready.",
             ],
           ].map(([title, body]) => (
             <article key={title} className="rounded-xl border border-line bg-surface p-6">
