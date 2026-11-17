@@ -129,7 +129,7 @@ export const capabilities = [
   {
     id: "phone-agent-management",
     name: "Phone Agent Management",
-    purpose: "Version phone knowledge, summarize calls and manage after-hours handoffs",
+    purpose: "Optional, and not a Demore Lead Engine feature. This preview does not place phone calls.",
     output: "Versioned phone configuration and handoff checks",
   },
   {
@@ -195,7 +195,7 @@ export const capabilities = [
   {
     id: "storm-intelligence",
     name: "Storm Intelligence",
-    purpose: "Monitor public local storm events without promising damage or coverage",
+    purpose: "Optional, industry-specific capability for businesses where weather affects demand. It can note public local storm events. It does not promise damage findings, coverage, or that every project includes it.",
     output: "Source-backed storm advisory",
   },
   {id:"comparison-queue",name:"Comparison Queue Specialist",purpose:"Check comparison completeness, prioritize follow-up and prepare internal drafts",output:"Triage findings and unsent follow-up draft"},

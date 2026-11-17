@@ -29,7 +29,7 @@ const layers = [
   [
     "02",
     "Visibility",
-    "Technical SEO, geographic relevance, generative and answer-engine optimization, structured data, and content architecture.",
+    "Technical SEO, local SEO for service-area relevance, generative engine optimization (GEO), answer engine optimization (AEO) for clear extractable answers, structured data, and content architecture.",
   ],
   [
     "03",

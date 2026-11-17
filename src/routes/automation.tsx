@@ -25,7 +25,7 @@ export const Route = createFileRoute("/automation")({
 const blocks = [
   {
     title: "Social publishing and auto-posting",
-    body: "Build approved workflows for Facebook, Instagram, TikTok, YouTube, LinkedIn, X, Google Business Profile, Nextdoor, and other channels the business actually uses. Content calendars, approvals, scheduling, publishing, and reuse can be coordinated instead of handled one post at a time.",
+    body: "Build approved workflows for Facebook, Instagram, TikTok, YouTube, LinkedIn, X, Google Business Profile, Nextdoor, and other channels the business actually uses. Content calendars, approvals, scheduling, publishing, and reuse can be coordinated instead of handled one post at a time. Exact integrations depend on the platform APIs, account permissions, and the workflow being automated.",
   },
   {
     title: "AI-assisted content production",

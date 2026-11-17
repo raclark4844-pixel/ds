@@ -5,6 +5,18 @@ import { Section } from "@/components/section";
 import { industries, type IndustryProfile } from "@/lib/industries";
 import { breadcrumbJsonLd, serviceJsonLd } from "@/lib/seo";
 
+const customerPhrase: Record<IndustryProfile["slug"], string> = {
+  restaurants: "restaurant customers",
+  pubs: "pub customers",
+  "pizza-shops": "pizza shop customers",
+  contractors: "contractor and home-service customers",
+  landscaping: "landscaping and outdoor-service customers",
+  hospitality: "hospitality customers",
+  "professional-services": "professional-service customers",
+  "service-companies": "service-company customers",
+  "stores-ecommerce": "retail and ecommerce customers",
+};
+
 export function IndustryPage({ industry }: { industry: IndustryProfile }) {
   const path = `/industries/${industry.slug}`;
   const factors = [
@@ -72,10 +84,14 @@ export function IndustryPage({ industry }: { industry: IndustryProfile }) {
         title="More than a website. More useful than disconnected marketing services."
       >
         <p className="max-w-3xl text-base leading-relaxed text-muted">
-          The platform can include a custom website or ecommerce, SEO, GEO, AEO, CRO, technical
-          performance, content, social publishing, campaign pages, lead qualification, analytics,
-          CRM handoffs, review workflows, and AI-assisted automation. Each piece is scoped around{" "}
-          {industry.label.toLowerCase()} customers and can also be purchased à la carte.
+          The platform can include a custom website, local SEO, generative engine optimization (GEO)
+          so AI systems can understand and potentially cite the business, clear extractable answers
+          (AEO), CRO, technical performance, content, social publishing, campaign pages, analytics,
+          review workflows, and AI-assisted automation. Those pieces are scoped around{" "}
+          {customerPhrase[industry.slug]}. Ecommerce, CRM handoffs, and lead qualification are
+          included only when they fit how that business takes orders, bookings, or inquiries.
+          Included work can also be purchased à la carte. Rankings, AI citations, and conversion
+          lifts are not guaranteed.
         </p>
         <Link
           to="/platform"
@@ -107,7 +123,8 @@ export function IndustryPage({ industry }: { industry: IndustryProfile }) {
           >
             <h3 className="font-display text-xl font-semibold">Websites</h3>
             <p className="mt-2 text-sm text-muted">
-              Conversion-focused pages, ecommerce, landing pages, forms, and technical foundations.
+              Conversion-focused pages, landing pages, and forms. Ecommerce only when orders are
+              part of how the business sells.
             </p>
           </Link>
           <Link
@@ -125,7 +142,8 @@ export function IndustryPage({ industry }: { industry: IndustryProfile }) {
           >
             <h3 className="font-display text-xl font-semibold">Automation</h3>
             <p className="mt-2 text-sm text-muted">
-              AI-assisted marketing, content, routing, CRM handoffs, and repeatable workflows.
+              AI-assisted marketing, content, routing, and repeatable workflows. CRM handoffs only
+              when they fit how inquiries are handled.
             </p>
           </Link>
           <Link

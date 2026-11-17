@@ -35,7 +35,7 @@ export const dockTabs: readonly NavItem[] = [
   { to: "/growth", label: "Growth", short: "Growth" },
   { to: "/lead-generation", label: "Lead Engine", short: "Leads" },
   { to: "/automation", label: "Automation", short: "AI" },
-  { to: "/compare", label: "Free Comparison", short: "Compare" },
+  { to: "/compare", label: "Compare options", short: "Compare" },
   { to: "/industries", label: "Industries", short: "Industries" },
   { to: "/contact", label: "Start a Project", short: "Brief" },
 ];
@@ -52,7 +52,7 @@ export const allMainPages: readonly NavItem[] = [
   { to: "/work", label: "Work" },
   { to: "/process", label: "Process" },
   { to: "/contact", label: "Start a Project" },
-  { to: "/compare", label: "Free Comparison" },
+  { to: "/compare", label: "Compare options" },
 ];
 
 export const laterPages: readonly NavItem[] = [

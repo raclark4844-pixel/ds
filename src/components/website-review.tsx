@@ -328,7 +328,7 @@ function ReviewResult({ report, token }: { report: WebsiteReviewReport; token: s
       </div>
 
       <p className="text-sm text-muted">
-        Record ID {report.recordId} — same number as Ask Demore and the project form.
+        Record ID {report.recordId}.
       </p>
       <p className="text-xs text-muted">
         Rankings, AI citations, and conversion lifts are not guaranteed.

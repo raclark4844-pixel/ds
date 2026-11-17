@@ -118,7 +118,7 @@ export function CompareTool() {
       <section aria-labelledby="compare-needs">
         <p className="kicker">Step 2</p>
         <h2 id="compare-needs" className="mt-3 font-display text-3xl font-semibold tracking-tight">What does the system have to do?</h2>
-        <p className="mt-3 max-w-2xl text-muted">Mark the jobs that create revenue. The table only scores what you mark. Leave a row off if it is not the job.</p>
+        <p className="mt-3 max-w-2xl text-muted">Mark the jobs that matter. The checklist includes the jobs you mark. It is not a score of your current vendor.</p>
         <div className="mt-6 grid gap-2 sm:grid-cols-2">
           {NEEDS.map((item) => (
             <label key={item.id} className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-lg border px-4 py-3 ${needs.has(item.id) ? "border-volt bg-volt-dim" : "border-line bg-surface"}`}>
@@ -132,7 +132,7 @@ export function CompareTool() {
       <section className="rounded-xl border border-line bg-surface p-5 sm:p-8" aria-labelledby="compare-result">
         <p className="kicker">Result</p>
         <h2 id="compare-result" className="mt-3 font-display text-3xl font-semibold tracking-tight">How the common options stack up</h2>
-        <p className="mt-3 max-w-2xl text-muted">Marks are qualitative. They are not rankings, conversion lifts, or a quote. Rankings, AI citations, and conversion lifts are not guaranteed.</p>
+        <p className="mt-3 max-w-2xl text-muted">This is a qualitative checklist of jobs a connected system can cover. It is not a score of your current vendor, not a promise that every project includes every row, and not a price, ranking, or conversion guarantee. The tally only counts Weak, Partial, and Built in marks for the jobs you marked.</p>
         <div className="mt-6 overflow-x-auto rounded-lg border border-line" role="table" aria-label="Comparison of DIY, template, brochure agency, and Demore platform">
           <div className="grid min-w-[54rem] grid-cols-[minmax(11rem,1.5fr)_repeat(4,minmax(6.4rem,1fr))]">
             <div className="contents" role="row">
@@ -167,7 +167,6 @@ export function CompareTool() {
           </div>
         </div>
         <p className="mt-5 text-sm"><strong>Read of your setup:</strong> {VERDICT[setup]}</p>
-        {recordId ? <p className="mt-3 text-sm text-muted">Comparison ID {recordId} — same number as Ask Demore and the project form.</p> : null}
         <div className="mt-6 flex flex-wrap gap-3">
           <Button asChild>
             <Link to="/contact" search={{ need: "platform", source: "compare", reportId: recordId, rid: recordId }}>

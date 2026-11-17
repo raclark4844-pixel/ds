@@ -38,7 +38,7 @@ export const primaryNav = [
   { to: "/growth", label: "Growth" },
   { to: "/lead-generation", label: "Lead Engine" },
   { to: "/automation", label: "Automation" },
-  { to: "/compare", label: "Free Comparison" },
+  { to: "/compare", label: "Compare options" },
 ] as const;
 
 export const laterNav = [
@@ -211,7 +211,7 @@ export const automationFaqs = [
   },
   {
     q: "Which platforms can the system support?",
-    a: "Workflows can be designed around the platforms the business actually uses, including Facebook, Instagram, TikTok, YouTube, LinkedIn, X, Google Business Profile, and other supported services. The exact integrations depend on the platform APIs, account permissions, and the workflow being automated.",
+    a: "Workflows can be designed around the platforms the business actually uses, including Facebook, Instagram, TikTok, YouTube, LinkedIn, X, Google Business Profile, and other supported services.",
   },
   {
     q: "Do automated posts and workflows need approval?",

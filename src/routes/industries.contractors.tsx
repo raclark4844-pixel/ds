@@ -32,7 +32,7 @@ const tradesQuestion = "Which trades do you build this for?";
 const contractorFaqs = [
   {
     q: "What does digital marketing for contractors include at Demore Technology Solutions?",
-    a: "It can include contractor websites and ecommerce, local and service-area SEO, visibility in AI-generated answers (GEO / AEO), conversion-rate work on estimate and campaign pages, Google Business Profile and review workflows, campaign or storm pages, lead intake, analytics, and follow-up automation. You can start with one service or connect them as one system.",
+    a: "It can include contractor websites and ecommerce, local and service-area SEO, generative engine optimization (GEO) so AI systems can understand and potentially cite the business, clear extractable answers (AEO), conversion-rate work on estimate and campaign pages, Google Business Profile and review workflows, campaign or storm pages, lead intake, analytics, and follow-up automation. You can start with one service or connect them as one system. Rankings, AI citations, and conversion lifts are not guaranteed.",
   },
   {
     q: "Do you design contractor websites, or only run ads and SEO?",
@@ -71,7 +71,7 @@ const websiteIncludes = [
 
 const localSeoIncludes = [
   "Local and service-area search structure, internal linking, and technical performance",
-  "Visibility in traditional search and in AI-generated answers (GEO / AEO), plus conversion-rate optimization (CRO) on estimate and campaign pages",
+  "Generative engine optimization (GEO) so AI systems can understand and potentially cite the business, answer engine optimization (AEO) for clear extractable on-page answers, and conversion-rate optimization (CRO) on estimate and campaign pages. Rankings and citations are not guaranteed",
   "Google Business Profile support, including approved posts, photos, service information, and other profile updates when permissions and integrations allow",
   "Review workflows that surface new reviews, notify the team, and help reuse permitted review content on the website and social channels",
   "Analytics through tools such as Google Analytics and Search Console, so the company can see which pages and campaigns lead to inquiries",
@@ -93,7 +93,7 @@ const platformOffers = [
   {
     name: "Growth and search",
     detail:
-      "local SEO for contractors, GEO, AEO, CRO, campaigns, analytics, and Google Business Profile support",
+      "local SEO for contractors, GEO (generative engine optimization), AEO for extractable answers, CRO, campaigns, analytics, and Google Business Profile support",
   },
   {
     name: "Bots and automation",
@@ -260,9 +260,11 @@ function ContractorsPage() {
           </p>
           <p>
             Digital marketing for contractors should support that path, not just decorate it. That
-            means contractor websites with clear service and service-area pages, local SEO and
-            AI-answer visibility (SEO, GEO, and AEO), review and profile workflows, campaign or
-            storm pages where they fit, and intake that a closer or dispatcher can actually use.
+            means contractor websites with clear service and service-area pages, local SEO,
+            generative engine optimization (GEO) so AI systems can understand and potentially cite
+            the business, and clear extractable answers (AEO), plus review and profile workflows,
+            campaign or storm pages where they fit, and intake that a closer or dispatcher can
+            actually use. Rankings and AI citations are not guaranteed.
           </p>
         </div>
       </Section>

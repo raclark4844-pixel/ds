@@ -58,6 +58,10 @@ export function ControlCenter() {
       <h1 className="mt-4 max-w-4xl font-display text-4xl font-semibold sm:text-6xl">
         One place to coordinate your websites and AI team.
       </h1>
+      <p className="mt-4 max-w-3xl text-sm leading-relaxed text-muted">
+        This is a guided capability preview. The demo does not run bots, send messages, spend
+        credits, or change a website.
+      </p>
       <p className="mt-6 max-w-3xl text-lg text-muted">
         Connect site knowledge, specialist bots, review, approvals and measurement around your
         business. Keep useful tools you already have, then add capabilities as each integration is
@@ -140,10 +144,14 @@ export function ControlCenter() {
         <p className="kicker">Capability library</p>
         <h2 className="mt-3 text-3xl font-semibold">A specialist for each part of the journey.</h2>
         <p className="mt-4 max-w-3xl text-muted">
-          The framework covers search and AI-answer visibility (SEO, GEO and AEO), conversion
-          optimization (CRO), content, reputation, social publishing, CRM, email/SMS, phone-agent
-          management, compliance review, knowledge sync, analytics, costs and uptime. Individual
-          services require configuration and validation before activation.
+          The framework covers search visibility (SEO), local SEO, generative engine optimization
+          (GEO) so AI systems can understand and potentially cite a business, clear extractable
+          answers (AEO), conversion optimization (CRO), content, reputation, social publishing, CRM,
+          and email or SMS after account setup and team approval. Phone calling is not a working
+          feature, and this preview does not place calls. Compliance review, knowledge sync,
+          analytics, costs, and uptime are also listed. Individual services require configuration
+          and validation before activation. Rankings, citations, and conversion lifts are not
+          guaranteed.
         </p>
         <label className="mt-6 block max-w-xl text-sm">
           Find a capability

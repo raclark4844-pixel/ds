@@ -9,12 +9,11 @@ import { SITE_URL } from "@/lib/site";
 import { pageHead, faqJsonLd } from "@/lib/seo";
 
 const faqs = [
-  { q: "What does this comparison tool measure?", a: "It scores common website options against the jobs that move a customer from discovery to a tracked next step: pages, search, answers, conversion, qualification, follow-up, content destinations, measurement, and approved improvement." },
-  { q: "Is the score a quote or a ranking guarantee?", a: "No. The marks are qualitative. They are not prices, case studies, or promised rankings, AI citations, or conversion lifts. Rankings, AI citations, and conversion lifts are not guaranteed." },
+  { q: "What does this comparison tool measure?", a: "It is a qualitative checklist of jobs a connected system can cover: pages, search, answers, conversion, qualification, follow-up, content destinations, measurement, and approved improvement. It is not a score of your current vendor, not a promise that every project includes every row, and not a price, ranking, or conversion guarantee." },
+  { q: "Is this a quote or a ranking guarantee?", a: "No. There is no vendor score. The marks are qualitative. They are not prices, case studies, or promised rankings, AI citations, or conversion lifts. Rankings, AI citations, and conversion lifts are not guaranteed." },
   { q: "What does Website Review inspect?", a: "A server-side scan of public HTML for a title, search description, a single H1, mobile viewport, HTTPS, image alt text, a contact route, a form, a call to action, structured data, FAQ copy, and service or product navigation. Marks are Detected, Not detected, or Not applicable. Bars show detected HTML signals, not speed, rankings, or revenue." },
-  { q: "What does Download branded PDF do?", a: "It asks the server to generate a real multi-page PDF with @react-pdf/renderer and returns application/pdf. It does not open the browser print dialog." },
-  { q: "Should every business buy the complete platform?", a: "No. Some shops only need a website and intake. Some already have a system and need a gap review. Mark the jobs that create revenue, then file a project with that scope." },
-  { q: "Where does the comparison go next?", a: "Start a project from the result. The project form can open with the complete platform marked. You can uncheck anything that does not belong. The same Record ID is shared with Ask Demore." },
+  { q: "Should every business buy the complete platform?", a: "No. Some shops only need a website and intake. Some already have a system and need a gap review. Mark the jobs that create revenue, then file a project with that scope. Not every project includes every row." },
+  { q: "Where does the comparison go next?", a: "Start a project from the result. The project form can open with the complete platform marked. You can uncheck anything that does not belong. Submitting the comparison or a brief is not a contract." },
 ];
 
 export const Route = createFileRoute("/compare")({
@@ -58,7 +57,7 @@ function ComparePage() {
       </GeoQuote>
       <DirectAnswer question="What does this page measure?">
         <p>
-          Website Review inspects public HTML for a title, search description, a single heading, mobile viewport, HTTPS, image text, a contact route, a form, a call to action, structured data, FAQ copy, and service or product navigation. Marks are Detected, Not detected, or Not applicable. Bars show detected HTML signals, not speed, rankings, or revenue. The comparison table then scores DIY, a template pack, a brochure agency site, and the Demore platform against the jobs you mark. Marks are qualitative: Weak, Partial, and Built in. Rankings, AI citations, and conversion lifts are not guaranteed.
+          Website Review inspects public HTML for a title, search description, a single heading, mobile viewport, HTTPS, image text, a contact route, a form, a call to action, structured data, FAQ copy, and service or product navigation. Marks are Detected, Not detected, or Not applicable. Bars show detected HTML signals, not speed, rankings, or revenue. The comparison below is a qualitative checklist of jobs a connected system can cover. It is not a score of your current vendor, not a promise that every project includes every row, and not a price, ranking, or conversion guarantee.
         </p>
       </DirectAnswer>
       <WebsiteReview />
