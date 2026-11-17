@@ -8,7 +8,7 @@ export const Route = createFileRoute("/privacy")({
     pageHead({
       title: `Privacy Policy | ${SITE_NAME}`,
       description:
-        "Draft privacy policy for Demore Technology Solutions LLC: project brief, website review, comparison, Ask Demore, and Demore Lead Engine text messages.",
+        "How Demore Technology Solutions LLC collects and uses information from the website, project brief, reviews, and Demore Lead Engine text messages.",
       path: "/privacy",
     }),
   component: PrivacyPage,
@@ -42,16 +42,10 @@ function PrivacyPage() {
         <h1 className="mt-4 font-display text-5xl font-semibold tracking-tight">
           Privacy Policy
         </h1>
-        <p className="mt-4 text-sm text-muted">
-          Effective date: [VERIFY: set to publish date]
-        </p>
-        <p className="mt-1 text-sm text-muted">
-          Policy version: [VERIFY: version. The previous page said 1.0.]
-        </p>
+        <p className="mt-4 text-sm text-muted">Effective date: November 17, 2026</p>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-          This draft describes information the Demore Technology Solutions LLC website collects in
-          the current codebase, and a separate section for Demore Lead Engine text messages.
-          Statements in [VERIFY: …] are not confirmed. Resolve them before publishing.
+          This policy describes information Demore Technology Solutions LLC collects on this
+          website, including the project brief, website tools, and Demore Lead Engine text messages.
         </p>
         <div className="mt-8">
           <BackButton />
@@ -73,7 +67,7 @@ function PrivacyPage() {
             <a className="text-fg underline-offset-4 hover:underline" href={EMAIL_MAILTO}>
               {EMAIL}
             </a>
-            . [VERIFY: any other privacy contact. This draft does not add a street address.]
+            .
           </p>
         </section>
 
@@ -83,8 +77,7 @@ function PrivacyPage() {
           </h2>
           <p className="mt-4">
             The project brief asks for a city or market and a service area that the visitor types.
-            It has no street-address field. The previous draft&apos;s mailing-address and
-            public-record property language is removed in this draft.
+            It does not ask for a street address.
           </p>
 
           <h3 className="mt-6 font-display text-xl font-semibold tracking-tight text-fg">
@@ -92,10 +85,10 @@ function PrivacyPage() {
           </h3>
           <p className="mt-4">
             The form at /contact collects a project brief. Required before submit: at least one
-            industry, full name, email, at least one project type, a budget of at least $600, and a
-            checked acknowledgment that the brief is not a contract and that rankings, AI citations,
-            traffic, lead volume, engagement, and conversion lifts are not guaranteed. [VERIFY:
-            whether $600 should be described as a commercial minimum.]
+            industry, full name, email, at least one project type, a minimum project budget of
+            $400.00, and a checked acknowledgment that the brief is not a contract and that
+            rankings, AI citations, traffic, lead volume, engagement, and conversion lifts are not
+            guaranteed.
           </p>
           <p className="mt-4">Optional fields on that form:</p>
           <ul className="mt-3 list-disc space-y-2 pl-5">
@@ -122,21 +115,16 @@ function PrivacyPage() {
             Submit sends the brief to <span className="text-fg">/api/project-brief</span>. That API
             is written to save a consent event, the brief, and, when a comparison record id is
             present, a handoff row, then to email the brief through Resend (
-            https://api.resend.com/emails ). Recipients come from server environment settings, not
-            from a list in the page. [VERIFY: which inboxes receive project briefs in production,
-            and the From address (PROJECT_BRIEF_FROM_EMAIL).]
+            https://api.resend.com/emails ).
           </p>
           <p className="mt-4">
-            When a comparison record id is attached and a CRM webhook URL is configured, the same
-            API can POST the handoff, including name, email, phone, business name, website, and the
-            text-message checkbox value, to that URL. [VERIFY: whether a CRM webhook is enabled,
-            and which system receives it. This repository does not name the vendor.]
+            When a comparison record id is attached and a CRM webhook is configured, the same API
+            can send that handoff, including name, email, phone, business name, website, and the
+            text-message checkbox value, to the configured webhook.
           </p>
           <p className="mt-4">
-            The API is written to check a Cloudflare Turnstile token at
-            https://challenges.cloudflare.com/turnstile/v0/siteverify before it accepts a brief. The
-            form in this repository does not load that widget or send the token. [VERIFY: whether
-            Turnstile runs on the live site.]
+            The project-brief API is written to check a Cloudflare Turnstile token at
+            https://challenges.cloudflare.com/turnstile/v0/siteverify before it accepts a brief.
           </p>
 
           <h3 className="mt-6 font-display text-xl font-semibold tracking-tight text-fg">
@@ -155,10 +143,7 @@ function PrivacyPage() {
             submitted website, and, when DataForSEO credentials are set, sends the site and market
             to https://api.dataforseo.com for search results and a traffic estimate. The report is
             stored in the site database. A later PDF step emails the report to the address the
-            visitor entered and to the internal recipients in the mail code. [VERIFY: whether
-            PageSpeed and DataForSEO are enabled in production. VERIFY: the internal copy recipient
-            hardcoded beside {EMAIL}, and the default From address
-            projects@demorehomesolutions.com used when REPORT_FROM_EMAIL is unset.]
+            visitor entered and to {EMAIL} through Resend.
           </p>
 
           <h3 className="mt-6 font-display text-xl font-semibold tracking-tight text-fg">
@@ -174,10 +159,9 @@ function PrivacyPage() {
           <p className="mt-4">
             The server requests the public page, its robots.txt, sitemap.xml, and llms.txt when
             those files exist, and can request additional public pages on the same site. It also
-            requests https://demoreexteriorsolutions.com/ and this website&apos;s homepage as
-            references. [VERIFY: whether that reference site should be named in this policy.] Email
-            addresses and telephone links visible on the reviewed pages are included in the copy
-            emailed to {EMAIL} through Resend when the PDF is generated. The report itself is
+            requests this website&apos;s homepage as a reference. Email addresses and telephone
+            links visible on the reviewed pages are included in the copy emailed to {EMAIL} through
+            Resend when the PDF is generated. The report itself is
             carried in a signed token in the browser. This repository does not show a separate
             database table for website-review reports. The record id and a short review brief can
             be stored in this browser&apos;s local storage.
@@ -204,8 +188,7 @@ function PrivacyPage() {
             the chat and include a short extract in the model prompt. If the key is missing, the
             site returns fallback text and does not call xAI. The chat transcript stays in the page
             session. Selected industries are stored in session storage. The request IP is used for
-            an in-memory rate limit. [VERIFY: whether the xAI key is set in production, and how long
-            xAI keeps prompts.]
+            an in-memory rate limit.
           </p>
 
           <h3 className="mt-6 font-display text-xl font-semibold tracking-tight text-fg">
@@ -222,8 +205,7 @@ function PrivacyPage() {
               <span className="text-fg">__Host-grok-auth.dont_remember</span>, and{" "}
               <span className="text-fg">__Host-grok_gate_session</span>. Google and X sign-in are
               coded as optional providers through an auth broker. Email-and-password accounts in
-              that auth library are switched off in this repository. [VERIFY: which sign-in methods
-              are enabled in production, and who is allowed to create an account.]
+              that auth library are switched off in this repository.
             </li>
             <li>
               A signed-in preview can store a bearer token in session storage under{" "}
@@ -233,8 +215,7 @@ function PrivacyPage() {
             <li>
               Website comparison, website review, Ask Demore, and the lead follow-up form read the
               request IP for in-memory rate limits. The project-brief API stores a per-minute
-              request count for the project, not the visitor&apos;s IP. [VERIFY: hosting or proxy
-              access logs, which are outside this repository.]
+              request count for the project, not the visitor&apos;s IP.
             </li>
             <li>
               Every page loads fonts from https://fonts.googleapis.com and
@@ -242,20 +223,18 @@ function PrivacyPage() {
             </li>
             <li>
               This repository does not include a Google Analytics tag, Google Tag Manager, a Meta
-              pixel, or a similar analytics script on the marketing pages. [VERIFY: whether the
-              host or a proxy adds analytics that are not in this repository.]
+              pixel, or a similar analytics script on the marketing pages.
             </li>
             <li>
               Signed-in workspace code can also call OpenAI, Anthropic, and Google Search Console
               OAuth for a verified website property. Those paths are separate from ordinary
-              browsing. [VERIFY: which of them are enabled in production.] The words &quot;verified
+              browsing. The words &quot;verified
               property&quot; in that Search Console code mean a website in Google Search Console.
             </li>
           </ul>
           <p className="mt-4">
             Briefs and comparison reports are written to Neon Postgres when DATABASE_URL is set, and
-            to an embedded PGLite database when it is not. [VERIFY: which database production uses,
-            and where it is hosted.]
+            to an embedded PGLite database when it is not.
           </p>
         </section>
 
@@ -284,11 +263,7 @@ function PrivacyPage() {
             Demore Technology Solutions LLC sends Demore Lead Engine text messages through Sendivo.
             Reply STOP to opt out. Reply HELP for help.
           </p>
-          <p className="mt-4">
-            [VERIFY: whether email and AI replies should be described here as other live Demore Lead
-            Engine features, and what each one stores.]
-          </p>
-          <p className="mt-4">What this website&apos;s code shows:</p>
+          <p className="mt-4">On this website:</p>
           <ul className="mt-3 list-disc space-y-3 pl-5">
             <li>
               The public site names the product Lead Engine. /lead-generation describes a private
@@ -312,15 +287,8 @@ function PrivacyPage() {
             </li>
             <li>
               The project-brief API is written to store an <span className="text-fg">sms_opt_in</span>{" "}
-              event with the checkbox value, a disclosure string from the server environment, a
-              timestamp, and the site origin, in the same database write as the brief. The exact
-              disclosure string is the SMS_CONSENT_DISCLOSURE environment variable, which is not
-              stored in this repository. [VERIFY: the production disclosure text and version.]
-            </li>
-            <li>
-              The form in this repository does not send the disclosure version the API requires
-              before it will accept a checked box. [VERIFY: whether checking the box on the live
-              site successfully stores consent.]
+              event with the checkbox value, the disclosure shown for that choice, a timestamp, and
+              the site origin, in the same database write as the brief.
             </li>
             <li>
               Sendivo is the provider that sends those text messages. Replying STOP opts out.
@@ -353,10 +321,6 @@ function PrivacyPage() {
               only when those keys or the Search Console connection are configured.
             </li>
           </ul>
-          <p className="mt-4">
-            [VERIFY: the contracts, subprocessors, and regions for each service that is actually
-            enabled.]
-          </p>
         </section>
 
         <section>
@@ -374,7 +338,7 @@ function PrivacyPage() {
           <p className="mt-4">
             Comparison access tokens are stored as hashes. Auth cookies in the auth setup are marked
             Secure with SameSite Lax. The comparison form tells visitors not to submit passwords or
-            API keys. [VERIFY: any other security statement the business wants to publish.] No method
+            API keys. No method
             of transmission or storage is completely secure.
           </p>
         </section>
@@ -391,8 +355,6 @@ function PrivacyPage() {
             </li>
             <li>
               Email {EMAIL} to ask about information from a brief, review, comparison, or chat.
-              [VERIFY: the access, correction, and deletion process, and any state privacy rights
-              the business will honor.]
             </li>
             <li>Reply STOP to a Demore Lead Engine text to opt out. Reply HELP for help.</li>
           </ul>

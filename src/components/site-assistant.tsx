@@ -245,7 +245,12 @@ export function SiteAssistant() {
             </div>
           </div>
           <div className="border-t border-line px-3 py-2 text-xs text-muted">
-            Share your goals, then click Create my improvement PDF for a plan tailored to your relevant business details.
+            <p>
+              Share your goals, then click Create my improvement PDF for a plan tailored to your relevant business details.
+            </p>
+            <p className="mt-2">
+              Ask Demore gives general information, not legal, financial, or other professional advice. Answers can be wrong.
+            </p>
           </div>
           <form
             className="flex flex-wrap shrink-0 gap-2 border-t border-line p-2"

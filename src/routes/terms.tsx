@@ -8,7 +8,7 @@ export const Route = createFileRoute("/terms")({
     pageHead({
       title: `Terms & Conditions | ${SITE_NAME}`,
       description:
-        "Draft terms for the Demore Technology Solutions LLC website and project brief, plus Demore Lead Engine text messages sent by Sendivo.",
+        "Terms for the Demore Technology Solutions LLC website, project brief, and Demore Lead Engine text messages sent by Sendivo.",
       path: "/terms",
     }),
   component: TermsPage,
@@ -42,17 +42,11 @@ function TermsPage() {
         <h1 className="mt-4 font-display text-5xl font-semibold tracking-tight">
           Terms &amp; Conditions
         </h1>
-        <p className="mt-4 text-sm text-muted">
-          Effective date: [VERIFY: set to publish date]
-        </p>
-        <p className="mt-1 text-sm text-muted">
-          Terms version: [VERIFY: version. The previous page had no version number.]
-        </p>
+        <p className="mt-4 text-sm text-muted">Effective date: November 17, 2026</p>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-          These draft terms cover use of the Demore Technology Solutions LLC website, including the
+          These terms cover use of the Demore Technology Solutions LLC website, including the
           project brief, website review, website comparison, lead-generation follow-up form, and Ask
           Demore chat. Text messages are in their own section below, under Demore Lead Engine.
-          Statements in [VERIFY: …] are not confirmed. Resolve them before publishing.
         </p>
         <div className="mt-8">
           <BackButton />
@@ -70,10 +64,7 @@ function TermsPage() {
             Mentor, Ohio and serves clients nationwide, including remote work.
           </p>
           <p className="mt-4">We do not sell or share personal information for advertising.</p>
-          <p className="mt-4">
-            Pages, examples, and scores are informational. [VERIFY: any license, acceptable-use, or
-            account rules the business wants added. This repository does not state them.]
-          </p>
+          <p className="mt-4">Pages, examples, and scores are informational.</p>
         </section>
 
         <section>
@@ -88,8 +79,7 @@ function TermsPage() {
             in the contact-page questions in the site copy.
           </p>
           <p className="mt-4">
-            The form rejects a budget below $600. [VERIFY: whether that figure should appear here
-            as a commercial minimum. It is a validation rule in the form, not a price list.]
+            The minimum project budget is $400.00.
           </p>
           <p className="mt-4">
             A copy of the brief can remain in the browser until the visitor clears site data. What
@@ -126,10 +116,10 @@ function TermsPage() {
             Ask Demore
           </h2>
           <p className="mt-4">
-            Ask Demore answers from the xAI API when a key is configured, and from fallback text on
-            the site when it is not. Some answers use a web search or a public page the visitor
-            named. Answers can be incomplete. [VERIFY: whether chat answers should be disclaimed as
-            not legal, financial, or other professional advice.]
+            Ask Demore gives general information, not legal, financial, or other professional advice,
+            and its answers can be wrong. It answers from the xAI API when a key is configured, and
+            from fallback text on the site when it is not. Some answers use a web search or a public
+            page the visitor named.
           </p>
         </section>
 
@@ -158,10 +148,6 @@ function TermsPage() {
             Demore Technology Solutions LLC sends Demore Lead Engine text messages through Sendivo.
             Reply STOP to opt out. Reply HELP for help.
           </p>
-          <p className="mt-4">
-            [VERIFY: whether email and AI replies should be described here as other live Demore Lead
-            Engine features.]
-          </p>
           <ul className="mt-4 list-disc space-y-3 pl-5">
             <li>
               <strong className="text-fg">Where the checkbox appears:</strong> the project brief.
@@ -178,10 +164,7 @@ function TermsPage() {
             <li>
               <strong className="text-fg">What this repository does with that box:</strong> the
               project-brief API is written to store the checkbox value with the brief as an
-              sms_opt_in consent event. The disclosure text it stores comes from a server
-              environment variable, not from a file in this repository. The current form does not
-              send the disclosure version that API requires. [VERIFY: whether a checked box on the
-              live site is stored, and the exact disclosure the visitor is shown.]
+              sms_opt_in consent event, together with the disclosure for that choice.
             </li>
             <li>
               <strong className="text-fg">Sending:</strong> Sendivo sends Demore Lead Engine text
@@ -191,14 +174,9 @@ function TermsPage() {
               Public Lead Engine copy on /lead-generation says email and text replies stay in one
               inbox, that AI-suggested replies are drafts a person decides whether to send, and that
               email and SMS sending runs only after it is set up for the account and the team
-              approves the campaign. [VERIFY: that this description still matches the product the
-              owner confirmed.]
+              approves the campaign.
             </li>
           </ul>
-          <p className="mt-4">
-            [VERIFY: carrier disclaimer language Sendivo or the carriers require. The previous page
-            said carriers are not liable for delayed or undelivered messages.]
-          </p>
         </section>
 
         <section>
@@ -207,9 +185,8 @@ function TermsPage() {
           </h2>
           <p className="mt-4">
             The login page is an administrator sign-in. Optional Google and X sign-in exist in the
-            auth setup when the broker is configured. [VERIFY: who may create an account, and the
-            rules for the separate Lead Engine login at
-            https://demore-lead-engine.vercel.app/login.]
+            auth setup when the broker is configured. An existing Lead Engine account can be opened
+            from https://demore-lead-engine.vercel.app/login.
           </p>
         </section>
 
@@ -218,10 +195,10 @@ function TermsPage() {
             Limitation of liability
           </h2>
           <p className="mt-4">
-            [VERIFY: what liability limit, if any, should be published. The previous page limited
-            liability for use of an SMS program, including delayed or undelivered messages. Confirm
-            the replacement, including any limit that should cover the website, the project brief,
-            reviews, and Demore Lead Engine texts sent by Sendivo.]
+            To the extent the law allows, Demore Technology Solutions LLC is not liable for indirect
+            or consequential damages arising from this website, a project brief, a review, a
+            comparison, Ask Demore, or Demore Lead Engine text messages. Our total liability for a
+            specific service is limited to the amounts you paid us for that service.
           </p>
         </section>
 
@@ -230,9 +207,8 @@ function TermsPage() {
             Changes to these terms
           </h2>
           <p className="mt-4">
-            [VERIFY: how changes will be posted, and whether continued use of the website or
-            continued text messages counts as acceptance. The previous page said continuing to
-            receive text messages meant acceptance of updated terms.]
+            We may update these terms. The updated terms will be posted on this page, and the
+            effective date above will show when they last changed.
           </p>
         </section>
 
