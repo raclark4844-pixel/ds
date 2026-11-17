@@ -52,7 +52,7 @@ function ContactPage() {
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
           Select all applicable industries first, choose the complete platform or individual services, set your
           project budget, then tell us about your goals, current stack, growth priorities, and
-          automation needs. Minimum project budget: $600.
+          automation needs. Minimum project budget: $400.
         </p>
       </header>
 

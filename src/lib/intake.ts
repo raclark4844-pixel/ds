@@ -1,7 +1,7 @@
 import { industries } from "@/lib/industries";
 
 export const STORAGE_KEY = "demore-brief-v5";
-export const MIN_BUDGET = 600;
+export const MIN_BUDGET = 400;
 
 export const industryOptions = [...industries.map((item) => item.label), "Other"] as const;
 

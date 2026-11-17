@@ -43,7 +43,7 @@ function WorkPage() {
       <Section kicker="All pages" title="Jump to an offer."><RelatedOffers current="/work" /></Section>
       <Section kicker="Questions" title="Direct answers."><FaqList items={workFaqs} /></Section>
       <div className="mt-16">
-        <CtaBand kicker="Work" title="Start with a real project." body="Submit your industry, goals, what you need built, and a project budget of at least $600. Results will be documented when there is real, permissioned work to publish." secondary={{ to: "/growth", label: "See the growth stack", variant: "outline" }} />
+        <CtaBand kicker="Work" title="Start with a real project." body="Submit your industry, goals, what you need built, and a project budget of at least $400. Results will be documented when there is real, permissioned work to publish." secondary={{ to: "/growth", label: "See the growth stack", variant: "outline" }} />
       </div>
     </main>
   );

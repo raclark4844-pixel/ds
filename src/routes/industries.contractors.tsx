@@ -110,7 +110,7 @@ const platformOffers = [
 const projectSteps = [
   {
     lead: "File a brief.",
-    body: "Tell us the trades you offer, the service area you cover, what you want built, and what happens today when an estimate request comes in. The minimum project budget is $600.",
+    body: "Tell us the trades you offer, the service area you cover, what you want built, and what happens today when an estimate request comes in. The minimum project budget is $400.",
   },
   {
     lead: "Pressure-test the offer.",
