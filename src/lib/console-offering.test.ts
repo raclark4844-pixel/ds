@@ -3,9 +3,10 @@ import assert from "node:assert/strict";
 import { customerPdfText } from "./console-offering.ts";
 
 test("customer PDFs keep the Tech address and drop the other company identity", () => {
-  const domain = ["demore", "exterior", "solutions.com"].join("");
-  const name = ["Demore", "Exterior", "Solutions"].join(" ");
-  const shortName = ["Demore", "Exterior"].join(" ");
+  // Intentional negative-test fixtures for Demore Exterior Solutions (already-public business contact info)
+  const domain = "demoreexteriorsolutions.com";
+  const name = "Demore Exterior Solutions";
+  const shortName = "Demore Exterior";
   const text = customerPdfText(
     `See https://${domain}/about and ${domain} plus ${name}. Also ${shortName}. Phone 440-920-6133, +14409206133, and +1-440-920-6133 stay.`,
   );
