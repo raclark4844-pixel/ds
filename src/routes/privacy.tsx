@@ -8,7 +8,7 @@ export const Route = createFileRoute("/privacy")({
     pageHead({
       title: `Privacy Policy | ${SITE_NAME}`,
       description:
-        "Draft privacy policy for the Demore Technology Solutions website: project brief, website review, comparison, Ask Demore, and Demore Lead Engine text messages.",
+        "Draft privacy policy for Demore Technology Solutions LLC: project brief, website review, comparison, Ask Demore, and Demore Lead Engine text messages.",
       path: "/privacy",
     }),
   component: PrivacyPage,
@@ -43,15 +43,15 @@ function PrivacyPage() {
           Privacy Policy
         </h1>
         <p className="mt-4 text-sm text-muted">
-          Effective date: [VERIFY: effective date. The previous page said November 15, 2026.]
+          Effective date: [VERIFY: set to publish date]
         </p>
         <p className="mt-1 text-sm text-muted">
           Policy version: [VERIFY: version. The previous page said 1.0.]
         </p>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-          This draft describes information the Demore Technology Solutions website collects in the
-          current codebase, and a separate section for text messages associated with Demore Lead
-          Engine. Statements in [VERIFY: …] are not confirmed. Resolve them before publishing.
+          This draft describes information the Demore Technology Solutions LLC website collects in
+          the current codebase, and a separate section for Demore Lead Engine text messages.
+          Statements in [VERIFY: …] are not confirmed. Resolve them before publishing.
         </p>
         <div className="mt-8">
           <BackButton />
@@ -64,10 +64,9 @@ function PrivacyPage() {
             Who this policy covers
           </h2>
           <p className="mt-4">
-            The site name in the code is Demore Technology Solutions, at
-            https://www.demoretechnologysolutions.com. Published page copy says the business is
-            based in Mentor, Ohio and serves clients nationwide. [VERIFY: legal entity name and
-            form, such as LLC, corporation, or sole proprietorship.]
+            Demore Technology Solutions LLC operates this website at
+            https://www.demoretechnologysolutions.com. The business is based in Mentor, Ohio and
+            serves clients nationwide.
           </p>
           <p className="mt-4">
             Privacy questions go to{" "}
@@ -282,12 +281,14 @@ function PrivacyPage() {
             This section is only about text messages. It is separate from the website forms above.
           </p>
           <p className="mt-4">
-            [VERIFY: a teammate reported the owner&apos;s confirmation that the product is named
-            Demore Lead Engine and that its working features today are SMS, email, and AI replies.
-            Confirm that name, that those three features are live, what each one sends or stores,
-            and that this policy should not describe any other channel.]
+            Demore Technology Solutions LLC sends Demore Lead Engine text messages through Sendivo.
+            Reply STOP to opt out. Reply HELP for help.
           </p>
-          <p className="mt-4">What this repository shows:</p>
+          <p className="mt-4">
+            [VERIFY: whether email and AI replies should be described here as other live Demore Lead
+            Engine features, and what each one stores.]
+          </p>
+          <p className="mt-4">What this website&apos;s code shows:</p>
           <ul className="mt-3 list-disc space-y-3 pl-5">
             <li>
               The public site names the product Lead Engine. /lead-generation describes a private
@@ -322,11 +323,8 @@ function PrivacyPage() {
               site successfully stores consent.]
             </li>
             <li>
-              This repository does not include a text-message provider, code that sends text
-              messages, or code that receives STOP, HELP, or START replies. The previous draft named
-              Twilio. Twilio does not appear in this repository. [VERIFY: where Demore Lead Engine
-              SMS is sent from, which provider sends it, and whether STOP and HELP replies are
-              honored.]
+              Sendivo is the provider that sends those text messages. Replying STOP opts out.
+              Replying HELP gets help.
             </li>
           </ul>
         </section>
@@ -336,10 +334,12 @@ function PrivacyPage() {
             How information is shared
           </h2>
           <p className="mt-4">
-            This repository has no feature that sells personal information. [VERIFY: whether the
-            business sells or shares personal information for advertising outside this website.]
+            We do not sell or share personal information for advertising.
           </p>
-          <p className="mt-4">The code sends information to these services when the related feature runs:</p>
+          <p className="mt-4">
+            Demore Lead Engine text messages are sent through Sendivo. The website code also sends
+            information to these services when the related feature runs:
+          </p>
           <ul className="mt-3 list-disc space-y-3 pl-5">
             <li>Resend, to deliver the emails described above.</li>
             <li>xAI, when Ask Demore has an API key.</li>
@@ -364,9 +364,8 @@ function PrivacyPage() {
             Data retention
           </h2>
           <p className="mt-4">
-            [VERIFY: how long project briefs, consent events, comparison reports, review PDFs, chat
-            prompts, emails, and server logs are kept. This repository does not set a retention
-            period.]
+            We keep personal information for as long as we reasonably need it for the business
+            purposes described in this policy.
           </p>
         </section>
 
@@ -395,10 +394,7 @@ function PrivacyPage() {
               [VERIFY: the access, correction, and deletion process, and any state privacy rights
               the business will honor.]
             </li>
-            <li>
-              [VERIFY: the opt-out method for Demore Lead Engine text messages, including whether a
-              STOP reply is processed. This repository does not implement that reply.]
-            </li>
+            <li>Reply STOP to a Demore Lead Engine text to opt out. Reply HELP for help.</li>
           </ul>
         </section>
       </div>

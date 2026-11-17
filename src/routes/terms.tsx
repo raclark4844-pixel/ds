@@ -8,7 +8,7 @@ export const Route = createFileRoute("/terms")({
     pageHead({
       title: `Terms & Conditions | ${SITE_NAME}`,
       description:
-        "Draft terms for the Demore Technology Solutions website and project brief, plus a separate section for Demore Lead Engine text messages.",
+        "Draft terms for the Demore Technology Solutions LLC website and project brief, plus Demore Lead Engine text messages sent by Sendivo.",
       path: "/terms",
     }),
   component: TermsPage,
@@ -43,13 +43,13 @@ function TermsPage() {
           Terms &amp; Conditions
         </h1>
         <p className="mt-4 text-sm text-muted">
-          Effective date: [VERIFY: effective date. The previous page said November 15, 2026.]
+          Effective date: [VERIFY: set to publish date]
         </p>
         <p className="mt-1 text-sm text-muted">
           Terms version: [VERIFY: version. The previous page had no version number.]
         </p>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-          These draft terms cover use of the Demore Technology Solutions website, including the
+          These draft terms cover use of the Demore Technology Solutions LLC website, including the
           project brief, website review, website comparison, lead-generation follow-up form, and Ask
           Demore chat. Text messages are in their own section below, under Demore Lead Engine.
           Statements in [VERIFY: …] are not confirmed. Resolve them before publishing.
@@ -65,11 +65,11 @@ function TermsPage() {
             The website
           </h2>
           <p className="mt-4">
-            Demore Technology Solutions publishes this website to describe custom websites,
-            ecommerce, growth work, automation, and custom AI platforms. Published page copy says
-            the business is based in Mentor, Ohio and serves clients nationwide, including remote
-            work. [VERIFY: legal entity name and form.]
+            Demore Technology Solutions LLC publishes this website to describe custom websites,
+            ecommerce, growth work, automation, and custom AI platforms. The business is based in
+            Mentor, Ohio and serves clients nationwide, including remote work.
           </p>
+          <p className="mt-4">We do not sell or share personal information for advertising.</p>
           <p className="mt-4">
             Pages, examples, and scores are informational. [VERIFY: any license, acceptable-use, or
             account rules the business wants added. This repository does not state them.]
@@ -83,7 +83,7 @@ function TermsPage() {
           <p className="mt-4">
             The project brief at /contact is a request for a conversation about scope. The form
             requires this acknowledgment before it will submit: the brief is not a contract, and
-            submitting it does not hire Demore Technology Solutions or guarantee rankings, AI
+            submitting it does not hire Demore Technology Solutions LLC or guarantee rankings, AI
             citations, traffic, lead volume, engagement, or conversion lifts. The same statement is
             in the contact-page questions in the site copy.
           </p>
@@ -140,7 +140,7 @@ function TermsPage() {
           <p className="mt-4">
             The follow-up form on /lead-generation emails the visitor&apos;s name, company, email,
             phone, optional website, and goals to {EMAIL}. The page copy says this does not create
-            a campaign or a draft and does not hire Demore Technology Solutions.
+            a campaign or a draft and does not hire Demore Technology Solutions LLC.
           </p>
         </section>
 
@@ -155,10 +155,12 @@ function TermsPage() {
             Engine and to the optional checkbox on the project brief.
           </p>
           <p className="mt-4">
-            [VERIFY: a teammate reported the owner&apos;s confirmation that the product is named
-            Demore Lead Engine and that its working features today are SMS, email, and AI replies.
-            Confirm the live program, what messages are sent, and that email and AI replies are in
-            scope for this section or for a later draft.]
+            Demore Technology Solutions LLC sends Demore Lead Engine text messages through Sendivo.
+            Reply STOP to opt out. Reply HELP for help.
+          </p>
+          <p className="mt-4">
+            [VERIFY: whether email and AI replies should be described here as other live Demore Lead
+            Engine features.]
           </p>
           <ul className="mt-4 list-disc space-y-3 pl-5">
             <li>
@@ -182,10 +184,8 @@ function TermsPage() {
               live site is stored, and the exact disclosure the visitor is shown.]
             </li>
             <li>
-              <strong className="text-fg">What this repository does not include:</strong> a
-              text-message provider, code that sends text messages, or code that handles STOP,
-              HELP, or START. [VERIFY: the system that sends Demore Lead Engine texts, the provider,
-              message frequency in practice, and whether STOP and HELP replies are honored.]
+              <strong className="text-fg">Sending:</strong> Sendivo sends Demore Lead Engine text
+              messages. Replying STOP opts out. Replying HELP gets help. Message frequency varies.
             </li>
             <li>
               Public Lead Engine copy on /lead-generation says email and text history can be kept
@@ -195,9 +195,8 @@ function TermsPage() {
             </li>
           </ul>
           <p className="mt-4">
-            Carrier delivery, message-and-data rates, and carrier liability were stated as facts on
-            the previous page. [VERIFY: carrier disclaimer language the messaging provider requires,
-            if a live SMS program is confirmed.]
+            [VERIFY: carrier disclaimer language Sendivo or the carriers require. The previous page
+            said carriers are not liable for delayed or undelivered messages.]
           </p>
         </section>
 
@@ -219,10 +218,9 @@ function TermsPage() {
           </h2>
           <p className="mt-4">
             [VERIFY: what liability limit, if any, should be published. The previous page limited
-            liability for use of an SMS program, including delayed or undelivered messages. This
-            draft does not restate that sentence, because this repository does not send those
-            messages. Confirm the replacement, including any limit that should cover the website,
-            the project brief, reviews, and Demore Lead Engine.]
+            liability for use of an SMS program, including delayed or undelivered messages. Confirm
+            the replacement, including any limit that should cover the website, the project brief,
+            reviews, and Demore Lead Engine texts sent by Sendivo.]
           </p>
         </section>
 
@@ -242,14 +240,14 @@ function TermsPage() {
             Governing law
           </h2>
           <p className="mt-4">
-            [VERIFY: governing law. The previous page said the laws of the State of Ohio.]
+            These terms are governed by the laws of the State of Ohio.
           </p>
         </section>
 
         <section>
           <h2 className="font-display text-2xl font-semibold tracking-tight text-fg">Contact us</h2>
           <p className="mt-4">
-            Demore Technology Solutions
+            Demore Technology Solutions LLC
             <br />
             6348 Meldon Dr
             <br />
@@ -258,11 +256,6 @@ function TermsPage() {
             <a className="text-fg underline-offset-4 hover:underline" href={EMAIL_MAILTO}>
               {EMAIL}
             </a>
-          </p>
-          <p className="mt-4">
-            [VERIFY: the street address above. It is left unchanged from the previous page. The
-            footer and Organization schema elsewhere in the site list Mentor, OH, US, and do not
-            list this street address. Confirm whether it should stay published.]
           </p>
         </section>
       </div>
