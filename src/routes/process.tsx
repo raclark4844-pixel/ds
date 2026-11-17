@@ -48,7 +48,7 @@ function ProcessPage() {
       <Section kicker="All pages" title="Jump to an offer."><RelatedOffers current="/process" /></Section>
       <Section kicker="Questions" title="Direct answers."><FaqList items={processFaqs} /></Section>
       <div className="mt-16">
-        <CtaBand kicker="Process" title="The brief is step one." body="Tell us the industry, offer, audience, current stack, conversion goal, content needs, automation needs, and project budget. Minimum budget is $600." secondary={{ to: "/growth", label: "See the growth stack", variant: "outline" }} />
+        <CtaBand kicker="Process" title="The brief is step one." body="Tell us the industry, offer, audience, current stack, conversion goal, content needs, automation needs, and project budget. Minimum budget is $400." secondary={{ to: "/growth", label: "See the growth stack", variant: "outline" }} />
       </div>
     </main>
   );
