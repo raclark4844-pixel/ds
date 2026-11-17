@@ -8,7 +8,7 @@ export const Route = createFileRoute("/terms")({
     pageHead({
       title: `Terms & Conditions | ${SITE_NAME}`,
       description:
-        "Terms & Conditions for the Demore Technology Solutions text messaging program, including opt-out, help, carrier disclaimer, and governing law.",
+        "Draft terms for the Demore Technology Solutions website and project brief, plus a separate section for Demore Lead Engine text messages.",
       path: "/terms",
     }),
   component: TermsPage,
@@ -42,11 +42,17 @@ function TermsPage() {
         <h1 className="mt-4 font-display text-5xl font-semibold tracking-tight">
           Terms &amp; Conditions
         </h1>
-        <p className="mt-4 text-sm text-muted">Effective date: November 15, 2026</p>
+        <p className="mt-4 text-sm text-muted">
+          Effective date: [VERIFY: effective date. The previous page said November 15, 2026.]
+        </p>
+        <p className="mt-1 text-sm text-muted">
+          Terms version: [VERIFY: version. The previous page had no version number.]
+        </p>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-          These Terms &amp; Conditions govern the text messaging program and services offered by
-          Demore Technology Solutions. By opting in to receive text messages from Demore Technology
-          Solutions, you agree to these terms.
+          These draft terms cover use of the Demore Technology Solutions website, including the
+          project brief, website review, website comparison, lead-generation follow-up form, and Ask
+          Demore chat. Text messages are in their own section below, under Demore Lead Engine.
+          Statements in [VERIFY: …] are not confirmed. Resolve them before publishing.
         </p>
         <div className="mt-8">
           <BackButton />
@@ -56,89 +62,154 @@ function TermsPage() {
       <div className="mt-12 space-y-10 text-sm leading-relaxed text-muted">
         <section>
           <h2 className="font-display text-2xl font-semibold tracking-tight text-fg">
-            SMS program
-          </h2>
-          <ul className="mt-4 list-disc space-y-3 pl-5">
-            <li>
-              <strong className="text-fg">Brand name:</strong> Demore Technology Solutions.
-            </li>
-            <li>
-              <strong className="text-fg">Program description:</strong> Demore Technology Solutions
-              sends text messages about your inquiries, appointments, requests for information, and
-              our services, including follow-ups and replies to messages you send us.
-            </li>
-            <li>
-              <strong className="text-fg">Message frequency:</strong> message frequency varies based
-              on your inquiry and interactions with us.
-            </li>
-            <li>
-              Message and data rates may apply. Your mobile carrier&apos;s standard message and data
-              rates may apply to messages you send and receive. Check with your carrier for details
-              about your plan.
-            </li>
-            <li>Consent to receive text messages is not a condition of any purchase.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="font-display text-2xl font-semibold tracking-tight text-fg">
-            How to opt out
+            The website
           </h2>
           <p className="mt-4">
-            You can cancel the SMS service at any time. Reply <strong className="text-fg">STOP</strong>{" "}
-            to any message from Demore Technology Solutions. After you send STOP, you will receive one
-            final message confirming that you have been unsubscribed, and you will receive no further
-            texts from us. To join again, reply <strong className="text-fg">START</strong>.
+            Demore Technology Solutions publishes this website to describe custom websites,
+            ecommerce, growth work, automation, and custom AI platforms. Published page copy says
+            the business is based in Mentor, Ohio and serves clients nationwide, including remote
+            work. [VERIFY: legal entity name and form.]
+          </p>
+          <p className="mt-4">
+            Pages, examples, and scores are informational. [VERIFY: any license, acceptable-use, or
+            account rules the business wants added. This repository does not state them.]
           </p>
         </section>
 
         <section>
           <h2 className="font-display text-2xl font-semibold tracking-tight text-fg">
-            How to get help
+            Project brief
           </h2>
           <p className="mt-4">
-            Reply <strong className="text-fg">HELP</strong> to any message for help, or contact Demore
-            Technology Solutions at{" "}
-            <a className="text-fg underline-offset-4 hover:underline" href={EMAIL_MAILTO}>
-              {EMAIL}
-            </a>
-            .
+            The project brief at /contact is a request for a conversation about scope. The form
+            requires this acknowledgment before it will submit: the brief is not a contract, and
+            submitting it does not hire Demore Technology Solutions or guarantee rankings, AI
+            citations, traffic, lead volume, engagement, or conversion lifts. The same statement is
+            in the contact-page questions in the site copy.
           </p>
-        </section>
-
-        <section>
-          <h2 className="font-display text-2xl font-semibold tracking-tight text-fg">
-            Carrier disclaimer
-          </h2>
           <p className="mt-4">
-            Carriers are not liable for delayed or undelivered messages. Delivery of messages is
-            subject to effective transmission from your wireless carrier and is not guaranteed.
+            The form rejects a budget below $600. [VERIFY: whether that figure should appear here
+            as a commercial minimum. It is a validation rule in the form, not a price list.]
           </p>
-        </section>
-
-        <section>
-          <h2 className="font-display text-2xl font-semibold tracking-tight text-fg">
-            Your mobile number
-          </h2>
           <p className="mt-4">
-            You confirm that you are the account holder or an authorized user of the mobile number
-            you provide. If you change or deactivate your number, please reply STOP from that number
-            or contact us so we can update our records.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="font-display text-2xl font-semibold tracking-tight text-fg">Privacy</h2>
-          <p className="mt-4">
-            Your information is handled as described in our{" "}
+            A copy of the brief can remain in the browser until the visitor clears site data. What
+            the form collects, and where it is sent, is described in the{" "}
             <Link
               to="/privacy"
               className="text-fg underline decoration-line underline-offset-4 hover:text-volt"
             >
               Privacy Policy
             </Link>
-            . We do not sell, rent, or share your mobile number or SMS consent with third parties or
-            affiliates for their marketing or promotional purposes.
+            .
+          </p>
+        </section>
+
+        <section>
+          <h2 className="font-display text-2xl font-semibold tracking-tight text-fg">
+            Website review and comparison
+          </h2>
+          <p className="mt-4">
+            The visitor supplies a public website address and the contact details the form
+            requires. The server fetches public pages and public files for that address. The
+            comparison form says not to enter passwords, API keys, or login links.
+          </p>
+          <p className="mt-4">
+            A review, score, or PDF is a reading of public pages and, for a comparison, of the
+            measurement services named in the Privacy Policy. It is not a promise of rankings, AI
+            citations, traffic, or conversion lifts. The email copy in the code uses that same
+            disclaimer.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="font-display text-2xl font-semibold tracking-tight text-fg">
+            Ask Demore
+          </h2>
+          <p className="mt-4">
+            Ask Demore answers from the xAI API when a key is configured, and from fallback text on
+            the site when it is not. Some answers use a web search or a public page the visitor
+            named. Answers can be incomplete. [VERIFY: whether chat answers should be disclaimed as
+            not legal, financial, or other professional advice.]
+          </p>
+        </section>
+
+        <section>
+          <h2 className="font-display text-2xl font-semibold tracking-tight text-fg">
+            Lead-generation follow-up
+          </h2>
+          <p className="mt-4">
+            The follow-up form on /lead-generation emails the visitor&apos;s name, company, email,
+            phone, optional website, and goals to {EMAIL}. The page copy says this does not create
+            a campaign or a draft and does not hire Demore Technology Solutions.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="font-display text-2xl font-semibold tracking-tight text-fg">
+            Demore Lead Engine text messages
+          </h2>
+          <p className="mt-4">
+            This section is the text-message terms. It does not, by itself, make the rest of these
+            terms an SMS-program contract. The previous page said these terms governed a text
+            messaging program for the whole business. This draft limits that subject to Demore Lead
+            Engine and to the optional checkbox on the project brief.
+          </p>
+          <p className="mt-4">
+            [VERIFY: a teammate reported the owner&apos;s confirmation that the product is named
+            Demore Lead Engine and that its working features today are SMS, email, and AI replies.
+            Confirm the live program, what messages are sent, and that email and AI replies are in
+            scope for this section or for a later draft.]
+          </p>
+          <ul className="mt-4 list-disc space-y-3 pl-5">
+            <li>
+              <strong className="text-fg">Where the checkbox appears:</strong> the project brief.
+              The box starts unchecked. The form can be submitted without it. The checkbox says
+              consent is not required to submit the form or to make a purchase.
+            </li>
+            <li>
+              <strong className="text-fg">Checkbox text shown on the form:</strong> &quot;I agree to
+              receive promotional and marketing text messages from Demore Technology Solutions, such
+              as offers and service announcements. Message frequency varies. Message and data rates
+              may apply. Reply HELP for help or STOP to opt out at any time. Consent is not required
+              to submit this form or to make a purchase.&quot;
+            </li>
+            <li>
+              <strong className="text-fg">What this repository does with that box:</strong> the
+              project-brief API is written to store the checkbox value with the brief as an
+              sms_opt_in consent event. The disclosure text it stores comes from a server
+              environment variable, not from a file in this repository. The current form does not
+              send the disclosure version that API requires. [VERIFY: whether a checked box on the
+              live site is stored, and the exact disclosure the visitor is shown.]
+            </li>
+            <li>
+              <strong className="text-fg">What this repository does not include:</strong> a
+              text-message provider, code that sends text messages, or code that handles STOP,
+              HELP, or START. [VERIFY: the system that sends Demore Lead Engine texts, the provider,
+              message frequency in practice, and whether STOP and HELP replies are honored.]
+            </li>
+            <li>
+              Public Lead Engine copy on /lead-generation says email and text history can be kept
+              in the workspace inbox, that AI-assisted replies are drafts for staff review, and that
+              email, SMS, and AI services require configuration before those live features run.
+              [VERIFY: that this description still matches the product the owner confirmed.]
+            </li>
+          </ul>
+          <p className="mt-4">
+            Carrier delivery, message-and-data rates, and carrier liability were stated as facts on
+            the previous page. [VERIFY: carrier disclaimer language the messaging provider requires,
+            if a live SMS program is confirmed.]
+          </p>
+        </section>
+
+        <section>
+          <h2 className="font-display text-2xl font-semibold tracking-tight text-fg">
+            Accounts
+          </h2>
+          <p className="mt-4">
+            The login page is an administrator sign-in. Optional Google and X sign-in exist in the
+            auth setup when the broker is configured. [VERIFY: who may create an account, and the
+            rules for the separate Lead Engine login at
+            https://demore-lead-engine.vercel.app/login.]
           </p>
         </section>
 
@@ -147,9 +218,11 @@ function TermsPage() {
             Limitation of liability
           </h2>
           <p className="mt-4">
-            To the fullest extent permitted by law, Demore Technology Solutions is not liable for any
-            indirect, incidental, or consequential damages arising from your use of the SMS program,
-            including delayed or undelivered messages.
+            [VERIFY: what liability limit, if any, should be published. The previous page limited
+            liability for use of an SMS program, including delayed or undelivered messages. This
+            draft does not restate that sentence, because this repository does not send those
+            messages. Confirm the replacement, including any limit that should cover the website,
+            the project brief, reviews, and Demore Lead Engine.]
           </p>
         </section>
 
@@ -158,9 +231,9 @@ function TermsPage() {
             Changes to these terms
           </h2>
           <p className="mt-4">
-            We may update these terms from time to time. The effective date at the top shows when they
-            last changed. Continuing to receive messages after a change means you accept the updated
-            terms.
+            [VERIFY: how changes will be posted, and whether continued use of the website or
+            continued text messages counts as acceptance. The previous page said continuing to
+            receive text messages meant acceptance of updated terms.]
           </p>
         </section>
 
@@ -168,7 +241,9 @@ function TermsPage() {
           <h2 className="font-display text-2xl font-semibold tracking-tight text-fg">
             Governing law
           </h2>
-          <p className="mt-4">These terms are governed by the laws of the State of Ohio.</p>
+          <p className="mt-4">
+            [VERIFY: governing law. The previous page said the laws of the State of Ohio.]
+          </p>
         </section>
 
         <section>
@@ -183,6 +258,11 @@ function TermsPage() {
             <a className="text-fg underline-offset-4 hover:underline" href={EMAIL_MAILTO}>
               {EMAIL}
             </a>
+          </p>
+          <p className="mt-4">
+            [VERIFY: the street address above. It is left unchanged from the previous page. The
+            footer and Organization schema elsewhere in the site list Mentor, OH, US, and do not
+            list this street address. Confirm whether it should stay published.]
           </p>
         </section>
       </div>
