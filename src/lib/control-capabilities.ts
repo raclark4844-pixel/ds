@@ -127,12 +127,6 @@ export const capabilities = [
     output: "Routing plan with duplicate prevention",
   },
   {
-    id: "phone-agent-management",
-    name: "Phone Agent Management",
-    purpose: "Optional, and not a Demore Lead Engine feature. This preview does not place phone calls.",
-    output: "Versioned phone configuration and handoff checks",
-  },
-  {
     id: "qa-testing",
     name: "QA and Testing",
     purpose: "Run deterministic form, link, mobile, chatbot and API tests in preview",
