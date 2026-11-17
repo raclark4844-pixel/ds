@@ -69,7 +69,7 @@ export function LeadEnginePreview() {
       <div className="mt-6 flex flex-wrap gap-3 border-t border-line pt-5">
         <Button asChild>
           <a href="https://demore-lead-engine.vercel.app/api/website-signin/start">
-            Authorized users: log in to Lead Engine
+            Authorized users: log in to Demore Lead Engine
           </a>
         </Button>
         <Button asChild variant="outline">

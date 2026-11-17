@@ -33,7 +33,7 @@ export const THEME_COLOR = "#050505";
 
 export const primaryNav = [
   { to: "/", label: "Home" },
-  { to: "/platform", label: "AI Growth Platform" },
+  { to: "/platform", label: "Connected system" },
   { to: "/websites", label: "Websites" },
   { to: "/growth", label: "Growth" },
   { to: "/lead-generation", label: "Lead Engine" },

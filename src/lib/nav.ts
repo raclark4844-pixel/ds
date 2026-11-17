@@ -19,7 +19,7 @@ export type NavItem = {
 };
 
 export const featuredPills: readonly NavItem[] = [
-  { to: "/platform", label: "AI growth platform", short: "Platform" },
+  { to: "/platform", label: "Connected system", short: "Platform" },
   { to: "/websites", label: "Websites & ecommerce", short: "Sites" },
   { to: "/growth", label: "Growth", short: "Growth" },
   { to: "/lead-generation", label: "Lead Engine", short: "Leads" },
@@ -30,7 +30,7 @@ export const featuredPillsWide = featuredPills;
 
 export const dockTabs: readonly NavItem[] = [
   { to: "/", label: "Home", short: "Home" },
-  { to: "/platform", label: "AI Growth Platform", short: "Platform" },
+  { to: "/platform", label: "Connected system", short: "Platform" },
   { to: "/websites", label: "Websites", short: "Sites" },
   { to: "/growth", label: "Growth", short: "Growth" },
   { to: "/lead-generation", label: "Lead Engine", short: "Leads" },
@@ -43,7 +43,7 @@ export const dockTabs: readonly NavItem[] = [
 export const allMainPages: readonly NavItem[] = [
   { to: "/control-center", label: "AI Control Center" },
   { to: "/", label: "Home" },
-  { to: "/platform", label: "AI Marketing Platform" },
+  { to: "/platform", label: "Connected system" },
   { to: "/websites", label: "Websites & Ecommerce" },
   { to: "/growth", label: "Growth" },
   { to: "/lead-generation", label: "Lead Engine" },
