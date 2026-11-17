@@ -297,11 +297,11 @@ function PrivacyPage() {
               preview on this website is described as viewing-only.
             </li>
             <li>
-              That page&apos;s copy says the inbox can keep email and text conversation history, that
-              AI-assisted replies are drafts for staff review, and that email, SMS, and AI services
-              require configuration before the corresponding live features run. The site assistant
-              instructions say messaging requires setup and that sending is not automatically
-              enabled.
+              That page&apos;s copy says email and text replies stay in one Demore Lead Engine inbox,
+              that AI-suggested replies are drafts a person decides whether to send, and that email
+              and SMS sending runs only after it is set up for the account and the team approves
+              the campaign. The site assistant instructions say messaging requires setup and that
+              sending is not automatically enabled.
             </li>
             <li>
               The project brief includes an optional, unchecked checkbox with this text: &quot;I

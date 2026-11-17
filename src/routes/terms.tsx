@@ -188,10 +188,11 @@ function TermsPage() {
               messages. Replying STOP opts out. Replying HELP gets help. Message frequency varies.
             </li>
             <li>
-              Public Lead Engine copy on /lead-generation says email and text history can be kept
-              in the workspace inbox, that AI-assisted replies are drafts for staff review, and that
-              email, SMS, and AI services require configuration before those live features run.
-              [VERIFY: that this description still matches the product the owner confirmed.]
+              Public Lead Engine copy on /lead-generation says email and text replies stay in one
+              inbox, that AI-suggested replies are drafts a person decides whether to send, and that
+              email and SMS sending runs only after it is set up for the account and the team
+              approves the campaign. [VERIFY: that this description still matches the product the
+              owner confirmed.]
             </li>
           </ul>
           <p className="mt-4">
