@@ -10,9 +10,9 @@ import { EMAIL } from "@/lib/site";
 import { faqJsonLd, pageHead } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
-const TITLE = "Website Design, AI Bots & Lead Engine | Demore Technology Solutions";
+const TITLE = "Website Design, AI Bots & Demore Lead Engine | Demore Tech";
 const DESCRIPTION =
-  "Custom website design, ecommerce, AI bots, Lead Engine campaign workspace, and growth marketing built around your business. Based in Mentor, Ohio, serving clients nationwide.";
+  "Custom website design, ecommerce, AI bots, growth marketing, and the Demore Lead Engine workspace. Based in Mentor, Ohio, serving clients nationwide.";
 
 const LOCATION =
   "Based in Mentor, Ohio. We meet clients at their location or a convenient spot nearby, and work remotely nationwide.";
@@ -61,14 +61,14 @@ const serviceAreas = [
   },
   {
     number: "03",
-    title: "Lead Engine",
+    title: "Demore Lead Engine",
     accent: "bg-sun",
     to: "/lead-generation",
-    label: "Explore Lead Engine",
-    body: "The private campaign workspace that connects your website, campaigns, conversations, and qualified handoffs. Plan by industry and territory, review leads, manage replies, and hand opportunities to your team.",
+    label: "Explore Demore Lead Engine",
+    body: "The private campaign workspace that connects your website, campaigns, conversations, and qualified handoffs. Plan campaigns by industry and territory, review the leads that come in, manage replies, and hand opportunities to your team.",
     details: [
       "Customer records and campaign planning with territories and qualification questions",
-      "Lead review, shared inbox for conversations, and qualified handoffs",
+      "Lead review, a shared SMS and email inbox, and AI reply drafts your team reviews",
       "Campaign history, cost views, and team controls in one workspace",
     ],
     outcome: "A clear path from campaign draft to a qualified opportunity your team can act on.",
@@ -173,7 +173,7 @@ const projectSteps = [
 ] as const;
 
 const buildAnswer =
-  "Custom websites and ecommerce, AI bots and business automation, growth and search work (SEO, GEO, AEO, and CRO), analytics, content and social workflows, and custom AI-assisted marketing and lead-generation systems. You can start with one service or connect them so discovery, lead capture, follow-up, and measurement work as one system. AI can help with research, drafting, repurposing, analysis, and repetitive tasks; people keep control of strategy, approvals, brand, and final decisions.";
+  "Custom websites and ecommerce, AI bots and business automation, growth and search work (SEO, GEO, AEO, and CRO), analytics, content and social workflows, and custom AI-assisted marketing and lead-generation systems, including the Demore Lead Engine campaign workspace. You can start with one service or connect them so discovery, lead capture, follow-up, and measurement work as one system. AI can help with research, drafting, repurposing, analysis, and repetitive tasks; people keep control of strategy, approvals, brand, and final decisions.";
 
 const whoAnswer =
   "Contractors, service companies, ecommerce businesses, professional practices, restaurants, pubs, pizza shops, other hospitality businesses, landscaping and outdoor-service companies, and other growing companies that want a connected digital growth system instead of disconnected tactics.";
@@ -230,7 +230,7 @@ function Home() {
       <JsonLd data={faqJsonLd(schemaFaqs)} />
       <PageHero
         kicker="Demore Technology Solutions"
-        title="Website design, AI bots, Lead Engine, and growth platforms that work as one system."
+        title="Website design, AI bots, Demore Lead Engine, and growth platforms that work as one system."
         lede={
           <p>
             Demore Technology Solutions designs custom websites, builds AI bots, improves search and
@@ -257,13 +257,13 @@ function Home() {
       <Section
         id="services"
         title="Choose the service. Shape the system."
-        lede="Website design, bots, Lead Engine, growth, and custom business tools each have a job. Use one of them, or connect the parts that fit your goals. Every service is available à la carte or as part of your connected system."
+        lede="Website design, bots, Demore Lead Engine, growth, and custom business tools each have a job. Use one of them, or connect the parts that fit your goals. Every service is available à la carte or as part of your connected system."
       >
         <ul className="grid gap-5 md:grid-cols-2">
           {serviceAreas.map((service) => (
             <li
               key={service.number}
-              className="relative flex flex-col overflow-hidden rounded-xl border border-line bg-surface p-6 sm:p-8"
+              className="relative flex flex-col overflow-hidden rounded-xl border border-line bg-surface p-6 sm:p-8 md:last:odd:col-span-2"
             >
               <span
                 aria-hidden="true"
