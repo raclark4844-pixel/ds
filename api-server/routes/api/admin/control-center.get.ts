@@ -13,14 +13,6 @@ export default async function controlCenter(event: { req: Request }) {
         leadRoutingConnected: process.env.INBOX_AUTO_ROUTING_DISABLED !== "1",
         sites: [
           {
-            id: "demore",
-            name: "Demore Exterior Solutions",
-            url: "https://demoreexteriorsolutions.com/",
-            email: "ryan@demoreexteriorsolutions.com",
-            platform: "Base44",
-            status: "Existing Grok roles preserved; automatic inbox first-assignment connected; hosted specialist analysis/review available; external bot actions inactive",
-          },
-          {
             id: "demore-technology",
             name: "Demore Technology Solutions",
             url: "https://www.demoretechnologysolutions.com/",

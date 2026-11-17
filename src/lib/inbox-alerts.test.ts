@@ -18,7 +18,9 @@ test('alerts persist, exclude private content, deduplicate and retry identical p
   const transient:typeof fetch=async(_url,init)=>{sent=String(init?.body);key=(init?.headers as Record<string,string>)['Idempotency-Key'];return new Response('{}',{status:503});};
   assert.equal((await deliverInboxAlert(sql,'fake-key',transient)).status,'retry');
   const payload=JSON.parse(sent);
+  assert.deepEqual(ALERT_TO,["ryan@demoretechnologysolutions.com"]);
   assert.deepEqual(payload.to,ALERT_TO);
+  assert.equal(sent.toLowerCase().includes("exterior"),false);
   assert(!sent.includes('Private customer'));assert(!sent.includes('private@example.invalid'));assert(!sent.includes('Sensitive inquiry'));
   assert(payload.text.includes('Opening this link does not authorize'));
   await sql.query("update dts_inbox_alerts set next_attempt_at=now()-interval '1 minute'");

@@ -89,7 +89,7 @@ describe("website review html scan", () => {
   });
 
   it("does not invent reference scores when the benchmark is unavailable", () => {
-    const missing = unavailableBenchmark("https://demoreexteriorsolutions.com/");
+    const missing = unavailableBenchmark("https://www.demoretechnologysolutions.com/");
     assert.equal(missing.unavailable, true);
     assert.ok(missing.checks.every((item) => item.status === "Unavailable"));
     const scores = categoryScores(missing.checks);
@@ -104,7 +104,7 @@ describe("website review report v3", () => {
       html: `<!doctype html><html><head><title>Example Landscaping</title></head><body><h1>Lawn care</h1></body></html>`,
     });
     const industry = resolveIndustry("landscaping", []);
-    const report = makeReport(current, unavailableBenchmark("https://demoreexteriorsolutions.com/"), "DTS-41F6B18F", industry);
+    const report = makeReport(current, unavailableBenchmark("https://www.demoretechnologysolutions.com/"), "DTS-41F6B18F", industry);
     assert.equal(report.version, 3);
     assert.ok(report.industry.capabilities.length >= 3);
     assert.match(report.assistantBrief, /DTS-41F6B18F/);

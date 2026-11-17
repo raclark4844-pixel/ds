@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import type { Sql } from "./db";
 type DB = Pick<Sql, "query">;
-export const ALERT_TO = ["ryan@demoretechnologysolutions.com", "ryan@demoreexteriorsolutions.com"];
+export const ALERT_TO = ["ryan@demoretechnologysolutions.com"];
 const URL = "https://www.demoretechnologysolutions.com/lead-inbox";
 export async function queueInboxAlert(sql: DB, from: string, now = new Date()) {
   // Only identifiers and operational status are used. Customer content never enters email.
@@ -16,14 +16,14 @@ export async function queueInboxAlert(sql: DB, from: string, now = new Date()) {
   if (!leads.length && !issue) return null;
   const day = now.toISOString().slice(0,10);
   const id = createHash('sha256').update(JSON.stringify({day,leads,issue})).digest('hex');
-  const lines = leads.map(l => `${l.site_id === 'demore' ? 'Demore Exterior Solutions' : 'Demore Technology Solutions'}: ${l.total} lead(s) awaiting review (new or qualified).`);
-  if (issue) lines.push(`Exterior sync needs attention: ${issue.failed} failed, ${issue.retry} retrying${issue.paused?', paused':''}${issue.runFailed?', run incomplete':''}${issue.stale?', report or run overdue':''}.`);
+  const lines = leads.map(l => `${l.site_id === 'demore-technology' ? 'Demore Technology Solutions' : 'Lead pipeline'}: ${l.total} lead(s) awaiting review (new or qualified).`);
+  if (issue) lines.push(`Lead sync needs attention: ${issue.failed} failed, ${issue.retry} retrying${issue.paused?', paused':''}${issue.runFailed?', run incomplete':''}${issue.stale?', report or run overdue':''}.`);
   const text = ["Shared inbox — action needed", "", ...lines, "", "Review and authorize:", URL,
     "Sign in as administrator, review the lead, choose its owner and stage, then confirm the exact change. Opening this link does not authorize an action.",
-    "Sync delivery failures can be reviewed in the existing Exterior Solutions Base44 delivery queue.",
+    "Sync delivery failures can be reviewed in the Base44 delivery queue.",
     "Replying to this email does not execute commands. Customer messages, spending and website deployments are not authorized by this email.",
     "Unresolved work is summarized again once per UTC day, or when the pending work changes. Leads leave this reminder when marked contacted, won or lost.",
-    "", "https://demoreexteriorsolutions.com/", "https://www.demoretechnologysolutions.com/"].join("\n");
+    "", "https://www.demoretechnologysolutions.com/"].join("\n");
   await sql.query(`insert into dts_inbox_alerts(id,payload,created_at) values($1,$2::jsonb,$3) on conflict(id) do nothing`, [id,JSON.stringify({from,to:ALERT_TO,subject:"Demore shared inbox — action needed",text}),now.toISOString()]);
   return id;
 }

@@ -6,7 +6,7 @@ export function topCompetitors(report:Pick<ComparisonReport,'website'|'competito
  const own=host(report.website);const seen=new Set<string>();
  return report.competitors.filter(c=>c.source!=='Industry benchmark'&&host(c.website))
  .sort((a,b)=>rank(a.mapsRank)-rank(b.mapsRank)||rank(a.organicRank)-rank(b.organicRank))
- .filter(c=>{const h=host(c.website);if(h===own||h.endsWith('.'+own)||['demoreexteriorsolutions.com','demoretechnologysolutions.com'].includes(h)||seen.has(h))return false;seen.add(h);return true;}).slice(0,2);
+ .filter(c=>{const h=host(c.website);if(h===own||h.endsWith('.'+own)||h==='demoretechnologysolutions.com'||seen.has(h))return false;seen.add(h);return true;}).slice(0,2);
 }
 export const comparisonDimensions:Array<{key:keyof CategoryScores;label:string;solution:string}>=[
  {key:'seo',label:'Search visibility',solution:'Relevant service pages, metadata, internal links and crawlability improvements.'},

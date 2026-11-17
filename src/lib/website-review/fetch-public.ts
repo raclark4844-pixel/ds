@@ -115,4 +115,4 @@ export async function fetchPublicFile(input: string, signal?: AbortSignal) {
   return fetchPublic(input, signal, "file");
 }
 
-export const REFERENCE_URL = "https://demoreexteriorsolutions.com/";
+export const REFERENCE_URL = "https://www.demoretechnologysolutions.com/";

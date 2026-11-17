@@ -209,7 +209,7 @@ export function IntakeForm({
     () => (brief.submittedAt ? 100 : (step / 5) * 100),
     [step, brief.submittedAt],
   );
-  const emailHref = `${EMAIL_MAILTO}&subject=${encodeURIComponent("Project brief follow-up")}&body=${encodeURIComponent(formatBrief(brief))}`;
+  const emailHref = `${EMAIL_MAILTO}?subject=${encodeURIComponent("Project brief follow-up")}&body=${encodeURIComponent(formatBrief(brief))}`;
 
   if (!hydrated)
     return (

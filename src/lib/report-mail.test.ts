@@ -24,7 +24,7 @@ function sampleReport(): WebsiteReviewReport {
         { id: "schema", category: "AI and search visibility", label: "Structured business information", offer: "Schema, GEO and AEO", action: "Publish structured data.", effort: "Build next", status: "Not detected", evidence: "", verify: "Search page source.", improve: "Add structured data." },
       ],
     },
-    benchmark: { url: "https://demoreexteriorsolutions.com/", title: "Demore Exterior Solutions", checks: [] },
+    benchmark: { url: "https://www.demoretechnologysolutions.com/", title: "Demore Technology Solutions", checks: [] },
     industry: {
       id: "landscaping",
       name: "Landscaping",
@@ -55,7 +55,9 @@ describe("internal PDF copy", () => {
     const report = sampleReport();
     const text = websiteReviewCopyText(report);
     const subject = websiteReviewCopySubject(report);
-    assert.equal(mailConfig().internal[0], "ryan@demoretechnologysolutions.com");
+    assert.deepEqual(mailConfig().internal, ["ryan@demoretechnologysolutions.com"]);
+    assert.equal("internalCc" in mailConfig(), false);
+    assert.equal(JSON.stringify(mailConfig()).toLowerCase().includes("exterior"), false);
     assert.match(subject, /DTS-41F6B18F/);
     assert.match(text, /Record ID: DTS-41F6B18F/);
     assert.match(text, /https:\/\/example\.com\//);
@@ -63,7 +65,7 @@ describe("internal PDF copy", () => {
     assert.match(text, /source=website-review&rid=DTS-41F6B18F/);
     assert.match(text, /Measurement: Google Analytics or Google tag Not detected/);
     assert.match(text, /AI visibility: Structured business information Not detected/);
-    assert.doesNotMatch(text, /ryan@demoreexteriorsolutions\.com/);
+    assert.equal(text.toLowerCase().includes("exterior"), false);
     assert.doesNotMatch(text, /password/i);
     assert.doesNotMatch(text, /\$\d/);
     assert.doesNotMatch(text, /guaranteed ranking/i);
