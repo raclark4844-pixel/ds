@@ -153,7 +153,7 @@ const projectSteps = [
   {
     n: "01",
     title: "File a brief.",
-    body: "Tell us who you serve, what you sell, what you want built, what is working now, and the business outcome the system needs to support. The minimum project budget is $600.",
+    body: "Tell us who you serve, what you sell, what you want built, what is working now, and the business outcome the system needs to support. The minimum project budget is $400.",
   },
   {
     n: "02",
@@ -186,8 +186,8 @@ const locationAnswer = `${LOCATION} Call ${PHONE_VISIBLE}.`;
 const resultsAnswer =
   "No. Rankings, AI citations, traffic, lead volume, engagement, and conversion lifts are not guaranteed, and the site does not publish fake proof. Work and case studies will be added only when there is real work and permission to publish it.";
 
-// The project-start answer states the published $600 minimum, so it stays
-// visible and is left out of FAQPage. Schema has no Offer, price, or $600.
+// The project-start answer states the published $400 minimum, so it stays
+// visible and is left out of FAQPage. Schema has no Offer, price, or $400.
 const schemaFaqs = [
   { q: "What does Demore Technology Solutions build?", a: buildAnswer },
   { q: "Who is Demore Technology Solutions for?", a: whoAnswer },
@@ -410,7 +410,7 @@ function Home() {
           </FaqItem>
           <FaqItem question="How does a project start?">
             {/* prettier-ignore */}
-            <p>{linkedPhrase("Start with an industry-first project brief. It collects your industry, what you want built, current digital stack, goals, and a project budget (published minimum: $600). The brief is used to pressure-test scope and next steps. Submitting it is not a contract.", "project brief", "/contact")}</p>
+            <p>{linkedPhrase("Start with an industry-first project brief. It collects your industry, what you want built, current digital stack, goals, and a project budget (published minimum: $400). The brief is used to pressure-test scope and next steps. Submitting it is not a contract.", "project brief", "/contact")}</p>
           </FaqItem>
           <FaqItem question="Where is Demore based, and do you work outside Ohio?">
             {/* prettier-ignore */}

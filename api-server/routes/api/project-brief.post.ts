@@ -540,7 +540,7 @@ export default async function projectBrief({ req }: { req: Request }) {
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
       !wants.length ||
       !Number.isFinite(budget) ||
-      budget < 600 ||
+      budget < 400 ||
       raw.consent !== true ||
       typeof raw.smsOptIn !== "boolean"
     ) {
