@@ -69,6 +69,8 @@ The Demore Report ID is the only identifier for one comparison interaction. The 
 - /work
 - /process
 - /contact
+- /blog
+- /blog/you-dont-need-everything-on-day-one
 
 Email: ryan@demoretechnologysolutions.com
 Phone unpublished: [PHONE]
