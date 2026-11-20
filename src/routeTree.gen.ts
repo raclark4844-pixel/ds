@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AutomationRouteImport } from './routes/automation'
+import { Route as BlogRouteImport } from './routes/blog'
 import { Route as CompareRouteImport } from './routes/compare'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ControlCenterRouteImport } from './routes/control-center'
@@ -22,12 +23,14 @@ import { Route as LeadGenerationRouteImport } from './routes/lead-generation'
 import { Route as LeadInboxRouteImport } from './routes/lead-inbox'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PlatformRouteImport } from './routes/platform'
-import { Route as ProcessRouteImport } from './routes/process'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ProcessRouteImport } from './routes/process'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as WebsitesRouteImport } from './routes/websites'
 import { Route as WorkRouteImport } from './routes/work'
 import { Route as WorkspaceRouteImport } from './routes/workspace'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as BlogYouDontNeedEverythingOnDayOneRouteImport } from './routes/blog.you-dont-need-everything-on-day-one'
 import { Route as IndustriesIndexRouteImport } from './routes/industries.index'
 import { Route as IndustriesContractorsRouteImport } from './routes/industries.contractors'
 import { Route as IndustriesHospitalityRouteImport } from './routes/industries.hospitality'
@@ -52,6 +55,11 @@ const AdminRoute = AdminRouteImport.update({
 const AutomationRoute = AutomationRouteImport.update({
   id: '/automation',
   path: '/automation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CompareRoute = CompareRouteImport.update({
@@ -104,14 +112,14 @@ const PlatformRoute = PlatformRouteImport.update({
   path: '/platform',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProcessRoute = ProcessRouteImport.update({
-  id: '/process',
-  path: '/process',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProcessRoute = ProcessRouteImport.update({
+  id: '/process',
+  path: '/process',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TermsRoute = TermsRouteImport.update({
@@ -134,6 +142,17 @@ const WorkspaceRoute = WorkspaceRouteImport.update({
   path: '/workspace',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BlogRoute,
+} as any)
+const BlogYouDontNeedEverythingOnDayOneRoute =
+  BlogYouDontNeedEverythingOnDayOneRouteImport.update({
+    id: '/you-dont-need-everything-on-day-one',
+    path: '/you-dont-need-everything-on-day-one',
+    getParentRoute: () => BlogRoute,
+  } as any)
 const IndustriesIndexRoute = IndustriesIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -192,21 +211,24 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/automation': typeof AutomationRoute
+  '/blog': typeof BlogRouteWithChildren
   '/compare': typeof CompareRoute
   '/contact': typeof ContactRoute
   '/control-center': typeof ControlCenterRoute
   '/control-center-admin': typeof ControlCenterAdminRoute
   '/growth': typeof GrowthRoute
+  '/industries': typeof IndustriesRouteWithChildren
   '/lead-generation': typeof LeadGenerationRoute
   '/lead-inbox': typeof LeadInboxRoute
   '/login': typeof LoginRoute
   '/platform': typeof PlatformRoute
-  '/process': typeof ProcessRoute
   '/privacy': typeof PrivacyRoute
+  '/process': typeof ProcessRoute
   '/terms': typeof TermsRoute
   '/websites': typeof WebsitesRoute
   '/work': typeof WorkRoute
   '/workspace': typeof WorkspaceRoute
+  '/blog/you-dont-need-everything-on-day-one': typeof BlogYouDontNeedEverythingOnDayOneRoute
   '/industries/contractors': typeof IndustriesContractorsRoute
   '/industries/hospitality': typeof IndustriesHospitalityRoute
   '/industries/landscaping': typeof IndustriesLandscapingRoute
@@ -216,6 +238,7 @@ export interface FileRoutesByFullPath {
   '/industries/restaurants': typeof IndustriesRestaurantsRoute
   '/industries/service-companies': typeof IndustriesServiceCompaniesRoute
   '/industries/stores-ecommerce': typeof IndustriesStoresEcommerceRoute
+  '/blog/': typeof BlogIndexRoute
   '/industries/': typeof IndustriesIndexRoute
 }
 export interface FileRoutesByTo {
@@ -231,12 +254,13 @@ export interface FileRoutesByTo {
   '/lead-inbox': typeof LeadInboxRoute
   '/login': typeof LoginRoute
   '/platform': typeof PlatformRoute
-  '/process': typeof ProcessRoute
   '/privacy': typeof PrivacyRoute
+  '/process': typeof ProcessRoute
   '/terms': typeof TermsRoute
   '/websites': typeof WebsitesRoute
   '/work': typeof WorkRoute
   '/workspace': typeof WorkspaceRoute
+  '/blog/you-dont-need-everything-on-day-one': typeof BlogYouDontNeedEverythingOnDayOneRoute
   '/industries/contractors': typeof IndustriesContractorsRoute
   '/industries/hospitality': typeof IndustriesHospitalityRoute
   '/industries/landscaping': typeof IndustriesLandscapingRoute
@@ -246,6 +270,7 @@ export interface FileRoutesByTo {
   '/industries/restaurants': typeof IndustriesRestaurantsRoute
   '/industries/service-companies': typeof IndustriesServiceCompaniesRoute
   '/industries/stores-ecommerce': typeof IndustriesStoresEcommerceRoute
+  '/blog': typeof BlogIndexRoute
   '/industries': typeof IndustriesIndexRoute
 }
 export interface FileRoutesById {
@@ -253,6 +278,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/automation': typeof AutomationRoute
+  '/blog': typeof BlogRouteWithChildren
   '/compare': typeof CompareRoute
   '/contact': typeof ContactRoute
   '/control-center': typeof ControlCenterRoute
@@ -263,12 +289,13 @@ export interface FileRoutesById {
   '/lead-inbox': typeof LeadInboxRoute
   '/login': typeof LoginRoute
   '/platform': typeof PlatformRoute
-  '/process': typeof ProcessRoute
   '/privacy': typeof PrivacyRoute
+  '/process': typeof ProcessRoute
   '/terms': typeof TermsRoute
   '/websites': typeof WebsitesRoute
   '/work': typeof WorkRoute
   '/workspace': typeof WorkspaceRoute
+  '/blog/you-dont-need-everything-on-day-one': typeof BlogYouDontNeedEverythingOnDayOneRoute
   '/industries/contractors': typeof IndustriesContractorsRoute
   '/industries/hospitality': typeof IndustriesHospitalityRoute
   '/industries/landscaping': typeof IndustriesLandscapingRoute
@@ -278,6 +305,7 @@ export interface FileRoutesById {
   '/industries/restaurants': typeof IndustriesRestaurantsRoute
   '/industries/service-companies': typeof IndustriesServiceCompaniesRoute
   '/industries/stores-ecommerce': typeof IndustriesStoresEcommerceRoute
+  '/blog/': typeof BlogIndexRoute
   '/industries/': typeof IndustriesIndexRoute
 }
 export interface FileRouteTypes {
@@ -286,21 +314,24 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/automation'
+    | '/blog'
     | '/compare'
     | '/contact'
     | '/control-center'
     | '/control-center-admin'
     | '/growth'
+    | '/industries'
     | '/lead-generation'
     | '/lead-inbox'
     | '/login'
     | '/platform'
-    | '/process'
     | '/privacy'
+    | '/process'
     | '/terms'
     | '/websites'
     | '/work'
     | '/workspace'
+    | '/blog/you-dont-need-everything-on-day-one'
     | '/industries/contractors'
     | '/industries/hospitality'
     | '/industries/landscaping'
@@ -310,6 +341,7 @@ export interface FileRouteTypes {
     | '/industries/restaurants'
     | '/industries/service-companies'
     | '/industries/stores-ecommerce'
+    | '/blog/'
     | '/industries/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -325,12 +357,13 @@ export interface FileRouteTypes {
     | '/lead-inbox'
     | '/login'
     | '/platform'
-    | '/process'
     | '/privacy'
+    | '/process'
     | '/terms'
     | '/websites'
     | '/work'
     | '/workspace'
+    | '/blog/you-dont-need-everything-on-day-one'
     | '/industries/contractors'
     | '/industries/hospitality'
     | '/industries/landscaping'
@@ -340,12 +373,14 @@ export interface FileRouteTypes {
     | '/industries/restaurants'
     | '/industries/service-companies'
     | '/industries/stores-ecommerce'
+    | '/blog'
     | '/industries'
   id:
     | '__root__'
     | '/'
     | '/admin'
     | '/automation'
+    | '/blog'
     | '/compare'
     | '/contact'
     | '/control-center'
@@ -356,12 +391,13 @@ export interface FileRouteTypes {
     | '/lead-inbox'
     | '/login'
     | '/platform'
-    | '/process'
     | '/privacy'
+    | '/process'
     | '/terms'
     | '/websites'
     | '/work'
     | '/workspace'
+    | '/blog/you-dont-need-everything-on-day-one'
     | '/industries/contractors'
     | '/industries/hospitality'
     | '/industries/landscaping'
@@ -371,6 +407,7 @@ export interface FileRouteTypes {
     | '/industries/restaurants'
     | '/industries/service-companies'
     | '/industries/stores-ecommerce'
+    | '/blog/'
     | '/industries/'
   fileRoutesById: FileRoutesById
 }
@@ -378,6 +415,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   AutomationRoute: typeof AutomationRoute
+  BlogRoute: typeof BlogRouteWithChildren
   CompareRoute: typeof CompareRoute
   ContactRoute: typeof ContactRoute
   ControlCenterRoute: typeof ControlCenterRoute
@@ -388,8 +426,8 @@ export interface RootRouteChildren {
   LeadInboxRoute: typeof LeadInboxRoute
   LoginRoute: typeof LoginRoute
   PlatformRoute: typeof PlatformRoute
-  ProcessRoute: typeof ProcessRoute
   PrivacyRoute: typeof PrivacyRoute
+  ProcessRoute: typeof ProcessRoute
   TermsRoute: typeof TermsRoute
   WebsitesRoute: typeof WebsitesRoute
   WorkRoute: typeof WorkRoute
@@ -417,6 +455,13 @@ declare module '@tanstack/react-router' {
       path: '/automation'
       fullPath: '/automation'
       preLoaderRoute: typeof AutomationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/compare': {
@@ -489,18 +534,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlatformRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/process': {
-      id: '/process'
-      path: '/process'
-      fullPath: '/process'
-      preLoaderRoute: typeof ProcessRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/privacy': {
       id: '/privacy'
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/process': {
+      id: '/process'
+      path: '/process'
+      fullPath: '/process'
+      preLoaderRoute: typeof ProcessRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/terms': {
@@ -530,6 +575,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/workspace'
       preLoaderRoute: typeof WorkspaceRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof BlogRoute
+    }
+    '/blog/you-dont-need-everything-on-day-one': {
+      id: '/blog/you-dont-need-everything-on-day-one'
+      path: '/you-dont-need-everything-on-day-one'
+      fullPath: '/blog/you-dont-need-everything-on-day-one'
+      preLoaderRoute: typeof BlogYouDontNeedEverythingOnDayOneRouteImport
+      parentRoute: typeof BlogRoute
     }
     '/industries/': {
       id: '/industries/'
@@ -604,6 +663,19 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface BlogRouteChildren {
+  BlogYouDontNeedEverythingOnDayOneRoute: typeof BlogYouDontNeedEverythingOnDayOneRoute
+  BlogIndexRoute: typeof BlogIndexRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogYouDontNeedEverythingOnDayOneRoute:
+    BlogYouDontNeedEverythingOnDayOneRoute,
+  BlogIndexRoute: BlogIndexRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
+
 interface IndustriesRouteChildren {
   IndustriesContractorsRoute: typeof IndustriesContractorsRoute
   IndustriesHospitalityRoute: typeof IndustriesHospitalityRoute
@@ -638,6 +710,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   AutomationRoute: AutomationRoute,
+  BlogRoute: BlogRouteWithChildren,
   CompareRoute: CompareRoute,
   ContactRoute: ContactRoute,
   ControlCenterRoute: ControlCenterRoute,
@@ -648,8 +721,8 @@ const rootRouteChildren: RootRouteChildren = {
   LeadInboxRoute: LeadInboxRoute,
   LoginRoute: LoginRoute,
   PlatformRoute: PlatformRoute,
-  ProcessRoute: ProcessRoute,
   PrivacyRoute: PrivacyRoute,
+  ProcessRoute: ProcessRoute,
   TermsRoute: TermsRoute,
   WebsitesRoute: WebsitesRoute,
   WorkRoute: WorkRoute,
@@ -658,3 +731,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
