@@ -45,7 +45,3 @@ A practical first step is a free Website Review. If you already have a public si
 If you want to talk about a build after that — a first site, a small starter project, or a larger system — we start with a project brief, not a contract. The brief asks about your industry, what you want built, what you have now, the outcome that matters, and a project budget (the minimum project budget is $400). We can scope a complete platform or just the pieces you need right now.
 
 We're Demore Technology Solutions LLC, based in Mentor, Ohio, and we work with clients nationwide, including remotely. If you're local, Ryan will also meet on-site or at a coffee shop in the Mentor / Lake County area. You can also call 440-920-6133.
-
----
-
-**Sources:** homepage; `/websites`; `/growth`; `/platform`; `/automation`; `/compare`; `/work`; `/process`; `/contact`; industry pages as examples; owner-confirmed legal name, phone, meeting option, audience, project-size range, and friendly/approachable voice (Ryan Clark, November 16, 2026, America/New_York).
