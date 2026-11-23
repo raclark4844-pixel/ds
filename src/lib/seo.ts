@@ -119,6 +119,8 @@ export function organizationJsonLd() {
         ...entityContact(),
         address: postalAddress,
         areaServed: entityAreaServed,
+        sameAs: ["https://www.google.com/maps?cid=11038014414842148303"],
+        hasMap: "https://www.google.com/maps?cid=11038014414842148303",
         description:
           "Demore Technology Solutions builds custom websites, ecommerce, AI-assisted digital marketing, lead-generation systems, SEO, GEO, AEO, CRO, analytics, conversion tracking, social automation, content workflows, and custom business automation. Based in Mentor, Ohio and serving clients nationwide.",
         knowsAbout: [

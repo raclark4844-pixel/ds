@@ -29,12 +29,16 @@ export const Route = createFileRoute("/contact")({
   component: ContactPage,
 });
 
+// The project-brief FAQ answer states the published $400 minimum, so it stays
+// visible and is left out of FAQPage. Schema has no Offer, price, or $400.
+const schemaFaqs = contactFaqs.filter((item) => item.q !== "What goes in the project brief?");
+
 function ContactPage() {
   const { need, industry, reportId, handoffToken, rid } = Route.useSearch();
 
   return (
     <main id="main" className="mx-auto max-w-3xl px-4 pb-20 sm:px-6">
-      <JsonLd data={faqJsonLd(contactFaqs)} />
+      <JsonLd data={faqJsonLd(schemaFaqs)} />
       <JsonLd
         data={serviceJsonLd({
           name: "Digital project intake",
@@ -53,6 +57,16 @@ function ContactPage() {
           Select all applicable industries first, choose the complete platform or individual services, set your
           project budget, then tell us about your goals, current stack, growth priorities, and
           automation needs. Minimum project budget: $400.
+        </p>
+        <p className="mt-4 text-sm text-muted">
+          <a
+            href="https://www.google.com/maps?cid=11038014414842148303"
+            target="_blank"
+            rel="noopener"
+            className="underline decoration-line underline-offset-4 hover:text-volt"
+          >
+            Find us on Google
+          </a>
         </p>
       </header>
 
