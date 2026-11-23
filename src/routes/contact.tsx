@@ -29,12 +29,16 @@ export const Route = createFileRoute("/contact")({
   component: ContactPage,
 });
 
+// The project-brief FAQ answer states the published $400 minimum, so it stays
+// visible and is left out of FAQPage. Schema has no Offer, price, or $400.
+const schemaFaqs = contactFaqs.filter((item) => item.q !== "What goes in the project brief?");
+
 function ContactPage() {
   const { need, industry, reportId, handoffToken, rid } = Route.useSearch();
 
   return (
     <main id="main" className="mx-auto max-w-3xl px-4 pb-20 sm:px-6">
-      <JsonLd data={faqJsonLd(contactFaqs)} />
+      <JsonLd data={faqJsonLd(schemaFaqs)} />
       <JsonLd
         data={serviceJsonLd({
           name: "Digital project intake",
