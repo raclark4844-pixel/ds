@@ -1,7 +1,9 @@
+import { Link } from "@tanstack/react-router";
 import { Fragment, type ReactNode } from "react";
 import { bodyBlocks } from "@/lib/blog";
 
-const inlinePattern = /(\*\*[^*]+\*\*|`[^`]+`|https:\/\/[^\s)]+)/g;
+const inlinePattern = /(\[[^\]]+\]\(\/[a-z0-9-]+\)|\*\*[^*]+\*\*|`[^`]+`|https:\/\/[^\s)]+)/g;
+const internalLinkPattern = /^\[([^\]]+)\]\((\/[a-z0-9-]+)\)$/;
 
 function isSafeExternalUrl(value: string): boolean {
   if (/["'<>\\\u0000-\u0020\u007f-\u009f]/.test(value)) return false;
@@ -22,6 +24,19 @@ function isSafeExternalUrl(value: string): boolean {
 function renderInline(text: string): ReactNode[] {
   return text.split(inlinePattern).map((part, index) => {
     if (!part) return null;
+
+    const internal = internalLinkPattern.exec(part);
+    if (internal) {
+      return (
+        <Link
+          key={index}
+          to={internal[2]}
+          className="text-fg underline underline-offset-4 hover:text-volt"
+        >
+          {internal[1]}
+        </Link>
+      );
+    }
 
     if (part.startsWith("**") && part.endsWith("**")) {
       return (
