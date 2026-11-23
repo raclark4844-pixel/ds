@@ -1,16 +1,16 @@
 If you're just getting a business off the ground, it's easy to feel like you're already behind. Some advice says you need a full marketing stack before you open. Other advice says a logo on a template will do until later.
 
-You don't need every tool and campaign on day one. You do need a first website — or a first version of one — that has a job. It should say what you offer, make the next step obvious, and gather enough information so you can follow up, with room for search and measurement to connect later. That can be a small starter project, and it can grow into a complete system when you're ready.
+You don't need every tool and campaign on day one. You do need a first [website](/websites) — or a first version of one — that has a job. It should say what you offer, make the next step obvious, and gather enough information so you can follow up, with room for search and measurement to connect later. That can be a small starter project, and it can grow into a complete system when you're ready.
 
 We work with people who are just getting started, with startups, and with established businesses, in all industries. A project can be a small first step or a full large build, one service at a time or as a connected platform. At any size, your website should help someone find you and take the next step — not just sit there like a brochure.
 
-## Your first site still needs a job after someone clicks
+## Does your first site still have a job after someone clicks?
 
 A standalone website is one destination. Search, campaigns, lead routing, and measurement can be added later, and that's a perfectly fine place to start. What usually goes wrong is hoping those other jobs will take care of themselves once the design looks finished.
 
 A connected growth system treats your website as the place where things come together — search, content, lead capture, measurement, and follow-up, built around how you actually get paid, whether that's a call, an estimate, a booking, a consultation, or a purchase. You don't have to buy the whole system at once. Some businesses only need a website and a clear way for people to reach out. The jobs that help you get paid should still be chosen on purpose, even if you only build two of them this month.
 
-## The few jobs that matter first
+## What are the few jobs that matter first?
 
 Getting found is one job. Search engine optimization (SEO) is the work of making a site easy for search engines to read and understand, so the right person can find you. You don't need a huge library of articles on day one. You do need pages that say, plainly, what you offer.
 
@@ -28,9 +28,9 @@ That doesn't mean you need a large site. You might start with a tight set of pag
 
 We can apply the same approach to a site you already have. This work isn't limited to starting from scratch.
 
-## AI can help with the repetitive stuff. It shouldn't run the business.
+## Can AI help with the repetitive stuff without running the business?
 
-Used carefully, AI can speed up research, drafting, and analysis. It shouldn't replace your judgment. Approvals, brand, accuracy, and sales decisions stay with people. Automation is useful when it takes repetitive handoffs off your plate without giving up control of what gets published or sent. It's optional on day one, not a requirement for getting started.
+Used carefully, AI can speed up research, drafting, and analysis. It shouldn't replace your judgment. Approvals, brand, accuracy, and sales decisions stay with people. [Automation](/automation) is useful when it takes repetitive handoffs off your plate without giving up control of what gets published or sent. It's optional on day one, not a requirement for getting started.
 
 ## What we won't promise
 
@@ -42,6 +42,6 @@ We also won't fill the gap with invented revenue, fake testimonials, borrowed lo
 
 A practical first step is a free Website Review. If you already have a public site, we look at public page signals and put together a downloadable PDF with practical recommendations on design, search visibility, measurement, and inquiries. It isn't a ranking score, and it doesn't guarantee traffic or leads. You can start here: https://www.demoretechnologysolutions.com/compare
 
-If you want to talk about a build after that — a first site, a small starter project, or a larger system — we start with a project brief, not a contract. The brief asks about your industry, what you want built, what you have now, the outcome that matters, and a project budget (the minimum project budget is $400). We can scope a complete platform or just the pieces you need right now.
+If you want to talk about a build after that — a first site, a small starter project, or a larger system — we start with a [project brief](/contact), not a contract. The brief asks about your industry, what you want built, what you have now, the outcome that matters, and a project budget (the minimum project budget is $400). We can scope a complete platform or just the pieces you need right now.
 
 We're Demore Technology Solutions LLC, based in Mentor, Ohio, and we work with clients nationwide, including remotely. If you're local, Ryan will also meet on-site or at a coffee shop in the Mentor / Lake County area. You can also call 440-920-6133.

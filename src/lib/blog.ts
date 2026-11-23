@@ -19,7 +19,7 @@ export const blogPosts: readonly BlogPost[] = [
     description:
       "Starting a business? Learn what your first website needs on day one: a clear job, a way to be found, one next step, and follow-up, with room to grow.",
     datePublished: "2026-11-23T12:10:00-05:00",
-    dateModified: "2026-11-23T12:10:00-05:00",
+    dateModified: "2026-11-23T12:20:00-05:00",
     dateLabel: "November 23, 2026",
     body: dayOneBody,
   },
