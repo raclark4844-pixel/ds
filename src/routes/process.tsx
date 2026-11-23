@@ -2,13 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { CtaBand } from "@/components/cta-band";
 import { FaqList } from "@/components/faq-list";
 import { IndustryLinks } from "@/components/industry-links";
-import { JsonLd } from "@/components/json-ld";
 import { LaterPages, RelatedOffers } from "@/components/related-offers";
 import { DirectAnswer, GeoQuote, Section } from "@/components/section";
 import { processAnswer } from "@/lib/answers";
 import { assertPublished } from "@/lib/publish";
 import { engagementSteps, processFaqs } from "@/lib/site";
-import { faqJsonLd, pageHead } from "@/lib/seo";
+import { pageHead } from "@/lib/seo";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/process")({
@@ -24,9 +23,11 @@ export const Route = createFileRoute("/process")({
 });
 
 function ProcessPage() {
+  // The only process FAQ answer states the published $400 minimum, so it stays
+  // visible and is left out of FAQPage. FAQPage is omitted because no items remain.
+  // Schema has no Offer, price, or $400.
   return (
     <main id="main" className="mx-auto max-w-5xl px-4 pb-20 sm:px-6">
-      <JsonLd data={faqJsonLd(processFaqs)} />
       <header className="pt-10 sm:pt-16">
         <p className="kicker">Process</p>
         <h1 className="mt-4 font-display text-5xl font-semibold tracking-tight">Business outcome first. Build second.</h1>
