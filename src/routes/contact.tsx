@@ -54,6 +54,16 @@ function ContactPage() {
           project budget, then tell us about your goals, current stack, growth priorities, and
           automation needs. Minimum project budget: $400.
         </p>
+        <p className="mt-4 text-sm text-muted">
+          <a
+            href="https://www.google.com/maps?cid=11038014414842148303"
+            target="_blank"
+            rel="noopener"
+            className="underline decoration-line underline-offset-4 hover:text-volt"
+          >
+            Find us on Google
+          </a>
+        </p>
       </header>
 
       <GeoQuote>
