@@ -1,8 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { Fragment, type ReactNode } from "react";
+import { Fragment, useMemo, type ReactNode } from "react";
 import { bodyBlocks } from "@/lib/blog";
 
-const inlinePattern = /(\[[^\]]+\]\(\/[a-z0-9-]+\)|\*\*[^*]+\*\*|`[^`]+`|https:\/\/[^\s)]+)/g;
+const inlinePattern =
+  /(\[[^\]]+\]\(\/[a-z0-9-]+\)|\*\*[^*]+\*\*|`[^`]+`|https:\/\/[^\s)]+)/g;
 const internalLinkPattern = /^\[([^\]]+)\]\((\/[a-z0-9-]+)\)$/;
 
 function isSafeExternalUrl(value: string): boolean {
@@ -31,6 +32,7 @@ function renderInline(text: string): ReactNode[] {
         <Link
           key={index}
           to={internal[2]}
+          preload="intent"
           className="text-fg underline underline-offset-4 hover:text-volt"
         >
           {internal[1]}
@@ -73,9 +75,11 @@ function renderInline(text: string): ReactNode[] {
 }
 
 export function BlogBody({ markdown }: { markdown: string }) {
+  const blocks = useMemo(() => bodyBlocks(markdown), [markdown]);
+
   return (
     <div className="mt-12 space-y-6 text-lg leading-relaxed text-muted">
-      {bodyBlocks(markdown).map((block, index) => {
+      {blocks.map((block, index) => {
         if (block.kind === "rule") {
           return <hr key={index} className="my-10 border-line" />;
         }
