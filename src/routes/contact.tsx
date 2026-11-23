@@ -8,17 +8,52 @@ import { intakeStartAnswer } from "@/lib/answers";
 import { contactFaqs } from "@/lib/site";
 import { faqJsonLd, pageHead, serviceJsonLd } from "@/lib/seo";
 
-type ContactSearch = { need?: string; industry?: string; reportId?: string; handoffToken?: string; source?: string; rid?: string };
+type ContactSearch = {
+  need?: string;
+  industry?: string;
+  reportId?: string;
+  handoffToken?: string;
+  source?: string;
+  rid?: string;
+};
 
 export const Route = createFileRoute("/contact")({
-  validateSearch: (search: Record<string, unknown>): ContactSearch => ({
-    need: typeof search.need === "string" ? search.need : undefined,
-    industry: typeof search.industry === "string" ? search.industry : undefined,
-    reportId: typeof search.reportId === "string" ? search.reportId : typeof search.rid === "string" ? search.rid : undefined,
-    handoffToken: typeof search.handoffToken === "string" ? search.handoffToken : undefined,
-    source: typeof search.source === "string" ? search.source : undefined,
-    rid: typeof search.rid === "string" ? search.rid : undefined,
-  }),
+  validateSearch: (search: Record<string, unknown>): ContactSearch => {
+    // Confirm these bounded, URL-safe formats against the ds backend issuer.
+    const isValidToken = (token: string): boolean =>
+      token.length >= 16 &&
+      token.length <= 512 &&
+      !/[^A-Za-z0-9_.-]/.test(token);
+
+    const isValidReportId = (id: string): boolean =>
+      id.length >= 1 &&
+      id.length <= 128 &&
+      !/[^A-Za-z0-9_-]/.test(id);
+
+    const rid =
+      typeof search.rid === "string" && isValidReportId(search.rid)
+        ? search.rid
+        : undefined;
+
+    const reportId =
+      typeof search.reportId === "string" && isValidReportId(search.reportId)
+        ? search.reportId
+        : rid;
+
+    // Drop malformed credentials silently; never log or echo their values.
+    return {
+      need: typeof search.need === "string" ? search.need : undefined,
+      industry: typeof search.industry === "string" ? search.industry : undefined,
+      reportId,
+      handoffToken:
+        typeof search.handoffToken === "string" &&
+        isValidToken(search.handoffToken)
+          ? search.handoffToken
+          : undefined,
+      source: typeof search.source === "string" ? search.source : undefined,
+      rid,
+    };
+  },
   head: () =>
     pageHead({
       title: "Start a Digital Project | Demore Technology Solutions",
@@ -29,12 +64,17 @@ export const Route = createFileRoute("/contact")({
   component: ContactPage,
 });
 
-// The project-brief FAQ answer states the published $400 minimum, so it stays
-// visible and is left out of FAQPage. Schema has no Offer, price, or $400.
-const schemaFaqs = contactFaqs.filter((item) => item.q !== "What goes in the project brief?");
+// Keep the $400 minimum visible in the UI, but omit its FAQ from schema.
+const schemaFaqs = contactFaqs.filter(
+  (item) => item.q !== "What goes in the project brief?",
+);
+
+// Merge remains gated on full changed-file diffs, route-tree external-link audit,
+// footer noopener noreferrer, exact llms.txt phone line and trailing newline,
+// pricing-free FAQ/service schema, a green ds preview, and manual smoke tests.
 
 function ContactPage() {
-  const { need, industry, reportId, handoffToken, rid } = Route.useSearch();
+  const { need, industry, reportId, handoffToken } = Route.useSearch();
 
   return (
     <main id="main" className="mx-auto max-w-3xl px-4 pb-20 sm:px-6">
@@ -54,15 +94,16 @@ function ContactPage() {
           Start your custom AI-assisted growth platform—or choose à la carte.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-          Select all applicable industries first, choose the complete platform or individual services, set your
-          project budget, then tell us about your goals, current stack, growth priorities, and
-          automation needs. Minimum project budget: $400.
+          Select all applicable industries first, choose the complete platform or
+          individual services, set your project budget, then tell us about your
+          goals, current stack, growth priorities, and automation needs. Minimum
+          project budget: $400.
         </p>
         <p className="mt-4 text-sm text-muted">
           <a
             href="https://www.google.com/maps?cid=11038014414842148303"
             target="_blank"
-            rel="noopener"
+            rel="noopener noreferrer"
             className="underline decoration-line underline-offset-4 hover:text-volt"
           >
             Find us on Google
@@ -71,9 +112,9 @@ function ContactPage() {
       </header>
 
       <GeoQuote>
-        The brief captures the industry, offer, audience, budget, current digital stack, conversion
-        goals, and workflows so the project can be scoped around a real business outcome instead of
-        a generic package.
+        The brief captures the industry, offer, audience, budget, current digital
+        stack, conversion goals, and workflows so the project can be scoped around
+        a real business outcome instead of a generic package.
       </GeoQuote>
 
       <DirectAnswer question="What goes in the project brief?">
@@ -81,7 +122,15 @@ function ContactPage() {
       </DirectAnswer>
 
       <div className="mt-10">
-        <IntakeForm need={need} industry={industry} reportId={reportId || rid} handoffToken={handoffToken} />
+        {/* Client validation is not authorization. The ds backend must enforce
+            ownership and atomic single-use consumption of intake credentials;
+            neither credentials nor report IDs may enter logs or error messages. */}
+        <IntakeForm
+          need={need}
+          industry={industry}
+          reportId={reportId}
+          handoffToken={handoffToken}
+        />
       </div>
 
       <Section kicker="Also on this site" title="Which service is this brief for?">
