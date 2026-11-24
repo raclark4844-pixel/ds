@@ -14,13 +14,17 @@ export function Logo({
       aria-label="Demore Technology Solutions home"
       className={cn("inline-flex items-center no-underline focus-visible:outline-none", className)}
     >
-      <img
-        src="/logo.png"
-        alt="Demore Technology Solutions"
-        width={1076}
-        height={292}
-        className={cn("w-auto", size === "footer" ? "h-9" : "h-[34px] sm:h-10 xl:h-11")}
-      />
+      <picture>
+        <source type="image/avif" srcSet="/logo.avif" />
+        <source type="image/webp" srcSet="/logo.webp" />
+        <img
+          src="/logo.png"
+          alt="Demore Technology Solutions"
+          width={1076}
+          height={292}
+          className={cn("w-auto", size === "footer" ? "h-9" : "h-[34px] sm:h-10 xl:h-11")}
+        />
+      </picture>
     </Link>
   );
 }

@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Logo } from "@/components/logo";
 import { FeaturedPills } from "@/components/site-dock";
 import { featuredPillsWide, allMainPages } from "@/lib/nav";
-import { AREA_LINE, CITY_LINE, EMAIL, EMAIL_MAILTO, PHONE, SITE_NAME } from "@/lib/site";
+import { AREA_LINE, CITY_LINE, EMAIL, EMAIL_MAILTO, PHONE, PHONE_TEL, SITE_NAME } from "@/lib/site";
 import { PageButtons } from "@/components/page-buttons";
 import { isPlaceholder } from "@/lib/publish";
 
@@ -36,9 +36,17 @@ export function SiteFooter() {
               </div>
             ) : null}
             {!isPlaceholder(PHONE) ? (
-              <div className="flex gap-3">
+              <div className="flex items-center gap-3">
                 <dt className="w-16 text-faint">Phone</dt>
-                <dd>{PHONE}</dd>
+                <dd>
+                  <a
+                    href={PHONE_TEL}
+                    className="inline-flex min-h-11 items-center text-fg underline-offset-4 hover:underline"
+                  >
+                    <span className="sr-only">Call </span>
+                    {PHONE}
+                  </a>
+                </dd>
               </div>
             ) : null}
             <div className="flex gap-3">

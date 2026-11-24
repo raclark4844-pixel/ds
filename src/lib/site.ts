@@ -1,7 +1,6 @@
 /**
- * PLACEHOLDERS — find and replace these tokens site-wide:
- *   [PHONE]
- * Email is live. Domain is live. Phone stays unpublished.
+ * Published contact details. Email, domain, and phone are live.
+ * Values matching [TOKEN] stay unpublished.
  */
 import {
   automationAnswer,
@@ -16,7 +15,8 @@ import {
 
 export { seoGeoAeoAnswer, whoForAnswer } from "@/lib/answers";
 
-export const PHONE = "[PHONE]";
+export const PHONE = "440-920-6133";
+export const PHONE_TEL = "tel:+14409206133";
 export const EMAIL = "ryan@demoretechnologysolutions.com";
 export const EMAIL_MAILTO = `mailto:${EMAIL}`;
 export const CITY = "Mentor";

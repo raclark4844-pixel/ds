@@ -1,7 +1,10 @@
 /**
- * Deployed-app (Nitro) half of the platform PWA chrome. Auto-registered as
- * global h3 middleware because vite.config.ts sets `serverDir: "./server"` —
- * without that option Nitro v3 never scans this directory.
+ * Deployed-app (Nitro) half of the platform PWA chrome.
+ *
+ * Nitro only scans `serverDir` (`./api-server` in vite.config.ts), so this
+ * file is not part of the production build. `/__grok/manifest.webmanifest`
+ * is therefore a static file in `public/__grok/` and is served by the CDN.
+ * Do not rely on this middleware to inject head tags in production.
  *
  * - `?install=1&platform=ios` on a document path → the Home Screen tutorial,
  *   bundled into the server build via `?raw` (the public/ directory is CDN

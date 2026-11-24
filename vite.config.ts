@@ -25,6 +25,13 @@ export default defineConfig(({ command, isPreview }) => ({
             preset: "vercel",
             vercel: {functions: {maxDuration: 60}},
             serverDir: "./api-server",
+            routeRules: {
+              "/__grok/manifest.webmanifest": {
+                headers: {
+                  "content-type": "application/manifest+json; charset=utf-8",
+                },
+              },
+            },
             // Keep PDFKit inside its package scope so its Node package-import
             // aliases (for built-in fonts such as Helvetica) resolve at runtime.
             traceDeps: ["pdfkit*"],

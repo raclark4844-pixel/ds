@@ -78,17 +78,13 @@ export function SiteDock() {
               key={item.to}
               to={item.to}
               aria-current={active ? "page" : undefined}
-              aria-label={item.label}
               className={cn(
                 "flex min-h-14 min-w-[4.75rem] flex-1 snap-start flex-col items-center justify-center gap-1 rounded-md px-1 text-center no-underline transition-colors duration-200",
                 active ? "bg-volt-dim text-volt" : "text-muted hover:text-fg",
               )}
             >
               <Icon className="size-5" strokeWidth={active ? 2 : 1.5} aria-hidden="true" />
-              <span
-                className="max-w-full truncate text-[9px] font-medium leading-none tracking-wide min-[400px]:text-[10px]"
-                aria-hidden="true"
-              >
+              <span className="max-w-full truncate text-[9px] font-medium leading-none tracking-wide min-[400px]:text-[10px]">
                 {item.short && item.short !== item.label ? (
                   <>
                     <span className="md:hidden">{item.short}</span>
