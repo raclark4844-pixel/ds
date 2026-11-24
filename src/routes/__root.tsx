@@ -1,10 +1,4 @@
-import {
-  createRootRoute,
-  HeadContent,
-  Outlet,
-  Scripts,
-  useRouterState,
-} from "@tanstack/react-router";
+import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { SiteHeader } from "@/components/site-header";
@@ -46,10 +40,6 @@ export const Route = createRootRoute({
 });
 
 function SitewideEntityJsonLd() {
-  const showSharedGraph = useRouterState({
-    select: (state) => !state.matches.some((match) => match.routeId === "/industries/contractors"),
-  });
-  if (!showSharedGraph) return null;
   return <JsonLd data={organizationJsonLd()} />;
 }
 

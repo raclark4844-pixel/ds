@@ -12,7 +12,7 @@ import { pageHead, serviceJsonLd } from "@/lib/seo";
 export const Route = createFileRoute("/platform")({
   head: () =>
     pageHead({
-      title: "Custom AI-Assisted Digital Marketing & Lead-Generation Platform | Demore",
+      title: "AI-Assisted Marketing & Lead-Generation Platform | Demore Tech",
       description:
         "A custom AI-assisted platform connecting websites, ecommerce, SEO, GEO, AEO, CRO, content, social, lead capture, analytics, follow-up, and automation.",
       path: "/platform",

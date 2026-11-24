@@ -16,7 +16,8 @@ export const Route = createFileRoute("/lead-generation")({
   head: () =>
     pageHead({
       title: "Lead Generation & Campaign Management | Demore Technology Solutions",
-      description,
+      description:
+        "Demore Lead Engine connects your website, campaigns, customer records, lead review, conversations, and handoffs in one private workspace.",
       path: "/lead-generation",
     }),
   component: LeadGeneration,

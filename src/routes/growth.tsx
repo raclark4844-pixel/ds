@@ -14,10 +14,9 @@ import { faqJsonLd, pageHead, serviceJsonLd } from "@/lib/seo";
 export const Route = createFileRoute("/growth")({
   head: () =>
     pageHead({
-      title:
-        "AI Digital Marketing, Lead Generation, SEO, GEO, AEO & CRO | Demore Technology Solutions",
+      title: "SEO, GEO, AEO & CRO Growth Services | Demore Tech",
       description:
-        "Nationwide AI-assisted digital marketing, lead generation, SEO, geographic and generative optimization, AEO, CRO, analytics, performance, and conversion systems.",
+        "AI-assisted SEO, GEO, AEO, CRO, and analytics that move qualified visitors toward a call, form, or project brief. Serving clients nationwide.",
       path: "/growth",
     }),
   component: GrowthPage,
@@ -169,7 +168,7 @@ function GrowthPage() {
 
       <GeoQuote>{growthGeoQuote}</GeoQuote>
 
-      <DirectAnswer question="What is an AI-assisted digital marketing and lead-generation platform?">
+      <DirectAnswer question="How SEO, GEO, AEO, and CRO fit inside the platform.">
         <p>
           It is a connected marketing system that combines website and landing-page strategy, search
           visibility, geographic relevance, AI-assisted content workflows, social distribution, lead
