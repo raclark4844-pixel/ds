@@ -156,9 +156,7 @@ export function SiteHeader() {
         </div>
       ) : null}
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
-        <Link to="/" className="shrink-0" aria-label="Home">
-          <Logo size="header" />
-        </Link>
+        <Logo size="header" className="shrink-0" />
         <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">
           {primaryNav.map((item) => {
             const Icon = navIcons[item.to];

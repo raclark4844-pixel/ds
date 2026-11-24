@@ -6,6 +6,31 @@ import { cn } from "@/lib/utils";
 type ContactNeed = { need?: string };
 type SecondaryTo = "/contact" | "/platform" | "/growth" | "/websites" | "/automation";
 
+const heroImageSizes = "(min-width: 72rem) 72rem, 100vw";
+
+const heroSources: Record<string, readonly { type: string; srcSet: string }[]> = {
+  "/media/digital-grid.jpg": [
+    {
+      type: "image/avif",
+      srcSet: "/media/digital-grid-800.avif 800w, /media/digital-grid-1600.avif 1600w",
+    },
+    {
+      type: "image/webp",
+      srcSet: "/media/digital-grid-800.webp 800w, /media/digital-grid-1600.webp 1600w",
+    },
+  ],
+  "/media/growth-rays.jpg": [
+    {
+      type: "image/avif",
+      srcSet: "/media/growth-rays-896.avif 896w, /media/growth-rays-1792.avif 1792w",
+    },
+    {
+      type: "image/webp",
+      srcSet: "/media/growth-rays-896.webp 896w, /media/growth-rays-1792.webp 1792w",
+    },
+  ],
+};
+
 export function PageHero({
   kicker,
   title,
@@ -77,16 +102,25 @@ export function PageHero({
       </div>
       {media ? (
         <figure className="relative mt-12 overflow-hidden rounded-xl border border-line">
-          <img
-            src={media.src}
-            alt={media.alt}
-            width={1600}
-            height={900}
-            loading="eager"
-            fetchPriority="high"
-            decoding="async"
-            className="h-auto w-full object-cover"
-          />
+          <picture>
+            {(heroSources[media.src] ?? []).map((source) => (
+              <source
+                key={source.type}
+                type={source.type}
+                srcSet={source.srcSet}
+                sizes={heroImageSizes}
+              />
+            ))}
+            <img
+              src={media.src}
+              alt={media.alt}
+              width={1600}
+              height={900}
+              loading="lazy"
+              decoding="async"
+              className="h-auto w-full object-cover"
+            />
+          </picture>
         </figure>
       ) : null}
     </section>

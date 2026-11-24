@@ -5,7 +5,7 @@ import { JsonLd } from "@/components/json-ld";
 import { RelatedOffers } from "@/components/related-offers";
 import { DirectAnswer, GeoQuote, Section } from "@/components/section";
 import { intakeStartAnswer } from "@/lib/answers";
-import { contactFaqs } from "@/lib/site";
+import { contactFaqs, PHONE, PHONE_TEL } from "@/lib/site";
 import { faqJsonLd, pageHead, serviceJsonLd } from "@/lib/seo";
 
 type ContactSearch = { need?: string; industry?: string; reportId?: string; handoffToken?: string; source?: string; rid?: string };
@@ -66,6 +66,15 @@ function ContactPage() {
             className="underline decoration-line underline-offset-4 hover:text-volt"
           >
             Find us on Google
+          </a>
+        </p>
+        <p className="mt-2">
+          <a
+            href={PHONE_TEL}
+            className="inline-flex min-h-11 items-center text-sm text-fg underline decoration-line underline-offset-4 hover:text-volt"
+          >
+            <span className="sr-only">Call </span>
+            {PHONE}
           </a>
         </p>
       </header>
