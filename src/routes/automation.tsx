@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { CtaBand } from "@/components/cta-band";
 import { FaqList } from "@/components/faq-list";
 import { IndustryLinks } from "@/components/industry-links";
@@ -81,10 +81,10 @@ function AutomationPage() {
         title="AI marketing automation that makes repetitive work run like a system."
         lede={
           <p>
-            AI-assisted content, social publishing, Google Business Profile workflows, review
-            workflows, lead routing, custom bots, and business automation. The goal is not
-            automation for its own sake — it is fewer manual handoffs and a faster path from
-            activity to action.
+            AI-assisted content, social publishing, Google Business Profile
+            workflows, review workflows, lead routing, custom bots, and business
+            automation. The goal is not automation for its own sake — it is
+            fewer manual handoffs and a faster path from activity to action.
           </p>
         }
         primary={{ to: "/contact", label: "Start a project brief", search: { need: "automation" } }}
@@ -99,11 +99,12 @@ function AutomationPage() {
 
       <DirectAnswer question="What can Demore Technology Solutions automate for marketing and lead generation?">
         <p>
-          Demore can build workflows around content creation, approvals, social publishing, Google
-          Business Profile activity, review reuse, website forms, lead routing, notifications, CRM
-          handoffs, campaign organization, and custom AI-assisted business tasks. The exact workflow
-          depends on the platforms, permissions, data sources, and approval rules available to the
-          business.
+          Demore can build workflows around content creation, approvals, social
+          publishing, Google Business Profile activity, review reuse, website
+          forms, lead routing, notifications, CRM handoffs, campaign
+          organization, and custom AI-assisted business tasks. The exact
+          workflow depends on the platforms, permissions, data sources, and
+          approval rules available to the business.
         </p>
       </DirectAnswer>
 
@@ -112,17 +113,18 @@ function AutomationPage() {
         title="Use automation à la carte—or connect it to the complete customer journey."
       >
         <p className="max-w-3xl text-base leading-relaxed text-muted">
-          Automation delivers more value when it knows where demand came from, what the prospect
-          needs, and what the next sales action should be. The complete platform connects those
-          workflows to the website, campaigns, content, lead capture, analytics, and human
-          approvals.
+          Automation delivers more value when it knows where demand came from,
+          what the prospect needs, and what the next sales action should be. The
+          complete platform connects those workflows to the website, campaigns,
+          content, lead capture, analytics, and human approvals.
         </p>
-        <a
-          href="/platform"
+        <Link
+          to="/platform"
+          preload="intent"
           className="mt-5 inline-flex text-sm font-medium text-volt underline underline-offset-4"
         >
           See the platform comparison
-        </a>
+        </Link>
       </Section>
 
       <Section
@@ -133,71 +135,19 @@ function AutomationPage() {
         <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {blocks.map((item) => (
             <li key={item.title} className="rounded-xl border border-line bg-surface p-6">
-              <h3 className="font-display text-xl font-semibold tracking-tight">{item.title}</h3>
+              <h3 className="font-display text-xl font-semibold tracking-tight">
+                {item.title}
+              </h3>
               <p className="mt-3 text-sm leading-relaxed text-muted">{item.body}</p>
             </li>
           ))}
         </ul>
       </Section>
 
-      <Section
-        kicker="How the pieces connect"
-        title="Content should feed a destination. Leads should feed a workflow."
-      >
-        <div className="grid gap-4 md:grid-cols-3">
-          <article className="rounded-xl border border-line bg-surface p-6">
-            <p className="kicker">01</p>
-            <h3 className="mt-2 font-display text-xl font-semibold tracking-tight">
-              Create and approve
-            </h3>
-            <p className="mt-3 text-sm leading-relaxed text-muted">
-              AI can accelerate drafts and repurposing while the business controls the final
-              message, offer, claims, and approval rules.
-            </p>
-          </article>
-          <article className="rounded-xl border border-line bg-surface p-6">
-            <p className="kicker">02</p>
-            <h3 className="mt-2 font-display text-xl font-semibold tracking-tight">
-              Publish and drive traffic
-            </h3>
-            <p className="mt-3 text-sm leading-relaxed text-muted">
-              Approved content is distributed to the channels that matter and points toward a useful
-              landing page, service page, product, form, or campaign destination.
-            </p>
-          </article>
-          <article className="rounded-xl border border-line bg-surface p-6">
-            <p className="kicker">03</p>
-            <h3 className="mt-2 font-display text-xl font-semibold tracking-tight">
-              Capture and route
-            </h3>
-            <p className="mt-3 text-sm leading-relaxed text-muted">
-              When a prospect acts, the inquiry can be categorized, measured, and routed to the
-              right person or system with fewer manual handoffs.
-            </p>
-          </article>
-        </div>
-      </Section>
-
-      <Section kicker="Industries" title="See how automation changes by industry.">
-        <IndustryLinks />
-      </Section>
-
-      <Section kicker="Questions" title="Direct answers.">
-        <FaqList items={automationFaqs} />
-      </Section>
-
-      <RelatedOffers current="/automation" />
-
-      <div className="mt-16">
-        <CtaBand
-          kicker="Next"
-          title="Show us the repetitive work you want off the team’s plate."
-          body="The brief collects the industry, platforms, workflows, approval rules, destinations, budget, and lead-handling needs. Platform access, API availability, and third-party permissions can affect what can be automated."
-          primaryLabel="Start a project brief"
-          primaryNeed="automation"
-          secondary={{ to: "/growth", label: "See the growth stack" }}
-        />
-      </div>
+      <FaqList faqs={automationFaqs} />
+      <RelatedOffers />
+      <IndustryLinks />
+      <CtaBand />
     </main>
   );
 }
