@@ -13,10 +13,9 @@ import { faqJsonLd, pageHead, serviceJsonLd } from "@/lib/seo";
 export const Route = createFileRoute("/automation")({
   head: () =>
     pageHead({
-      title:
-        "AI Marketing Automation, Social Bots, Auto-Posting, and Content | Demore Technology Solutions",
+      title: "AI Marketing Automation & Business Bots | Demore Tech",
       description:
-        "AI-assisted marketing automation, social publishing, content repurposing, Google Business Profile workflows, review workflows, lead routing, and custom business bots.",
+        "AI-assisted marketing automation: social publishing, content repurposing, Google Business Profile and review workflows, lead routing, and custom bots.",
       path: "/automation",
     }),
   component: AutomationPage,
@@ -79,7 +78,7 @@ function AutomationPage() {
       />
       <PageHero
         kicker="Automation and content"
-        title="Make the repetitive work run like a system."
+        title="AI marketing automation that makes repetitive work run like a system."
         lede={
           <p>
             AI-assisted content, social publishing, Google Business Profile workflows, review

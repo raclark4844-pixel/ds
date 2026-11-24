@@ -23,7 +23,7 @@ export const Route = createFileRoute("/contact")({
     pageHead({
       title: "Start a Digital Project | Demore Technology Solutions",
       description:
-        "Start a project for a website, ecommerce, custom AI-assisted digital marketing and lead generation, SEO, GEO, AEO, CRO, analytics, content, or business automation.",
+        "Start a project brief for a website, ecommerce, AI-assisted lead generation, SEO, GEO, AEO, CRO, or business automation.",
       path: "/contact",
     }),
   component: ContactPage,

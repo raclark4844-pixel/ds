@@ -13,10 +13,9 @@ import { faqJsonLd, pageHead, serviceJsonLd } from "@/lib/seo";
 export const Route = createFileRoute("/websites")({
   head: () =>
     pageHead({
-      title:
-        "Custom Websites, Ecommerce, Landing Pages, and Lead Capture | Demore Technology Solutions",
+      title: "Custom Websites, Ecommerce & Landing Pages | Demore Tech",
       description:
-        "Custom websites, ecommerce, campaign landing pages, contractor sites, lead capture, analytics, and conversion-focused web systems built around how the business gets paid.",
+        "Custom websites, ecommerce, landing pages, and lead capture built around how your business gets discovered, sells, and gets paid.",
       path: "/websites",
     }),
   component: WebsitesPage,
@@ -97,7 +96,7 @@ function WebsitesPage() {
       />
       <PageHero
         kicker="Websites and stores"
-        title="Mapped to how you get discovered, how you sell, and how you get paid."
+        title="Custom websites, ecommerce, and landing pages mapped to how you get paid."
         lede={
           <p>
             Marketing sites, ecommerce, landing pages, contractor and service-company websites, lead
