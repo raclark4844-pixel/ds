@@ -84,7 +84,7 @@ Site: https://www.demoretechnologysolutions.com
 - /industries/pubs: events, private parties and group bookings.
 - /industries/pizza-shops: ordering paths, delivery coverage and catering inquiries.
 
-## Lead Engine preview and campaign access
+## Demore Lead Engine preview and campaign access
 Public detailed guide: https://www.demoretechnologysolutions.com/lead-generation
 Interactive preview: https://www.demoretechnologysolutions.com/lead-generation#preview
 The preview is for viewing purposes only and uses fictional restaurant, pub, and pizza-shop examples. Visitors cannot create or save draft campaigns. A follow-up form sends contact details and goals to ryan@demoretechnologysolutions.com. It shows all, current and past campaigns for viewing purposes only. The examples create no campaigns and send no outreach. The separate follow-up form emails the visitor’s details to Ryan.
